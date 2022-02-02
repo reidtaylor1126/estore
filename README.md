@@ -7,7 +7,7 @@ An online E-store system built in Java 8=>11 and ___ _replace with other platfor
 
 - Ryan Yocum
 - James McGuire
-- MEMBER3
+- Clay Rankin
 - MEMBER4
 
 
