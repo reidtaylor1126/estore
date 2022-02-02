@@ -13,17 +13,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductFileDAO implements ProductDAO {
+public class InventoryFileDAO implements InventoryDAO {
 
-    private Map<Integer, Product> products;
+    private Map<Integer, Product> inventory;
     private String filename;
     private ObjectMapper objectMapper;
     private static int nextId;
 
-    public ProductFileDAO(@Value("${product.filename}") String filename, ObjectMapper objectMapper) throws IOException {
+    public InventoryFileDAO(@Value("${inventory.filename}") String filename, ObjectMapper objectMapper)
+            throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
-        loadProducts();
+        loadInventory();
     }
 
     private synchronized static int nextId() {
@@ -32,32 +33,31 @@ public class ProductFileDAO implements ProductDAO {
         return id;
     }
 
-    private ArrayList<Product> getProductsArray() {
-        return new ArrayList<>(products.values());
+    private ArrayList<Product> getInventoryArray() {
+        return new ArrayList<>(inventory.values());
     }
 
     @Override
     public Product createProduct(Product product) throws IOException {
-        synchronized (products) {
+        synchronized (inventory) {
             Product newProduct = new Product(nextId(), product.getName(), product.getDescription(), product.getPrice(),
                     product.getQuantity());
-            products.put(newProduct.getId(), newProduct);
-            saveProducts();
+            inventory.put(newProduct.getId(), newProduct);
+            saveInventory();
         }
         return null;
     }
 
-    private void saveProducts() throws IOException {
-        objectMapper.writeValue(new File(filename), getProductsArray());
+    private void saveInventory() throws IOException {
+        objectMapper.writeValue(new File(filename), getInventoryArray());
     }
 
-    private void loadProducts() throws IOException {
-        products = new TreeMap<>();
+    private void loadInventory() throws IOException {
+        inventory = new TreeMap<>();
         nextId = 0;
-        System.out.println(System.getProperty("user.dir"));
-        Product[] productArray = objectMapper.readValue(new File(filename), Product[].class);
-        for (Product product : productArray) {
-            products.put(product.getId(), product);
+        Product[] inventoryArray = objectMapper.readValue(new File(filename), Product[].class);
+        for (Product product : inventoryArray) {
+            inventory.put(product.getId(), product);
             if (product.getId() > nextId) {
                 nextId = product.getId();
             }
