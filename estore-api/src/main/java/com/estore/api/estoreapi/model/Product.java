@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Product {
 
+    static final String STRING_FORMAT = "Product [id=%d, name=%s, description=%s, price=%f, quantity=%d]";
+
     @JsonProperty("id")
     private int id;
 
@@ -64,10 +66,8 @@ public class Product {
         return quantity;
     }
 
-    /**
-     * @return if product is sold out
-     */
-    public boolean isSoldOut() {
-        return (quantity == 0);
+    @Override
+    public String toString() {
+        return String.format(STRING_FORMAT, id, name, description, price, quantity);
     }
 }

@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "name": "Tape",
+        "description": "tape is a tape",
+        "price": 19.99,
+        "quantity": 10
+    }
+]
