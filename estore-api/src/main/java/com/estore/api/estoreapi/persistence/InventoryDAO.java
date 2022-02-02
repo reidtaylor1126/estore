@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.estore.api.estoreapi.model.Product;
 
-public interface ProductDAO {
+public interface InventoryDAO {
     /**
      * @param product
      * @return the product that was created

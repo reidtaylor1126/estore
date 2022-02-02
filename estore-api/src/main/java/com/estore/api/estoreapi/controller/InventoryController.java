@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.estore.api.estoreapi.model.Product;
-import com.estore.api.estoreapi.persistence.ProductDAO;
+import com.estore.api.estoreapi.persistence.InventoryDAO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/inventory")
 public class InventoryController {
     private static final Logger LOG = Logger.getLogger(InventoryController.class.getName());
-    private ProductDAO productDAO;
+    private InventoryDAO inventoryDAO;
 
-    public InventoryController(ProductDAO productDAO) {
-        this.productDAO = productDAO;
+    public InventoryController(InventoryDAO productDAO) {
+        this.inventoryDAO = productDAO;
     }
 
     @PostMapping("")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         LOG.info("POST /inventory " + product);
         try {
-            Product newProduct = productDAO.createProduct(product);
+            Product newProduct = inventoryDAO.createProduct(product);
             return new ResponseEntity<Product>(newProduct, HttpStatus.CREATED);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
