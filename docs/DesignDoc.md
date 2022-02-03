@@ -11,10 +11,11 @@ geometry: margin=1in
 ## Team Information
 * Team name: TEAMNAME
 * Team members
-  * MEMBER1
-  * MEMBER2
-  * MEMBER3
-  * MEMBER4
+  * Ryan Yocum
+  * James McGuire
+  * Clay Rankin
+  * Reid Taylor
+  * Nate Appleby
 
 ## Executive Summary
 

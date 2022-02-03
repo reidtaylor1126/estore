@@ -3,6 +3,7 @@ package com.estore.api.estoreapi.persistence;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -46,5 +47,14 @@ public class InventoryFileDAOTest {
         Product actual = inventoryFileDAO.getProduct(product.getId());
         assertEquals(actual.getId(), product.getId());
         assertEquals(actual.getName(), product.getName());
+    }
+
+    @Test
+    public void testDuplicates() throws IOException {
+        Product product = new Product(1, "test4", "testdes", 1.0, 1);
+
+        inventoryFileDAO.createProduct(product);
+        assertThrows(IllegalArgumentException.class, (() -> inventoryFileDAO.createProduct(product)),
+                "Unexpected exception thrown");
     }
 }
