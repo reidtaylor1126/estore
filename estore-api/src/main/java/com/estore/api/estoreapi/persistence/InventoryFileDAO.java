@@ -38,10 +38,14 @@ public class InventoryFileDAO implements InventoryDAO {
     }
 
     @Override
-    public Product createProduct(Product product) throws IOException {
+    public Product createProduct(Product product) throws IOException, IllegalArgumentException {
         synchronized (inventory) {
             Product newProduct = new Product(nextId(), product.getName(), product.getDescription(), product.getPrice(),
                     product.getQuantity());
+
+            if (inventory.values().stream().anyMatch(p -> p.getName().equals(newProduct.getName()))) {
+                throw new IllegalArgumentException("Product with name " + newProduct.getName() + " already exists");
+            }
             inventory.put(newProduct.getId(), newProduct);
             saveInventory();
             return newProduct;

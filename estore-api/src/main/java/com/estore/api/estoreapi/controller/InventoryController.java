@@ -29,8 +29,16 @@ public class InventoryController {
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         LOG.info("POST /inventory " + product);
         try {
+
+            if (product.getName() == null || product.getName().isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
             Product newProduct = inventoryDAO.createProduct(product);
             return new ResponseEntity<Product>(newProduct, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
