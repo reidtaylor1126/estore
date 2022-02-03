@@ -29,7 +29,7 @@ public class InventoryFileDAO implements InventoryDAO {
 
     private synchronized static int nextId() {
         int id = nextId;
-        ++nextId;
+        nextId++;
         return id;
     }
 
@@ -44,8 +44,15 @@ public class InventoryFileDAO implements InventoryDAO {
                     product.getQuantity());
             inventory.put(newProduct.getId(), newProduct);
             saveInventory();
+            return newProduct;
         }
-        return null;
+    }
+
+    @Override
+    public Product getProduct(int id) {
+        synchronized (inventory) {
+            return inventory.get(id);
+        }
     }
 
     private void saveInventory() throws IOException {
