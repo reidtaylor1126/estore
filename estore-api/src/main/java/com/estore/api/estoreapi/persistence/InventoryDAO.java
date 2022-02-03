@@ -11,4 +11,6 @@ public interface InventoryDAO {
      * @throws IOException
      */
     public Product createProduct(Product product) throws IOException;
+
+    public Product getProduct(int id);
 }

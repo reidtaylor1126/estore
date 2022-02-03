@@ -1,0 +1,50 @@
+package com.estore.api.estoreapi.persistence;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.IOException;
+
+import com.estore.api.estoreapi.model.Product;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+@Tag("Persistence")
+public class InventoryFileDAOTest {
+    InventoryFileDAO inventoryFileDAO;
+    Product[] testProducts;
+    ObjectMapper mockObjectMapper;
+
+    @BeforeEach
+    public void setUp() throws IOException {
+        mockObjectMapper = mock(ObjectMapper.class);
+        testProducts = new Product[3];
+        testProducts[0] = new Product(1, "test", "testdes", 1.0, 1);
+        testProducts[1] = new Product(2, "test1", "test2des", 1.0, 1);
+        testProducts[2] = new Product(3, "test2", "test3des", 1.0, 1);
+
+        when(mockObjectMapper.readValue(
+                new File("filenotfound.txt"), Product[].class)).thenReturn(testProducts);
+        inventoryFileDAO = new InventoryFileDAO("filenotfound.txt",
+                mockObjectMapper);
+    }
+
+    @Test
+    public void testCreateProduct() {
+        Product product = new Product(4, "test234", "test2314", 1.0, 1);
+
+        Product result = assertDoesNotThrow((() -> inventoryFileDAO.createProduct(product)),
+                "Unexpected exception thrown");
+        assertNotNull(result);
+        Product actual = inventoryFileDAO.getProduct(product.getId());
+        assertEquals(actual.getId(), product.getId());
+        assertEquals(actual.getName(), product.getName());
+    }
+}
