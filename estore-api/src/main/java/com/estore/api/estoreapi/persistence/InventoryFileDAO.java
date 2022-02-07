@@ -15,9 +15,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class InventoryFileDAO implements InventoryDAO {
 
+    /**
+     * The current inventory.
+     */
     private Map<Integer, Product> inventory;
+
+    /**
+     * The file name of the inventory file.
+     */
     private String filename;
+
+    /**
+     * The object mapper.
+     */
+
     private ObjectMapper objectMapper;
+
+    /**
+     * The next id to assign to a product.
+     */
     private static int nextId;
 
     public InventoryFileDAO(@Value("${inventory.filename}") String filename, ObjectMapper objectMapper)

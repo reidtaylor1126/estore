@@ -62,12 +62,16 @@ public class InventoryControllerTest {
 
     @Test
     public void testEmptyName() throws IOException {
-        Product product = new Product(1, null, "testdes", 1.0, 1);
+        Product productNull = new Product(1, null, "testdes", 1.0, 1);
+        Product productEmpty = new Product(1, "", "testdes", 1.0, 1);
 
-        when(mockInventoryDAO.createProduct(product)).thenReturn(product);
+        when(mockInventoryDAO.createProduct(productNull)).thenReturn(productNull);
+        when(mockInventoryDAO.createProduct(productEmpty)).thenReturn(productEmpty);
 
-        ResponseEntity<Product> response = inventoryController.createProduct(product);
+        ResponseEntity<Product> responseNull = inventoryController.createProduct(productNull);
+        ResponseEntity<Product> responseEmpty = inventoryController.createProduct(productEmpty);
 
-        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(responseNull.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(responseEmpty.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 }
