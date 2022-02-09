@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/inventory")
@@ -23,6 +25,18 @@ public class InventoryController {
 
     public InventoryController(InventoryDAO productDAO) {
         this.inventoryDAO = productDAO;
+    }
+
+    @GetMapping("/product")
+    public ResponseEntity<Product[]> searchProduct(@RequestParam String search) {
+        LOG.info("GET /inventory/product?search=" + search);
+        try {
+            Product[] products = inventoryDAO.searchProducts(search);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (IOException ioe) {
+            LOG.log(Level.SEVERE, ioe.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("")
