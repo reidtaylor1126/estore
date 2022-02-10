@@ -86,7 +86,11 @@ public class InventoryFileDAO implements InventoryDAO {
     @Override
     public Product getProduct(int id) {
         synchronized (inventory) {
-            return inventory.get(id);
+            Product tempProduct = inventory.get(id);
+            if (!(inventory.values().stream().anyMatch(p -> p.getName().equals(tempProduct.getName())))) {
+                throw new IllegalArgumentException("Product with name " + tempProduct.getName() + " does not exist");
+            }
+            return tempProduct;
         }
     }
 
