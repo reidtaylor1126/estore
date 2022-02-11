@@ -28,6 +28,11 @@ public class InventoryController {
     }
 
     @GetMapping("/product")
+    public ResponseEntity<Product[]> getInventory(){
+        return null;
+    }
+
+    @GetMapping("/product")
     public ResponseEntity<Product[]> searchProduct(@RequestParam String search) {
         LOG.info("GET /inventory/product?search=" + search);
         try {
