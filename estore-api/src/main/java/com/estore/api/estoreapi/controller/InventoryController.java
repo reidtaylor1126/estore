@@ -15,6 +15,7 @@ import com.estore.api.estoreapi.persistence.InventoryDAO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,6 +69,23 @@ public class InventoryController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+    @PutMapping("")
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+        LOG.info("PUT /inventory " + product);
+
+        try {
+            Product updatedProduct = inventoryDAO.updateProduct(product);
+            if (updatedProduct == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
