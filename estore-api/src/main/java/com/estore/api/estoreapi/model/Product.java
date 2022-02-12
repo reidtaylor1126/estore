@@ -1,14 +1,18 @@
 package com.estore.api.estoreapi.model;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Product {
 
     static final String STRING_FORMAT = "Product [id=%d, name=%s, description=%s, price=%f, quantity=%d]";
 
+    @NotNull
     @JsonProperty("id")
     private int id;
 
+    @NotNull
     @JsonProperty("name")
     private String name;
 
@@ -21,7 +25,7 @@ public class Product {
     @JsonProperty("quantity")
     private int quantity;
 
-    public Product(@JsonProperty("id") int id, @JsonProperty("name") String name,
+    public Product(@NotNull @JsonProperty("id") int id, @NotNull @JsonProperty("name") String name,
             @JsonProperty("description") String description, @JsonProperty("price") double price,
             @JsonProperty("quantity") int quantity) {
         this.id = id;
