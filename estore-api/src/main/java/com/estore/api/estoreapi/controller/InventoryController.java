@@ -17,7 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.RequestParam;
+=======
+import org.springframework.web.bind.annotation.PathVariable;
+>>>>>>> c80efa7 (Added method in InventoryController)
 
 @RestController
 @RequestMapping("/inventory")
@@ -53,6 +57,20 @@ public class InventoryController {
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable int id) {
+        LOG.info("GET /product/" + id);
+        try {
+            Product product = inventoryDAO.getProduct(id);
+            if (product != null)
+                return new ResponseEntity<Product>(product,HttpStatus.OK);
+            else
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
