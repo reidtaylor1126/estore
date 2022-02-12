@@ -71,7 +71,7 @@ public class InventoryController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
 
     @PutMapping("")
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product product) {
         LOG.info("PUT /inventory " + product);
 
         try {

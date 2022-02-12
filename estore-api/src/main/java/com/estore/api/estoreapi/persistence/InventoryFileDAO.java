@@ -95,8 +95,7 @@ public class InventoryFileDAO implements InventoryDAO {
                         product.getDescription(),
                         product.getPrice(), product.getQuantity());
 
-                if (inventory.values().stream().anyMatch(p -> p.getName().equals(updatedProduct.getName())
-                        && p.getId() != updatedProduct.getId())) {
+                if (inventory.values().stream().anyMatch(p -> p.getName().equals(updatedProduct.getName()))) {
                     throw new IllegalArgumentException(
                             "Product with name " + updatedProduct.getName() + " already exists");
                 }
