@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.validation.Valid;
+
 import com.estore.api.estoreapi.model.Product;
 import com.estore.api.estoreapi.persistence.InventoryDAO;
 
@@ -28,14 +30,9 @@ public class InventoryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
         LOG.info("POST /inventory " + product);
         try {
-
-            if (product.getName() == null || product.getName().isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
             Product newProduct = inventoryDAO.createProduct(product);
             return new ResponseEntity<Product>(newProduct, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
