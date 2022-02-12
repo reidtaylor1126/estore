@@ -12,7 +12,7 @@
     <!-- Application build dependency versions
     <maven.compiler.version>3.8.0</maven.compiler.version>
     <maven.assembly.version>3.1.0</maven.assembly.version> -->
-    <maven.exec.version>1.6.0</maven.exec.version> 
+    <maven.exec.version>1.6.0</maven.exec.version>
   </properties>
 
   <build>
@@ -33,9 +33,9 @@
                 <argument>${project.basedir}/DesignDoc.pdf</argument>
               </arguments>
             </configuration>
-          </execution> 
+          </execution>
         </executions>
-      </plugin>  
+      </plugin>
     </plugins>
   </build>
 </project>
