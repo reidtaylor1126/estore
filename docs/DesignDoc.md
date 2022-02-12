@@ -9,12 +9,13 @@ geometry: margin=1in
 > and appear in the generated PDF in italics._
 
 ## Team Information
-* Team name: TEAMNAME
+* Team name: straightflush
 * Team members
-  * MEMBER1
-  * MEMBER2
-  * MEMBER3
-  * MEMBER4
+  * Ryan Yocum
+  * James McGuire
+  * Clay Rankin
+  * Reid Taylor
+  * Nate Appleby
 
 ## Executive Summary
 
