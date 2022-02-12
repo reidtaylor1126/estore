@@ -29,7 +29,14 @@ public class InventoryController {
 
     @GetMapping("/product")
     public ResponseEntity<Product[]> getInventory(){
-        return null;
+        LOG.info("GET /inventory");
+        try{
+            Product[] products = inventoryDAO.getInventory();
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (IOException ioe) {
+            LOG.log(Level.SEVERE, ioe.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/product")
