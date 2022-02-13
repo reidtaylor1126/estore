@@ -77,6 +77,18 @@ public class InventoryFileDAO implements InventoryDAO {
         return products.toArray(new Product[0]);
     }
 
+    public Product[] getInventory(){
+        ArrayList<Product> products = new ArrayList<>();
+
+        for(Product product : inventory.values())
+            products.add(product);
+        
+        Product[] pArray = new Product[products.size()];    
+        pArray = products.toArray(pArray);
+        
+        return pArray;
+    }
+
     @Override
     public Product getProduct(String name) {
         synchronized (inventory) {
@@ -112,5 +124,4 @@ public class InventoryFileDAO implements InventoryDAO {
             inventory.put(product.getName(), product);
         }
     }
-
 }
