@@ -130,15 +130,15 @@ public class InventoryFileDAO implements InventoryDAO {
         boolean success = true;
 
         synchronized (inventory) {
-            try {
+            if (inventory.containsKey(name)) {
                 inventory.remove(name);
                 saveInventory();
-            } catch (Exception e) {
+            } else {
                 success = false;
                 return success;
             }
-        }
 
-        return success;
+            return success;
+        }
     }
 }
