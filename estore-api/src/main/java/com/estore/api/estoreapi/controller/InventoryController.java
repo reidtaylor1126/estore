@@ -30,6 +30,17 @@ public class InventoryController {
     }
 
     @GetMapping("/product")
+    public ResponseEntity<Product[]> getInventory(){
+        LOG.info("GET /inventory");
+        try{
+            Product[] products = inventoryDAO.getInventory();
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (IOException ioe) {
+            LOG.log(Level.SEVERE, ioe.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public ResponseEntity<Product[]> searchProduct(@RequestParam String q) {
         LOG.info("GET /inventory/product?q=" + q);
         try {
