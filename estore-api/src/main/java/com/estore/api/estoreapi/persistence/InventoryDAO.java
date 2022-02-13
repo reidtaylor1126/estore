@@ -15,4 +15,6 @@ public interface InventoryDAO {
     public Product[] searchProducts(String searchTerms) throws IOException;
 
     public Product getProduct(String name);
+
+    public Product updateProduct(Product product) throws IOException;
 }
