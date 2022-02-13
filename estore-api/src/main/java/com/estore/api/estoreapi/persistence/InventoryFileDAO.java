@@ -18,7 +18,7 @@ public class InventoryFileDAO implements InventoryDAO {
     /**
      * The current inventory.
      */
-    private Map<Integer, Product> inventory;
+    private Map<String, Product> inventory;
 
     /**
      * The file name of the inventory file.
@@ -70,12 +70,12 @@ public class InventoryFileDAO implements InventoryDAO {
 
     @Override
     public Product[] searchProducts(String searchTerms) {
-        if(searchTerms.length() == 0)
+        if (searchTerms.length() == 0)
             return new Product[0];
 
         ArrayList<Product> products = new ArrayList<>();
-        for(Product product : inventory.values()) {
-            if(product.getName().toLowerCase().contains(searchTerms.toLowerCase())) {
+        for (Product product : inventory.values()) {
+            if (product.getName().toLowerCase().contains(searchTerms.toLowerCase())) {
                 products.add(product);
             }
         }
@@ -84,12 +84,9 @@ public class InventoryFileDAO implements InventoryDAO {
     }
 
     @Override
-    public Product getProduct(int id) {
+    public Product getProduct(String name) {
         synchronized (inventory) {
-            Product tempProduct = inventory.get(id);
-            if (!(inventory.values().stream().anyMatch(p -> p.getName().equals(tempProduct.getName())))) {
-                throw new IllegalArgumentException("Product with name " + tempProduct.getName() + " does not exist");
-            }
+            Product tempProduct = inventory.get(name);
             return tempProduct;
         }
     }

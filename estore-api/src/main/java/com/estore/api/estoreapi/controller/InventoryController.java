@@ -60,11 +60,11 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable int id) {
-        LOG.info("GET /product/" + id);
+    @GetMapping("/{name}")
+    public ResponseEntity<Product> getProduct(@PathVariable String name) {
+        LOG.info("GET /product/" + name);
         try {
-            Product product = inventoryDAO.getProduct(id);
+            Product product = inventoryDAO.getProduct(name);
             if (product != null)
                 return new ResponseEntity<Product>(product,HttpStatus.OK);
             else
