@@ -54,15 +54,18 @@ public class InventoryFileDAO implements InventoryDAO {
     }
 
     @Override
-    public Product createProduct(Product product) throws IOException, IllegalArgumentException {
+    public Product createProduct(Product product) throws IOException,
+            IllegalArgumentException {
         synchronized (inventory) {
-            Product newProduct = new Product(nextId(), product.getName(), product.getDescription(), product.getPrice(),
+            Product newProduct = new Product(nextId(), product.getName(),
+                    product.getDescription(), product.getPrice(),
                     product.getQuantity());
 
             if (inventory.values().stream().anyMatch(p -> p.getName().equals(newProduct.getName()))) {
-                throw new IllegalArgumentException("Product with name " + newProduct.getName() + " already exists");
+                throw new IllegalArgumentException("Product with name " +
+                        newProduct.getName() + " already exists");
             }
-            inventory.put(newProduct.getId(), newProduct);
+            inventory.put(newProduct.getName(), newProduct);
             saveInventory();
             return newProduct;
         }
@@ -100,7 +103,7 @@ public class InventoryFileDAO implements InventoryDAO {
         nextId = 0;
         Product[] inventoryArray = objectMapper.readValue(new File(filename), Product[].class);
         for (Product product : inventoryArray) {
-            inventory.put(product.getId(), product);
+            inventory.put(product.getName(), product);
             if (product.getId() > nextId) {
                 nextId = product.getId();
             }
