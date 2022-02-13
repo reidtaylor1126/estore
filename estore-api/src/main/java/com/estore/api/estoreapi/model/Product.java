@@ -6,11 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Product {
 
-    static final String STRING_FORMAT = "Product [id=%d, name=%s, description=%s, price=%f, quantity=%d]";
-
-    @NotNull
-    @JsonProperty("id")
-    private int id;
+    static final String STRING_FORMAT = "Product [name=%s, description=%s, price=%f, quantity=%d]";
 
     @NotNull
     @JsonProperty("name")
@@ -25,21 +21,13 @@ public class Product {
     @JsonProperty("quantity")
     private int quantity;
 
-    public Product(@NotNull @JsonProperty("id") int id, @NotNull @JsonProperty("name") String name,
+    public Product(@NotNull @JsonProperty("name") String name,
             @JsonProperty("description") String description, @JsonProperty("price") double price,
             @JsonProperty("quantity") int quantity) {
-        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
-    }
-
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
     }
 
     /**
@@ -79,6 +67,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return String.format(STRING_FORMAT, id, name, description, price, quantity);
+        return String.format(STRING_FORMAT, name, description, price, quantity);
     }
 }

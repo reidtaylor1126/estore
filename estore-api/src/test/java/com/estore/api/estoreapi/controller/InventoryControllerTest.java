@@ -28,7 +28,7 @@ public class InventoryControllerTest {
 
     @Test
     public void testCreateProduct() throws IOException {
-        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        Product product = new Product("test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.createProduct(product)).thenReturn(product);
 
@@ -40,7 +40,7 @@ public class InventoryControllerTest {
 
     @Test
     public void testDuplicates() throws IOException {
-        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        Product product = new Product("test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.createProduct(product)).thenThrow(new IllegalArgumentException());
 
@@ -51,27 +51,12 @@ public class InventoryControllerTest {
 
     @Test
     public void testError() throws IOException {
-        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        Product product = new Product("test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.createProduct(product)).thenThrow(new IOException());
 
         ResponseEntity<Product> response = inventoryController.createProduct(product);
 
         assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @Test
-    public void testEmptyName() throws IOException {
-        Product productNull = new Product(1, null, "testdes", 1.0, 1);
-        Product productEmpty = new Product(1, "", "testdes", 1.0, 1);
-
-        when(mockInventoryDAO.createProduct(productNull)).thenReturn(productNull);
-        when(mockInventoryDAO.createProduct(productEmpty)).thenReturn(productEmpty);
-
-        ResponseEntity<Product> responseNull = inventoryController.createProduct(productNull);
-        ResponseEntity<Product> responseEmpty = inventoryController.createProduct(productEmpty);
-
-        assertEquals(responseNull.getStatusCode(), HttpStatus.BAD_REQUEST);
-        assertEquals(responseEmpty.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 }

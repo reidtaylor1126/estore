@@ -27,9 +27,9 @@ public class InventoryFileDAOTest {
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
         testProducts = new Product[3];
-        testProducts[0] = new Product(1, "test", "testdes", 1.0, 1);
-        testProducts[1] = new Product(2, "test1", "test2des", 1.0, 1);
-        testProducts[2] = new Product(3, "test2", "test3des", 1.0, 1);
+        testProducts[0] = new Product("test", "testdes", 1.0, 1);
+        testProducts[1] = new Product("test1", "test2des", 1.0, 1);
+        testProducts[2] = new Product("test2", "test3des", 1.0, 1);
 
         when(mockObjectMapper.readValue(
                 new File("filenotfound.txt"), Product[].class)).thenReturn(testProducts);
@@ -37,26 +37,24 @@ public class InventoryFileDAOTest {
                 mockObjectMapper);
     }
 
-    // @Test
-    // public void testCreateProduct() {
-    // Product product = new Product(4, "test234", "test2314", 1.0, 1);
+    @Test
+    public void testCreateProduct() {
+        Product product = new Product("test234", "test2314", 1.0, 1);
 
-    // Product result = assertDoesNotThrow((() ->
-    // inventoryFileDAO.createProduct(product)),
-    // "Unexpected exception thrown");
-    // assertNotNull(result);
-    // Product actual = inventoryFileDAO.getProduct(product.getId());
-    // assertEquals(actual.getId(), product.getId());
-    // assertEquals(actual.getName(), product.getName());
-    // }
+        Product result = assertDoesNotThrow((() -> inventoryFileDAO.createProduct(product)),
+                "Unexpected exception thrown");
+        assertNotNull(result);
+        Product actual = inventoryFileDAO.getProduct(product.getName());
+        assertEquals(actual.getName(), product.getName());
+        assertEquals(actual.getName(), product.getName());
+    }
 
-    // @Test
-    // public void testDuplicates() throws IOException {
-    // Product product = new Product(1, "test4", "testdes", 1.0, 1);
+    @Test
+    public void testDuplicates() throws IOException {
+        Product product = new Product("test4", "testdes", 1.0, 1);
 
-    // inventoryFileDAO.createProduct(product);
-    // assertThrows(IllegalArgumentException.class, (() ->
-    // inventoryFileDAO.createProduct(product)),
-    // "Unexpected exception thrown");
-    // }
+        inventoryFileDAO.createProduct(product);
+        assertThrows(IllegalArgumentException.class, (() -> inventoryFileDAO.createProduct(product)),
+                "Unexpected exception thrown");
+    }
 }
