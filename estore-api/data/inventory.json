@@ -1,13 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-[{"name":"testproduct","description":"sdafasdfsdafasdf","price":1.0,"quantity":5}]
-=======
-[
-    { "id": 1, "name": "hero6", "description": null, "price": 0.0, "quantity": 0 },
-    { "id": 2, "name": "iteminstore", "description": null, "price": 0.0, "quantity": 0 },
-    { "id": 3, "name": "hero1", "description": null, "price": 0.0, "quantity": 0 }
-]
->>>>>>> db4a77f (Partial update)
-=======
-[{"id":1,"name":"1","description":null,"price":0.0,"quantity":0},{"id":2,"name":"iteminstore","description":null,"price":0.0,"quantity":0},{"id":3,"name":"hero1","description":null,"price":0.0,"quantity":0}]
->>>>>>> a0f4354 (Finished updatea)
+[{"name":"testproduct","description":"sdafasdfsdafasdf","price":1.1,"quantity":5}]
