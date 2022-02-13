@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.validation.Valid;
+
 import com.estore.api.estoreapi.model.Product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,11 +33,6 @@ public class InventoryFileDAO implements InventoryDAO {
 
     private ObjectMapper objectMapper;
 
-    /**
-     * The next id to assign to a product.
-     */
-    private static int nextId;
-
     public InventoryFileDAO(@Value("${inventory.filename}") String filename, ObjectMapper objectMapper)
             throws IOException {
         this.filename = filename;
@@ -43,26 +40,23 @@ public class InventoryFileDAO implements InventoryDAO {
         loadInventory();
     }
 
-    private synchronized static int nextId() {
-        int id = nextId;
-        nextId++;
-        return id;
-    }
-
     private ArrayList<Product> getInventoryArray() {
         return new ArrayList<>(inventory.values());
     }
 
     @Override
-    public Product createProduct(Product product) throws IOException, IllegalArgumentException {
+    public Product createProduct(@Valid Product product) throws IOException,
+            IllegalArgumentException {
         synchronized (inventory) {
-            Product newProduct = new Product(nextId(), product.getName(), product.getDescription(), product.getPrice(),
+            Product newProduct = new Product(product.getName(),
+                    product.getDescription(), product.getPrice(),
                     product.getQuantity());
 
-            if (inventory.values().stream().anyMatch(p -> p.getName().equals(newProduct.getName()))) {
-                throw new IllegalArgumentException("Product with name " + newProduct.getName() + " already exists");
+            if (inventory.containsKey(newProduct.getName())) {
+                throw new IllegalArgumentException("Product with name " +
+                        newProduct.getName() + " already exists");
             }
-            inventory.put(newProduct.getId(), newProduct);
+            inventory.put(newProduct.getName(), newProduct);
             saveInventory();
             return newProduct;
         }
@@ -70,12 +64,12 @@ public class InventoryFileDAO implements InventoryDAO {
 
     @Override
     public Product[] searchProducts(String searchTerms) {
-        if(searchTerms.length() == 0)
+        if (searchTerms.length() == 0)
             return new Product[0];
 
         ArrayList<Product> products = new ArrayList<>();
-        for(Product product : inventory.values()) {
-            if(product.getName().toLowerCase().contains(searchTerms.toLowerCase())) {
+        for (Product product : inventory.values()) {
+            if (product.getName().toLowerCase().contains(searchTerms.toLowerCase())) {
                 products.add(product);
             }
         }
@@ -84,7 +78,7 @@ public class InventoryFileDAO implements InventoryDAO {
     }
 
     @Override
-    public Product getProduct(String name){
+    public Product getProduct(String name) {
         synchronized (inventory) {
             Product tempProduct = inventory.get(name);
             return tempProduct;
@@ -97,15 +91,10 @@ public class InventoryFileDAO implements InventoryDAO {
 
     private void loadInventory() throws IOException {
         inventory = new TreeMap<>();
-        nextId = 0;
         Product[] inventoryArray = objectMapper.readValue(new File(filename), Product[].class);
         for (Product product : inventoryArray) {
-            inventory.put(product.getId(), product);
-            if (product.getId() > nextId) {
-                nextId = product.getId();
-            }
+            inventory.put(product.getName(), product);
         }
-        nextId++;
     }
 
 }
