@@ -18,7 +18,7 @@ public class InventoryFileDAO implements InventoryDAO {
     /**
      * The current inventory.
      */
-    private Map<Integer, Product> inventory;
+    private Map<String, Product> inventory;
 
     /**
      * The file name of the inventory file.
@@ -69,19 +69,16 @@ public class InventoryFileDAO implements InventoryDAO {
     }
 
     @Override
-    public Product getProduct(int id) {
+    public Product getProduct(String name) {
         synchronized (inventory) {
-            Product tempProduct = inventory.get(id);
-            if (!(inventory.values().stream().anyMatch(p -> p.getName().equals(tempProduct.getName())))) {
-                throw new IllegalArgumentException("Product with name " + tempProduct.getName() + " does not exist");
-            }
+            Product tempProduct = inventory.get(name);
             return tempProduct;
         }
     }
 
     private void saveInventory() throws IOException {
         objectMapper.writeValue(new File(filename), getInventoryArray());
-    }
+    }  
 
     private void loadInventory() throws IOException {
         inventory = new TreeMap<>();
