@@ -132,6 +132,7 @@ public class InventoryFileDAO implements InventoryDAO {
         synchronized (inventory) {
             try {
                 inventory.remove(name);
+                saveInventory();
             } catch (Exception e) {
                 success = false;
                 return success;
