@@ -85,6 +85,22 @@ public class InventoryFileDAO implements InventoryDAO {
         }
     }
 
+    @Override
+    public Product updateProduct(Product product) throws IOException, IllegalArgumentException {
+        synchronized (inventory) {
+            if (!inventory.containsKey(product.getName())) {
+                throw new IllegalArgumentException("Product with name " +
+                        product.getName() + " does not exist");
+            }
+            Product updatedProduct = new Product(product.getName(), product.getDescription(), product.getPrice(),
+                    product.getQuantity());
+
+            inventory.put(updatedProduct.getName(), updatedProduct);
+            saveInventory();
+            return updatedProduct;
+        }
+    }
+
     private void saveInventory() throws IOException {
         objectMapper.writeValue(new File(filename), getInventoryArray());
     }  
