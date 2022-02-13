@@ -87,7 +87,7 @@ public class InventoryFileDAO implements InventoryDAO {
 
     private void saveInventory() throws IOException {
         objectMapper.writeValue(new File(filename), getInventoryArray());
-    }
+    }  
 
     private void loadInventory() throws IOException {
         inventory = new TreeMap<>();
