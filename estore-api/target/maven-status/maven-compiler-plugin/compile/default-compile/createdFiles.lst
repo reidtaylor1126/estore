@@ -1,0 +1,6 @@
+com\estore\api\estoreapi\persistence\InventoryDAO.class
+com\estore\api\estoreapi\controller\InventoryController.class
+com\estore\api\estoreapi\model\Product.class
+com\estore\api\estoreapi\WebConfig.class
+com\estore\api\estoreapi\persistence\InventoryFileDAO.class
+com\estore\api\estoreapi\EstoreApiApplication.class
