@@ -69,7 +69,22 @@ public class InventoryFileDAO implements InventoryDAO {
     }
 
     @Override
-    public Product getProduct(String name) {
+    public Product[] searchProducts(String searchTerms) {
+        if(searchTerms.length() == 0)
+            return new Product[0];
+
+        ArrayList<Product> products = new ArrayList<>();
+        for(Product product : inventory.values()) {
+            if(product.getName().toLowerCase().contains(searchTerms.toLowerCase())) {
+                products.add(product);
+            }
+        }
+
+        return products.toArray(new Product[0]);
+    }
+
+    @Override
+    public Product getProduct(String name){
         synchronized (inventory) {
             Product tempProduct = inventory.get(name);
             return tempProduct;
