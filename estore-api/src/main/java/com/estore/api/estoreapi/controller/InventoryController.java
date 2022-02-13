@@ -32,7 +32,7 @@ public class InventoryController {
         this.inventoryDAO = productDAO;
     }
 
-    @GetMapping("/product")
+    @GetMapping("")
     public ResponseEntity<Product[]> getInventory() {
         LOG.info("GET /inventory");
         try {
@@ -44,6 +44,7 @@ public class InventoryController {
         }
     }
 
+    @GetMapping("/product")
     public ResponseEntity<Product[]> searchProduct(@RequestParam String q) {
         LOG.info("GET /inventory/product?q=" + q);
         try {
@@ -99,9 +100,9 @@ public class InventoryController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/product/{name}")
     public ResponseEntity<Product> deleteProduct(@PathVariable String name) {
-        LOG.info("DELETE /inventory/" + name);
+        LOG.info("DELETE /inventory/product" + name);
 
         try {
             boolean success = inventoryDAO.deleteProduct(name);
