@@ -17,10 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/inventory")
@@ -33,9 +33,9 @@ public class InventoryController {
     }
 
     @GetMapping("/product")
-    public ResponseEntity<Product[]> getInventory(){
+    public ResponseEntity<Product[]> getInventory() {
         LOG.info("GET /inventory");
-        try{
+        try {
             Product[] products = inventoryDAO.getInventory();
             return new ResponseEntity<>(products, HttpStatus.OK);
         } catch (IOException ioe) {
@@ -76,7 +76,7 @@ public class InventoryController {
         try {
             Product product = inventoryDAO.getProduct(name);
             if (product != null)
-                return new ResponseEntity<Product>(product,HttpStatus.OK);
+                return new ResponseEntity<Product>(product, HttpStatus.OK);
             else
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {
@@ -93,6 +93,22 @@ public class InventoryController {
             return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable String name) {
+        LOG.info("DELETE /inventory/" + name);
+
+        try {
+            boolean success = inventoryDAO.deleteProduct(name);
+            if (success)
+                return new ResponseEntity<>(HttpStatus.OK);
+            else
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

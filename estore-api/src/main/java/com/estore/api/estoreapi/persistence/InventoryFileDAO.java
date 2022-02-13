@@ -77,15 +77,15 @@ public class InventoryFileDAO implements InventoryDAO {
         return products.toArray(new Product[0]);
     }
 
-    public Product[] getInventory(){
+    public Product[] getInventory() {
         ArrayList<Product> products = new ArrayList<>();
 
-        for(Product product : inventory.values())
+        for (Product product : inventory.values())
             products.add(product);
-        
-        Product[] pArray = new Product[products.size()];    
+
+        Product[] pArray = new Product[products.size()];
         pArray = products.toArray(pArray);
-        
+
         return pArray;
     }
 
@@ -115,7 +115,7 @@ public class InventoryFileDAO implements InventoryDAO {
 
     private void saveInventory() throws IOException {
         objectMapper.writeValue(new File(filename), getInventoryArray());
-    }  
+    }
 
     private void loadInventory() throws IOException {
         inventory = new TreeMap<>();
@@ -123,5 +123,21 @@ public class InventoryFileDAO implements InventoryDAO {
         for (Product product : inventoryArray) {
             inventory.put(product.getName(), product);
         }
+    }
+
+    @Override
+    public boolean deleteProduct(String name) throws IOException {
+        boolean success = true;
+
+        synchronized (inventory) {
+            try {
+                inventory.remove(name);
+            } catch (Exception e) {
+                success = false;
+                return success;
+            }
+        }
+
+        return success;
     }
 }
