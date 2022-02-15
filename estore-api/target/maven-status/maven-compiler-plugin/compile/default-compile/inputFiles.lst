@@ -1,6 +1,6 @@
-C:\team-project-2215-section-02-2215-swen-261-02-c-straightflush\estore-api\src\main\java\com\estore\api\estoreapi\persistence\InventoryDAO.java
-C:\team-project-2215-section-02-2215-swen-261-02-c-straightflush\estore-api\src\main\java\com\estore\api\estoreapi\persistence\InventoryFileDAO.java
-C:\team-project-2215-section-02-2215-swen-261-02-c-straightflush\estore-api\src\main\java\com\estore\api\estoreapi\controller\InventoryController.java
-C:\team-project-2215-section-02-2215-swen-261-02-c-straightflush\estore-api\src\main\java\com\estore\api\estoreapi\model\Product.java
-C:\team-project-2215-section-02-2215-swen-261-02-c-straightflush\estore-api\src\main\java\com\estore\api\estoreapi\WebConfig.java
-C:\team-project-2215-section-02-2215-swen-261-02-c-straightflush\estore-api\src\main\java\com\estore\api\estoreapi\EstoreApiApplication.java
+/home/rtyocum/code/rit/swen-261/team-project/estore-api/src/main/java/com/estore/api/estoreapi/persistence/InventoryFileDAO.java
+/home/rtyocum/code/rit/swen-261/team-project/estore-api/src/main/java/com/estore/api/estoreapi/controller/InventoryController.java
+/home/rtyocum/code/rit/swen-261/team-project/estore-api/src/main/java/com/estore/api/estoreapi/persistence/InventoryDAO.java
+/home/rtyocum/code/rit/swen-261/team-project/estore-api/src/main/java/com/estore/api/estoreapi/WebConfig.java
+/home/rtyocum/code/rit/swen-261/team-project/estore-api/src/main/java/com/estore/api/estoreapi/EstoreApiApplication.java
+/home/rtyocum/code/rit/swen-261/team-project/estore-api/src/main/java/com/estore/api/estoreapi/model/Product.java

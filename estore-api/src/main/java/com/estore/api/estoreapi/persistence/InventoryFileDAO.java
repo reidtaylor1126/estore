@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import javax.validation.Valid;
 
 import com.estore.api.estoreapi.model.Product;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Value;
