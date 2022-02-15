@@ -105,8 +105,11 @@ public class InventoryFileDAO implements InventoryDAO {
                 throw new IllegalArgumentException("Product with name " +
                         product.getName() + " does not exist");
             }
-            Product updatedProduct = new Product(product.getName(), product.getDescription(), product.getPrice(),
-                    product.getQuantity());
+            Product tempProduct = inventory.get(product.getName());
+            Product updatedProduct = new Product(product.getName(),
+                    product.getDescription() != null ? product.getDescription() : tempProduct.getDescription(),
+                    product.getPrice() != null ? product.getPrice() : tempProduct.getPrice(),
+                    product.getQuantity() != null ? product.getQuantity() : tempProduct.getQuantity());
 
             inventory.put(updatedProduct.getName(), updatedProduct);
             saveInventory();

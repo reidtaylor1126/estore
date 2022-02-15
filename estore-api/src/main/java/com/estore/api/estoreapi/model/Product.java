@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {
 
     static final String STRING_FORMAT = "Product [name=%s, description=%s, price=%f, quantity=%d]";
@@ -18,14 +18,14 @@ public class Product {
     private String description;
 
     @JsonProperty("price")
-    private double price;
+    private Double price;
 
     @JsonProperty("quantity")
-    private int quantity;
+    private Integer quantity;
 
     public Product(@NotNull @JsonProperty("name") String name,
-            @JsonProperty("description") String description, @JsonProperty("price") double price,
-            @JsonProperty("quantity") int quantity) {
+            @JsonProperty("description") String description, @JsonProperty("price") Double price,
+            @JsonProperty("quantity") Integer quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -56,14 +56,14 @@ public class Product {
     /**
      * @return the price
      */
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
     /**
      * @return the quantity
      */
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
