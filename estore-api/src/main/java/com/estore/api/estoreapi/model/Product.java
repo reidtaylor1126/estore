@@ -2,8 +2,10 @@ package com.estore.api.estoreapi.model;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class Product {
 
     static final String STRING_FORMAT = "Product [name=%s, description=%s, price=%f, quantity=%d]";
