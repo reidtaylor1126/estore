@@ -1,0 +1,12 @@
+<div class="product">
+    <img src="assets/img/placeholder.jpg" alt="" height="200" width="200" />
+    <div class="product-info">
+        <h3 class="name">{{ product?.name }}</h3>
+        <p *ngIf="product?.description" class="description">
+            {{ product?.description }}
+        </p>
+        <p *ngIf="product?.price" class="price">
+            ${{ product?.price | number: "1.2-2" }}
+        </p>
+    </div>
+</div>
