@@ -25,9 +25,15 @@
 <div [ngClass]="navOpen ? 'navbar active' : 'navbar'">
     <div></div>
     <ul>
-        <li><a href="#">Item1</a></li>
-        <li><a href="#">Item2</a></li>
-        <li><a href="#">Item3</a></li>
-        <li><a href="#">Item4</a></li>
+        <li><a (click)="toggleNav(false)" routerLink="/">Home</a></li>
+        <li>
+            <a (click)="toggleNav(false)" routerLink="/products">View Items</a>
+        </li>
+        <li><a (click)="toggleNav(false)" routerLink="/search">Search</a></li>
+        <li>
+            <a (click)="toggleNav(false)" routerLink="/inventory"
+                >Manage Inventory</a
+            >
+        </li>
     </ul>
 </div>
