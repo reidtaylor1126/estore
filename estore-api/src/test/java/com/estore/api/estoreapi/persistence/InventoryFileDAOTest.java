@@ -51,10 +51,14 @@ public class InventoryFileDAOTest {
     @Test
     public void testDuplicates() throws IOException {
         Product product = new Product("test4", "testdes", 1.0, 1);
+        Product product2 = new Product("test4dasfsdfasda", "testdes", 1.0, 1);
 
         inventoryFileDAO.createProduct(product);
         assertThrows(IllegalArgumentException.class,
                 (() -> inventoryFileDAO.createProduct(product)), "Unexpected exception thrown");
+
+        assertThrows(IllegalArgumentException.class,
+                (() -> inventoryFileDAO.updateProduct(product2)), "Unexpected exception thrown");
     }
 
     @Test
