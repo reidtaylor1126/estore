@@ -39,6 +39,33 @@ public class InventoryControllerTest {
     }
 
     @Test
+    public void testUpdateProduct() throws IOException {
+        Product product = new Product("test", "testdes", 1.0, 1);
+
+        when(mockInventoryDAO.updateProduct(product)).thenReturn(product);
+
+        ResponseEntity<Product> response = inventoryController.updateProduct(product);
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody(), product);
+    }
+
+    @Test
+    public void testGetInventory() throws IOException {
+        Product[] products = new Product[3];
+        products[0] = new Product("test", "testdes", 1.0, 1);
+        products[1] = new Product("test1", "test2des", 1.0, 1);
+        products[2] = new Product("test2", "test3des", 1.0, 1);
+
+        when(mockInventoryDAO.getInventory()).thenReturn(products);
+
+        ResponseEntity<Product[]> response = inventoryController.getInventory();
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody(), products);
+    }
+
+    @Test
     public void testDuplicates() throws IOException {
         Product product = new Product("test", "testdes", 1.0, 1);
 
