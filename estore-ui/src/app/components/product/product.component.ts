@@ -12,4 +12,11 @@ export class ProductComponent implements OnInit {
     @Input() product?: Product;
 
     ngOnInit(): void {}
+
+    inStock(): boolean {
+        return (
+            typeof this.product?.quantity != 'undefined' &&
+            this.product.quantity > 0
+        );
+    }
 }
