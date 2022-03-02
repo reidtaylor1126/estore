@@ -45,7 +45,9 @@ public class InventoryControllerTest {
         when(mockInventoryDAO.updateProduct(product)).thenReturn(product);
 
         ResponseEntity<Product> response = inventoryController.updateProduct(product);
-
+        when(mockInventoryDAO.updateProduct(product)).thenThrow(new IllegalArgumentException());
+        ResponseEntity<Product> response2 = inventoryController.updateProduct(product);
+        assertEquals(response2.getStatusCode(), HttpStatus.NOT_FOUND);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
         assertEquals(response.getBody(), product);
     }
@@ -81,9 +83,15 @@ public class InventoryControllerTest {
         Product product = new Product("test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.createProduct(product)).thenThrow(new IOException());
+        when(mockInventoryDAO.updateProduct(product)).thenThrow(new IOException());
+        when(mockInventoryDAO.getInventory()).thenThrow(new IOException());
 
         ResponseEntity<Product> response = inventoryController.createProduct(product);
+        ResponseEntity<Product> response2 = inventoryController.updateProduct(product);
+        ResponseEntity<Product[]> response3 = inventoryController.getInventory();
 
         assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+        assertEquals(response2.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+        assertEquals(response3.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
