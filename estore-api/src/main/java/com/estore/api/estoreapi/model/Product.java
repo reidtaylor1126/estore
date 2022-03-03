@@ -1,16 +1,17 @@
 package com.estore.api.estoreapi.model;
 
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {
 
-    static final String STRING_FORMAT = "Product [name=%s, description=%s, price=%f, quantity=%d]";
+    static final String STRING_FORMAT =
+            "Product [id=%s, name=%s, description=%s, price=%f, quantity=%d]";
 
-    @NotNull
+    @JsonProperty("id")
+    private Integer id;
+
     @JsonProperty("name")
     private String name;
 
@@ -23,13 +24,21 @@ public class Product {
     @JsonProperty("quantity")
     private Integer quantity;
 
-    public Product(@NotNull @JsonProperty("name") String name,
+    public Product(@JsonProperty("id") Integer id, @JsonProperty("name") String name,
             @JsonProperty("description") String description, @JsonProperty("price") Double price,
             @JsonProperty("quantity") Integer quantity) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
     }
 
     /**
@@ -69,6 +78,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return String.format(STRING_FORMAT, name, description, price, quantity);
+        return String.format(STRING_FORMAT, id, name, description, price, quantity);
     }
 }

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.validation.Valid;
 
 import com.estore.api.estoreapi.model.Product;
 import com.estore.api.estoreapi.persistence.InventoryDAO;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/api/inventory")
 public class InventoryController {
     private static final Logger LOG = Logger.getLogger(InventoryController.class.getName());
     private InventoryDAO inventoryDAO;
@@ -44,9 +43,9 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/product")
+    @GetMapping(value = "", params = "q")
     public ResponseEntity<Product[]> searchProduct(@RequestParam String q) {
-        LOG.info("GET /inventory/product?q=" + q);
+        LOG.info("GET /inventory?q=" + q);
         try {
             Product[] products = inventoryDAO.searchProducts(q);
             return new ResponseEntity<>(products, HttpStatus.OK);
@@ -57,8 +56,11 @@ public class InventoryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         LOG.info("POST /inventory " + product);
+        if (product.getName() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             Product newProduct = inventoryDAO.createProduct(product);
             return new ResponseEntity<Product>(newProduct, HttpStatus.CREATED);
@@ -71,11 +73,11 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/product/{name}")
-    public ResponseEntity<Product> getProduct(@PathVariable String name) {
-        LOG.info("GET /product/" + name);
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable Integer id) {
+        LOG.info("GET /product/" + id);
         try {
-            Product product = inventoryDAO.getProduct(name);
+            Product product = inventoryDAO.getProduct(id);
             if (product != null)
                 return new ResponseEntity<Product>(product, HttpStatus.OK);
             else
@@ -86,9 +88,12 @@ public class InventoryController {
     }
 
     @PutMapping("")
-    public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
         LOG.info("PUT /inventory " + product);
 
+        if (product.getId() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             Product updatedProduct = inventoryDAO.updateProduct(product);
             return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
@@ -100,12 +105,12 @@ public class InventoryController {
         }
     }
 
-    @DeleteMapping("/product/{name}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable String name) {
-        LOG.info("DELETE /inventory/product" + name);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable Integer id) {
+        LOG.info("DELETE /inventory/product" + id);
 
         try {
-            boolean success = inventoryDAO.deleteProduct(name);
+            boolean success = inventoryDAO.deleteProduct(id);
             if (success)
                 return new ResponseEntity<>(HttpStatus.OK);
             else

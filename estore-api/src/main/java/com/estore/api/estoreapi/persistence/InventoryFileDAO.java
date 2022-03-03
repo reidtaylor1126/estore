@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.validation.Valid;
 
 import com.estore.api.estoreapi.model.Product;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -21,7 +20,7 @@ public class InventoryFileDAO implements InventoryDAO {
     /**
      * The current inventory.
      */
-    private Map<String, Product> inventory;
+    private Map<Integer, Product> inventory;
 
     /**
      * The file name of the inventory file.
@@ -34,35 +33,59 @@ public class InventoryFileDAO implements InventoryDAO {
 
     private ObjectMapper objectMapper;
 
-    public InventoryFileDAO(@Value("${inventory.filename}") String filename, ObjectMapper objectMapper)
-            throws IOException {
+    /**
+     * The next id to assign to a product.
+     */
+    private int nextId;
+
+    /**
+     * Constructor.
+     *
+     * @param filename the file name of the inventory file
+     */
+
+    public InventoryFileDAO(@Value("${inventory.filename}") String filename,
+            ObjectMapper objectMapper) throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
         loadInventory();
     }
 
+    private synchronized int nextId() {
+        return nextId++;
+    }
+
+    /**
+     * Gets the inventory.
+     */
+
     private ArrayList<Product> getInventoryArray() {
         return new ArrayList<>(inventory.values());
     }
 
+    /**
+     * Creates a new product.
+     */
     @Override
-    public Product createProduct(@Valid Product product) throws IOException,
-            IllegalArgumentException {
+    public Product createProduct(Product product) throws IOException, IllegalArgumentException {
         synchronized (inventory) {
-            Product newProduct = new Product(product.getName(),
-                    product.getDescription(), product.getPrice(),
-                    product.getQuantity());
+            Product newProduct = new Product(nextId(), product.getName(), product.getDescription(),
+                    product.getPrice(), product.getQuantity());
 
-            if (inventory.containsKey(newProduct.getName())) {
-                throw new IllegalArgumentException("Product with name " +
-                        newProduct.getName() + " already exists");
+            if (inventory.values().stream()
+                    .anyMatch(p -> p.getName().equals(newProduct.getName()))) {
+                throw new IllegalArgumentException("Product name must be unique");
             }
-            inventory.put(newProduct.getName(), newProduct);
+
+            inventory.put(newProduct.getId(), newProduct);
             saveInventory();
             return newProduct;
         }
     }
 
+    /**
+     * Searches for a product by name.
+     */
     @Override
     public Product[] searchProducts(String searchTerms) {
         if (searchTerms.length() == 0)
@@ -78,64 +101,88 @@ public class InventoryFileDAO implements InventoryDAO {
         return products.toArray(new Product[0]);
     }
 
+    /**
+     * Gets the entire inventory.
+     */
     public Product[] getInventory() {
-        ArrayList<Product> products = new ArrayList<>();
-
-        for (Product product : inventory.values())
-            products.add(product);
-
-        Product[] pArray = new Product[products.size()];
-        pArray = products.toArray(pArray);
-
-        return pArray;
+        return getInventoryArray().toArray(new Product[0]);
     }
 
+
+    /**
+     * Gets a product by id.
+     */
     @Override
-    public Product getProduct(String name) {
+    public Product getProduct(Integer id) {
         synchronized (inventory) {
-            Product tempProduct = inventory.get(name);
+            Product tempProduct = inventory.get(id);
             return tempProduct;
         }
     }
 
+    /**
+     * Updates a product.
+     */
     @Override
     public Product updateProduct(Product product) throws IOException, IllegalArgumentException {
         synchronized (inventory) {
-            if (!inventory.containsKey(product.getName())) {
-                throw new IllegalArgumentException("Product with name " +
-                        product.getName() + " does not exist");
+            if (!inventory.containsKey(product.getId())) {
+                throw new IllegalArgumentException(
+                        "Product with name " + product.getName() + " does not exist");
             }
-            Product tempProduct = inventory.get(product.getName());
-            Product updatedProduct = new Product(product.getName(),
-                    product.getDescription() != null ? product.getDescription() : tempProduct.getDescription(),
-                    product.getPrice() != null ? product.getPrice() : tempProduct.getPrice(),
-                    product.getQuantity() != null ? product.getQuantity() : tempProduct.getQuantity());
 
-            inventory.put(updatedProduct.getName(), updatedProduct);
+            // Grab the copy in the inventory
+            Product tempProduct = inventory.get(product.getId());
+
+            // Make sure there are no duplicate names
+            String name = product.getName();
+            if (inventory.values().stream().anyMatch(p -> p.getName().equals(product.getName()))) {
+                name = tempProduct.getName();
+            }
+
+            // Update the product
+            Product updatedProduct = new Product(product.getId(), name,
+                    product.getDescription() != null ? product.getDescription()
+                            : tempProduct.getDescription(),
+                    product.getPrice() != null ? product.getPrice() : tempProduct.getPrice(),
+                    product.getQuantity() != null ? product.getQuantity()
+                            : tempProduct.getQuantity());
+
+            // Update the inventory
+            inventory.put(updatedProduct.getId(), updatedProduct);
             saveInventory();
             return updatedProduct;
         }
     }
 
+    /**
+     * Save the inventory to the file.
+     */
     private void saveInventory() throws IOException {
         objectMapper.writeValue(new File(filename), getInventoryArray());
     }
 
+    /**
+     * Load the inventory from the file.
+     */
     private void loadInventory() throws IOException {
         inventory = new TreeMap<>();
         Product[] inventoryArray = objectMapper.readValue(new File(filename), Product[].class);
         for (Product product : inventoryArray) {
-            inventory.put(product.getName(), product);
+            inventory.put(product.getId(), product);
         }
     }
 
+    /**
+     * Deletes a product.
+     */
     @Override
-    public boolean deleteProduct(String name) throws IOException {
+    public boolean deleteProduct(Integer id) throws IOException {
         boolean success = true;
 
         synchronized (inventory) {
-            if (inventory.containsKey(name)) {
-                inventory.remove(name);
+            if (inventory.containsKey(id)) {
+                inventory.remove(id);
                 saveInventory();
             } else {
                 success = false;

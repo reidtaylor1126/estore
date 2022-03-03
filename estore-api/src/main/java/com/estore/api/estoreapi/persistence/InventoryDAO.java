@@ -14,11 +14,11 @@ public interface InventoryDAO {
 
     public Product[] searchProducts(String searchTerms) throws IOException;
 
-    public Product getProduct(String name);
+    public Product getProduct(Integer id);
 
     public Product updateProduct(Product product) throws IOException;
 
     public Product[] getInventory() throws IOException;
 
-    public boolean deleteProduct(String name) throws IOException;
+    public boolean deleteProduct(Integer id) throws IOException;
 }
