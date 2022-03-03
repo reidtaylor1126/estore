@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Product } from 'src/app/types/Product';
 
 @Component({
@@ -7,7 +8,7 @@ import { Product } from 'src/app/types/Product';
     styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
-    constructor() {}
+    constructor(private router: Router) {}
 
     @Input() product?: Product;
 
@@ -18,5 +19,15 @@ export class ProductComponent implements OnInit {
             typeof this.product?.quantity != 'undefined' &&
             this.product.quantity > 0
         );
+    }
+
+    navigate() {
+        this.router.navigate([`/products/${this.product?.name}`]);
+    }
+
+    addToCart(event: MouseEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        //TODO add to cart
     }
 }

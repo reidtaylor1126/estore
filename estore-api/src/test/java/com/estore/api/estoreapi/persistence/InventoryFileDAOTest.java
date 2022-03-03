@@ -80,4 +80,44 @@ public class InventoryFileDAOTest {
         assertNotNull(result);
         assertEquals(result.length, testProducts.length);
     }
+
+    @Test
+    public void testDeleteProduct() throws IOException {
+        boolean result = assertDoesNotThrow(() -> inventoryFileDAO.deleteProduct("test"),
+                "Unexpected exception thrown");
+
+        assertEquals(result, true);
+
+        assertEquals(inventoryFileDAO.getInventory().length, testProducts.length - 1);
+
+    }
+
+    @Test
+    public void testDeleteProductNotFound() {
+        boolean result = assertDoesNotThrow(() -> inventoryFileDAO.deleteProduct("xxtestxx"),
+                "Unexpected exception thrown");
+
+        assertEquals(result, false);
+        assertEquals(inventoryFileDAO.getInventory().length, testProducts.length);
+    }
+
+    @Test
+    public void testGetProduct() {
+        Product product1 = inventoryFileDAO.getProduct("test");
+        Product product2 = inventoryFileDAO.getProduct("test2");
+        Product product3 = inventoryFileDAO.getProduct("test5");
+
+        assertEquals(product1, testProducts[0]);
+        assertEquals(product2, testProducts[2]);
+        assertEquals(product3, null);
+    }
+
+    @Test
+    public void testSearchProduct() throws IOException {
+        String searchTerms = "1";
+
+        Product[] products = inventoryFileDAO.searchProducts(searchTerms);
+
+        assertEquals(testProducts[1], products[0]);
+    }
 }

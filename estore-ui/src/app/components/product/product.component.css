@@ -1,15 +1,18 @@
 .product {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 15px;
     border-radius: 20px;
     border: 2px solid #1e293b;
-    margin: 15px;
     width: 100%;
+    transform: scale(1);
+    transition: transform 0.2s ease-in-out;
 }
 
 .product:hover {
+    transform: scale(1.05);
 }
 
 .product img {

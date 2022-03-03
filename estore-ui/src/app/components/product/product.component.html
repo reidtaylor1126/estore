@@ -1,4 +1,4 @@
-<div [routerLink]="'/products/' + product?.name" class="product">
+<div (click)="navigate()" class="product">
     <img
         src="https://source.unsplash.com/500x500?cards"
         alt=""
@@ -12,7 +12,7 @@
                 ${{ product?.price | number: "1.2-2" }}
             </p>
         </div>
-        <button [disabled]="!inStock()">
+        <button (click)="addToCart($event)" [disabled]="!inStock()">
             {{ inStock() ? "Add to Cart" : "Sold Out" }}
         </button>
     </div>
