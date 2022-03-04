@@ -21,15 +21,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * @author Ryan Yocum
+ * @author Nate Appleby
+ * @author Reid Taylor
+ * @author Clay Rankin
+ * 
+ *         Controller for the Inventory API
+ */
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryController {
     private static final Logger LOG = Logger.getLogger(InventoryController.class.getName());
     private InventoryDAO inventoryDAO;
 
+    /**
+     * Constructor.
+     *
+     * @param inventoryDAO the inventory DAO
+     */
     public InventoryController(InventoryDAO productDAO) {
         this.inventoryDAO = productDAO;
     }
+
 
     @GetMapping("")
     public ResponseEntity<Product[]> getInventory() {
@@ -43,6 +57,12 @@ public class InventoryController {
         }
     }
 
+    /**
+     * Searches for a product by name.
+     * 
+     * @param q the query
+     * @return the product
+     */
     @GetMapping(value = "", params = "q")
     public ResponseEntity<Product[]> searchProduct(@RequestParam String q) {
         LOG.info("GET /inventory?q=" + q);
@@ -55,6 +75,12 @@ public class InventoryController {
         }
     }
 
+    /**
+     * Creates a new product.
+     * 
+     * @param product the product to create
+     * @return the created product
+     */
     @PostMapping("")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         LOG.info("POST /inventory " + product);
@@ -73,9 +99,15 @@ public class InventoryController {
         }
     }
 
+    /**
+     * Gets a product by id.
+     *
+     * @param id the id of the product
+     * @return the product
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer id) {
-        LOG.info("GET /product/" + id);
+        LOG.info("GET /inventory/" + id);
         try {
             Product product = inventoryDAO.getProduct(id);
             if (product != null)
@@ -84,9 +116,19 @@ public class InventoryController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * Updates a product.
+     *
+     * @param id the id of the product
+     * @param product the product to update
+     * @return the updated product
+     */
     @PutMapping("")
     public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
         LOG.info("PUT /inventory " + product);
@@ -105,9 +147,15 @@ public class InventoryController {
         }
     }
 
+    /**
+     * Deletes a product.
+     *
+     * @param id the id of the product
+     * @return the deleted product
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Integer id) {
-        LOG.info("DELETE /inventory/product" + id);
+        LOG.info("DELETE /inventory/" + id);
 
         try {
             boolean success = inventoryDAO.deleteProduct(id);
