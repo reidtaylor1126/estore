@@ -14,6 +14,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Ryan Yocum
+ * @author Nate Appleby
+ * @author Reid Taylor
+ * @author Clay Rankin
+ * 
+ *         The InventoryFileDAO class represents the persistence layer for the inventory.
+ */
 @Component
 public class InventoryFileDAO implements InventoryDAO {
 
@@ -51,6 +59,11 @@ public class InventoryFileDAO implements InventoryDAO {
         loadInventory();
     }
 
+    /**
+     * Gets the next id to assign to a product.
+     * 
+     * @return the next id to assign to a product
+     */
     private synchronized int nextId() {
         return nextId++;
     }
@@ -72,6 +85,7 @@ public class InventoryFileDAO implements InventoryDAO {
             Product newProduct = new Product(nextId(), product.getName(), product.getDescription(),
                     product.getPrice(), product.getQuantity());
 
+            // Checks if the name is unique
             if (inventory.values().stream()
                     .anyMatch(p -> p.getName().equals(newProduct.getName()))) {
                 throw new IllegalArgumentException("Product name must be unique");
@@ -122,6 +136,8 @@ public class InventoryFileDAO implements InventoryDAO {
 
     /**
      * Updates a product.
+     * 
+     * @return the updated product
      */
     @Override
     public Product updateProduct(Product product) throws IOException, IllegalArgumentException {
@@ -175,21 +191,21 @@ public class InventoryFileDAO implements InventoryDAO {
 
     /**
      * Deletes a product.
+     * 
+     * @return true if the product was deleted, false otherwise
      */
     @Override
     public boolean deleteProduct(Integer id) throws IOException {
-        boolean success = true;
 
         synchronized (inventory) {
             if (inventory.containsKey(id)) {
                 inventory.remove(id);
                 saveInventory();
             } else {
-                success = false;
-                return success;
+                return false;
             }
 
-            return success;
+            return true;
         }
     }
 }
