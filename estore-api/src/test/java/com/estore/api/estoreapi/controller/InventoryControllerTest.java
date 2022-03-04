@@ -29,7 +29,7 @@ public class InventoryControllerTest {
 
     @Test
     public void testCreateProduct() throws IOException {
-        Product product = new Product("test", "testdes", 1.0, 1);
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.createProduct(product)).thenReturn(product);
 
@@ -70,7 +70,7 @@ public class InventoryControllerTest {
 
     @Test
     public void testDuplicates() throws IOException {
-        Product product = new Product("test", "testdes", 1.0, 1);
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.createProduct(product)).thenThrow(new IllegalArgumentException());
 
@@ -81,7 +81,7 @@ public class InventoryControllerTest {
 
     @Test
     public void testError() throws IOException {
-        Product product = new Product("test", "testdes", 1.0, 1);
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.createProduct(product)).thenThrow(new IOException());
         when(mockInventoryDAO.updateProduct(product)).thenThrow(new IOException());
