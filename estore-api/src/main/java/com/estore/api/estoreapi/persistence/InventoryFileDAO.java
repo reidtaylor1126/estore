@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Stream;
+import java.util.List;
 
 
 import com.estore.api.estoreapi.model.Product;
@@ -85,9 +87,9 @@ public class InventoryFileDAO implements InventoryDAO {
             Product newProduct = new Product(nextId(), product.getName(), product.getDescription(),
                     product.getPrice(), product.getQuantity());
 
+
             // Checks if the name is unique
-            if (inventory.values().stream()
-                    .anyMatch(p -> p.getName().equals(newProduct.getName()))) {
+            if (!checkDuplicateName(newProduct.getName())) {
                 throw new IllegalArgumentException("Product name must be unique");
             }
 
@@ -152,7 +154,7 @@ public class InventoryFileDAO implements InventoryDAO {
 
             // Make sure there are no duplicate names
             String name = product.getName();
-            if (inventory.values().stream().anyMatch(p -> p.getName().equals(product.getName()))) {
+            if (!checkDuplicateName(name)) {
                 name = tempProduct.getName();
             }
 
@@ -207,5 +209,16 @@ public class InventoryFileDAO implements InventoryDAO {
 
             return true;
         }
+    }
+
+    /**
+     * Checks if the name is unique.
+     * 
+     * @return true if the name is unique, false otherwise
+     */
+    private boolean checkDuplicateName(String name) {
+        List<Product> inventory = getInventoryArray();
+        Stream<Product> inventoryStream = inventory.stream();
+        return !inventoryStream.anyMatch(p -> p.getName().equals(name));
     }
 }
