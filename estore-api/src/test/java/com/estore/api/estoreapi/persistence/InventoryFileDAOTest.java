@@ -45,27 +45,32 @@ public class InventoryFileDAOTest {
                 assertNotNull(result);
                 Product actual = inventoryFileDAO.getProduct(result.getId());
                 assertEquals(actual.getName(), product.getName());
+                assertEquals(actual.getName(), product.getName());
         }
 
         @Test
         public void testDuplicates() throws IOException {
-                Product product = new Product("test4", "testdes", 1.0, 1);
-                Product product2 = new Product("test4dasfsdfasda", "testdes", 1.0, 1);
+                Product product = new Product(4, "test4", "testdes", 1.0, 1);
+                Product product2 = new Product(45, "test4dasfsdfasda", "testdes", 1.0, 1);
 
                 inventoryFileDAO.createProduct(product);
                 assertThrows(IllegalArgumentException.class,
                                 (() -> inventoryFileDAO.createProduct(product)),
                                 "Unexpected exception thrown");
+
+                assertThrows(IllegalArgumentException.class,
+                                (() -> inventoryFileDAO.updateProduct(product2)),
+                                "Unexpected exception thrown");
         }
 
         @Test
         public void testUpdateProduct() {
-                Product product = new Product("test", "testdes", 1.0, 1);
+                Product product = new Product(1, "test", "testdes", 1.0, 1);
 
                 Product result = assertDoesNotThrow((() -> inventoryFileDAO.updateProduct(product)),
                                 "Unexpected exception thrown");
                 assertNotNull(result);
-                Product actual = inventoryFileDAO.getProduct(product.getName());
+                Product actual = inventoryFileDAO.getProduct(product.getId());
                 assertEquals(actual.getName(), product.getName());
                 assertEquals(actual.getName(), product.getName());
         }
@@ -80,7 +85,7 @@ public class InventoryFileDAOTest {
 
         @Test
         public void testDeleteProduct() throws IOException {
-                boolean result = assertDoesNotThrow(() -> inventoryFileDAO.deleteProduct("test"),
+                boolean result = assertDoesNotThrow(() -> inventoryFileDAO.deleteProduct(1),
                                 "Unexpected exception thrown");
 
                 assertEquals(result, true);
@@ -91,8 +96,7 @@ public class InventoryFileDAOTest {
 
         @Test
         public void testDeleteProductNotFound() {
-                boolean result = assertDoesNotThrow(
-                                () -> inventoryFileDAO.deleteProduct("xxtestxx"),
+                boolean result = assertDoesNotThrow(() -> inventoryFileDAO.deleteProduct(450),
                                 "Unexpected exception thrown");
 
                 assertEquals(result, false);
@@ -101,9 +105,9 @@ public class InventoryFileDAOTest {
 
         @Test
         public void testGetProduct() {
-                Product product1 = inventoryFileDAO.getProduct("test");
-                Product product2 = inventoryFileDAO.getProduct("test2");
-                Product product3 = inventoryFileDAO.getProduct("test5");
+                Product product1 = inventoryFileDAO.getProduct(1);
+                Product product2 = inventoryFileDAO.getProduct(3);
+                Product product3 = inventoryFileDAO.getProduct(560);
 
                 assertEquals(product1, testProducts[0]);
                 assertEquals(product2, testProducts[2]);
