@@ -1,0 +1,30 @@
+<div class="product-detail">
+    <div class="image-pane">
+        <img [src]="getImage()">
+    </div>
+
+    <div class="detail">
+        <h1 class="product-name">{{product.name}}</h1>
+        <h2 *ngIf="!isEditing()" class="product-price">${{product.price | number: "1.2-2"}}</h2>
+        <div *ngIf="isEditing()" class="price-edit-container">
+            <p class="price-edit-sign">$</p>
+            <input class="price-edit" [(ngModel)]="product.price" type="number">
+        </div>
+        <!-- Angular protects against XSS so the innerHtml here is safe. -->
+        <div *ngIf="!isEditing()" class="description" [innerHtml]="product.description"></div>
+        <h3 *ngIf="isEditing()">Edit Description</h3>
+        <textarea *ngIf="isEditing()" id="description-edit" class="description-edit" [(ngModel)]="product.description"></textarea>
+        <div class="options">
+            <div>
+                <label for="quantity">Quantity: </label>
+                <input *ngIf="!isEditing()" id="quantity" type="number" min="1" step="1" [(ngModel)]="localQuantity" placeholder=1>
+                <input *ngIf="isEditing()" id="quantity" type="number" min="0" step="1" [(ngModel)]="product.quantity" placeholder=0>
+            </div>
+            <div>
+                <button *ngIf="!isEditing()" (click)="addToCart($event)" [disabled]="!inStock()">
+                    {{ inStock() ? "Add to Cart" : "Sold Out" }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
