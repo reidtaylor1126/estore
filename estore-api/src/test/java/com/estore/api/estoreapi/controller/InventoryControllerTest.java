@@ -41,7 +41,7 @@ public class InventoryControllerTest {
 
     @Test
     public void testUpdateProduct() throws IOException {
-        Product product = new Product("test", "testdes", 1.0, 1);
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.updateProduct(product)).thenReturn(product);
 
@@ -56,9 +56,9 @@ public class InventoryControllerTest {
     @Test
     public void testGetInventory() throws IOException {
         Product[] products = new Product[3];
-        products[0] = new Product("test", "testdes", 1.0, 1);
-        products[1] = new Product("test1", "test2des", 1.0, 1);
-        products[2] = new Product("test2", "test3des", 1.0, 1);
+        products[0] = new Product(1, "test", "testdes", 1.0, 1);
+        products[1] = new Product(2, "test1", "test2des", 1.0, 1);
+        products[2] = new Product(3, "test2", "test3des", 1.0, 1);
 
         when(mockInventoryDAO.getInventory()).thenReturn(products);
 
@@ -98,51 +98,51 @@ public class InventoryControllerTest {
 
     @Test
     public void testDeleteProduct() throws IOException {
-        String productName = "test";
+        int id = 1;
 
-        when(mockInventoryDAO.deleteProduct(productName)).thenReturn(true);
+        when(mockInventoryDAO.deleteProduct(id)).thenReturn(true);
 
-        ResponseEntity<Product> response = inventoryController.deleteProduct(productName);
+        ResponseEntity<Product> response = inventoryController.deleteProduct(id);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     public void testDeleteProductNotFound() throws IOException {
-        String productName = "test";
+        int id = 1;
 
-        when(mockInventoryDAO.deleteProduct(productName)).thenReturn(false);
+        when(mockInventoryDAO.deleteProduct(id)).thenReturn(false);
 
-        ResponseEntity<Product> response = inventoryController.deleteProduct(productName);
+        ResponseEntity<Product> response = inventoryController.deleteProduct(id);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     public void testDeleteProductHandleException() throws IOException {
-        String productName = "test";
+        int id = 1;
 
-        when(mockInventoryDAO.deleteProduct(productName)).thenThrow(new IOException());
+        when(mockInventoryDAO.deleteProduct(id)).thenThrow(new IOException());
 
-        ResponseEntity<Product> response = inventoryController.deleteProduct(productName);
+        ResponseEntity<Product> response = inventoryController.deleteProduct(id);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
     public void testGetProduct() throws IOException {
-        Product product1 = new Product("test", "description", 1.0, 1);
-        Product product2 = new Product("test2", "description", 1.0, 1);
-        Product product3 = new Product("test3", "description", 1.0, 1);
+        Product product1 = new Product(1, "test", "description", 1.0, 1);
+        Product product2 = new Product(2, "test2", "description", 1.0, 1);
+        Product product3 = new Product(3, "test3", "description", 1.0, 1);
 
-        when(mockInventoryDAO.getProduct(product1.getName())).thenReturn(product1);
+        when(mockInventoryDAO.getProduct(1)).thenReturn(product1);
 
-        ResponseEntity<Product> response1 = inventoryController.getProduct(product1.getName());
-        when(mockInventoryDAO.getProduct(product2.getName())).thenReturn(null);
-        ResponseEntity<Product> response2 = inventoryController.getProduct(product2.getName());
-        when(mockInventoryDAO.getProduct(product3.getName()))
+        ResponseEntity<Product> response1 = inventoryController.getProduct(2);
+        when(mockInventoryDAO.getProduct(2)).thenReturn(null);
+        ResponseEntity<Product> response2 = inventoryController.getProduct(2);
+        when(mockInventoryDAO.getProduct(3))
                 .thenThrow(new IllegalArgumentException());
-        ResponseEntity<Product> response3 = inventoryController.getProduct(product3.getName());
+        ResponseEntity<Product> response3 = inventoryController.getProduct(3);
 
         assertEquals(HttpStatus.OK, response1.getStatusCode());
         assertEquals(product1, response1.getBody());
@@ -153,8 +153,8 @@ public class InventoryControllerTest {
     @Test
     public void testSearchProduct() throws IOException {
         String searchTerm = "1";
-        Product[] products = {new Product("test1", "test desc 1", 10.0, 1),
-                new Product("test10", "test desc 10", 7.0, 6),};
+        Product[] products = {new Product(1, "test1", "test desc 1", 10.0, 1),
+                new Product(10, "test10", "test desc 10", 7.0, 6),};
 
         when(mockInventoryDAO.searchProducts(searchTerm)).thenReturn(products);
 
