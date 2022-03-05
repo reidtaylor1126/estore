@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CartService } from 'src/app/services/cart/cart.service';
-import { ProductService } from 'src/app/services/product/product.service';
+import { InventoryService } from 'src/app/services/inventory/inventory.service';
 import { Product } from 'src/app/types/Product';
 
 @Component({
@@ -22,12 +22,12 @@ export class ProductDetailComponent implements OnInit {
   private userIsAdmin: boolean = false;
 
   private name: string = "";
-  constructor(private route: ActivatedRoute, private productService: ProductService, private cartService: CartService) {
+  constructor(private route: ActivatedRoute, private inventoryService: InventoryService, private cartService: CartService) {
     this.name = String(this.route.snapshot.paramMap.get('name'));
   }
 
   ngOnInit(): void {
-    this.productService.getProduct(this.name).subscribe((value) => {
+    this.inventoryService.getProduct(this.name).subscribe((value) => {
       var tempQuantity = this.product.quantity != 1 ? this.product.quantity : 1;
       this.product = value;
       this.product.quantity = tempQuantity;
