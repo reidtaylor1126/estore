@@ -98,33 +98,33 @@ public class InventoryControllerTest {
 
     @Test
     public void testDeleteProduct() throws IOException {
-        int id = 1;
+        int productId = 1;
 
-        when(mockInventoryDAO.deleteProduct(id)).thenReturn(true);
+        when(mockInventoryDAO.deleteProduct(productId)).thenReturn(true);
 
-        ResponseEntity<Product> response = inventoryController.deleteProduct(id);
+        ResponseEntity<Product> response = inventoryController.deleteProduct(productId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     public void testDeleteProductNotFound() throws IOException {
-        int id = 1;
+        int productId = 1;
 
-        when(mockInventoryDAO.deleteProduct(id)).thenReturn(false);
+        when(mockInventoryDAO.deleteProduct(productId)).thenReturn(false);
 
-        ResponseEntity<Product> response = inventoryController.deleteProduct(id);
+        ResponseEntity<Product> response = inventoryController.deleteProduct(productId);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     public void testDeleteProductHandleException() throws IOException {
-        int id = 1;
+        int productId = 1;
 
-        when(mockInventoryDAO.deleteProduct(id)).thenThrow(new IOException());
+        when(mockInventoryDAO.deleteProduct(productId)).thenThrow(new IOException());
 
-        ResponseEntity<Product> response = inventoryController.deleteProduct(id);
+        ResponseEntity<Product> response = inventoryController.deleteProduct(productId);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
@@ -135,14 +135,14 @@ public class InventoryControllerTest {
         Product product2 = new Product(2, "test2", "description", 1.0, 1);
         Product product3 = new Product(3, "test3", "description", 1.0, 1);
 
-        when(mockInventoryDAO.getProduct(1)).thenReturn(product1);
+        when(mockInventoryDAO.getProduct(product1.getId())).thenReturn(product1);
 
-        ResponseEntity<Product> response1 = inventoryController.getProduct(2);
-        when(mockInventoryDAO.getProduct(2)).thenReturn(null);
-        ResponseEntity<Product> response2 = inventoryController.getProduct(2);
-        when(mockInventoryDAO.getProduct(3))
+        ResponseEntity<Product> response1 = inventoryController.getProduct(product1.getId());
+        when(mockInventoryDAO.getProduct(product2.getId())).thenReturn(null);
+        ResponseEntity<Product> response2 = inventoryController.getProduct(product2.getId());
+        when(mockInventoryDAO.getProduct(product3.getId()))
                 .thenThrow(new IllegalArgumentException());
-        ResponseEntity<Product> response3 = inventoryController.getProduct(3);
+        ResponseEntity<Product> response3 = inventoryController.getProduct(product3.getId());
 
         assertEquals(HttpStatus.OK, response1.getStatusCode());
         assertEquals(product1, response1.getBody());
