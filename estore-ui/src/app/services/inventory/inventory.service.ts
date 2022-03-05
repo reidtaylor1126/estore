@@ -12,4 +12,9 @@ export class InventoryService {
     getItems(): Observable<Product[]> {
         return this.httpClient.get<Product[]>('/inventory');
     }
+
+    getProduct(name: string): Observable<Product> {
+      console.log(`fetching product ${name}`);
+      return this.httpClient.get<Product>(`http://localhost:8080/inventory/product/${name}`);
+    }
 }
