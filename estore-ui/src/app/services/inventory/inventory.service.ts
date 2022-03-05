@@ -10,11 +10,14 @@ export class InventoryService {
     constructor(private httpClient: HttpClient) {}
 
     getItems(): Observable<Product[]> {
-        return this.httpClient.get<Product[]>('/inventory');
+        return this.httpClient.get<Product[]>('/api/inventory');
     }
 
-    getProduct(name: string): Observable<Product> {
-      console.log(`fetching product ${name}`);
-      return this.httpClient.get<Product>(`http://localhost:8080/inventory/product/${name}`);
+    getProduct(id: number): Observable<Product> {
+      return this.httpClient.get<Product>(`/api/inventory/${id}`);
+    }
+
+    updateProduct(product: Product): Observable<Product> {
+        return this.httpClient.put<Product>('/api/inventory', product);
     }
 }

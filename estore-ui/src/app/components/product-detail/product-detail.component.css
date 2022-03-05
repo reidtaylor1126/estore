@@ -32,6 +32,40 @@
     margin-bottom: 5px;
 }
 
+.title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-width: 150%;
+}
+
+.edit-button {
+    display: flex;
+    background-color: #ffffff00;
+    border: 2px solid #1e293b;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    padding: 0%;
+    align-items: center;
+    justify-content: center;
+    color: #1e293b;
+    margin-left: 20px;
+}
+
+.edit-button:hover {
+    background-color: #1e293b;
+    color: #fafafa;
+}
+
+.name-edit {
+    width: auto;
+    min-width: 50%;
+    font-weight: bold;
+    text-align: left;
+}
+
 .description {
     margin-left: 5px;
 }
@@ -55,7 +89,8 @@
 }
 
 .price-edit {
-    width: 50px;
+    min-width: 50px;
+    width: auto;
     margin-left: 10px;
     font-size: 1.75rem;
     text-align: center;
@@ -70,6 +105,7 @@
 
 .options {
     margin-top: 30px;
+    min-width: 150%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -81,7 +117,37 @@
     font-weight: bold;
 }
 
-.options input {
+.edit-controls {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 200%;
+}
+
+.save-edit {
+    background-color: #ffffff00;
+    border: 2px solid #479261;
+    color: #479261;
+    margin-left: 20px;
+}
+
+.save-edit:hover {
+    background-color: #479261;
+    color: #fafafa;
+}
+
+.cancel-edit {
+    background-color: #ffffff00;
+    border: 2px solid #e44540;
+    color: #e44540;
+    margin-left: 20px;
+}
+
+.cancel-edit:hover {
+    background-color: #e44540;
+    color: #fafafa;
+}
+
+input {
     width: 50px;
     margin-left: 10px;
     font-size: 1.75rem;
