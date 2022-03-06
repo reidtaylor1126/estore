@@ -48,10 +48,16 @@ export class ProductDetailComponent implements OnInit {
     this.leaveEditing();
   }
 
-  leaveEditing(): void {
-    this.editing = false;
-    this.inventoryService.getProduct(this.id);
+  cancelEdit(): void {
+    if(this.userIsAdmin) {
+      this.inventoryService.getProduct(this.id).subscribe((value) => {
+        this.product = value;
+      })
+    }
+    this.leaveEditing();
   }
+
+  leaveEditing = () => {this.editing = false}
 
   getImage(): string {
     return "https://source.unsplash.com/500x500?cards";

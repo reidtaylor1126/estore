@@ -20,4 +20,8 @@ export class InventoryService {
     updateProduct(product: Product): Observable<Product> {
         return this.httpClient.put<Product>('/api/inventory', product);
     }
+
+    deleteProduct(id: number): Observable<Product> {
+        return this.httpClient.delete<Product>(`/api/inventory/${id}`);
+    }
 }
