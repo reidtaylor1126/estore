@@ -43,5 +43,10 @@
                 Cancel
             </button>
         </div>
+        <div *ngIf="isEditing()" class="edit-controls">
+            <button class="delete-product" (click)="deleteProduct()">
+                Delete Product
+            </button>
+        </div>
     </div>
 </div>

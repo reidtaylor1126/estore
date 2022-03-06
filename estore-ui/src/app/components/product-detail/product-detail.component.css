@@ -137,12 +137,24 @@
 
 .cancel-edit {
     background-color: #ffffff00;
+    border: 2px solid #465772;
+    color: #465772;
+    margin-left: 20px;
+}
+
+.cancel-edit:hover {
+    background-color: #465772;
+    color: #1e293b;
+}
+
+.delete-product {
+    background-color: #ffffff00;
     border: 2px solid #e44540;
     color: #e44540;
     margin-left: 20px;
 }
 
-.cancel-edit:hover {
+.delete-product:hover {
     background-color: #e44540;
     color: #fafafa;
 }

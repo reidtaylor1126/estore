@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { InventoryService } from 'src/app/services/inventory/inventory.service';
 import { Product } from 'src/app/types/Product';
@@ -20,11 +20,11 @@ export class ProductDetailComponent implements OnInit {
 
   @Input() localQuantity: number = 1;
 
-  private userIsAdmin: boolean = true;
+  private userIsAdmin: boolean = true; // temporary, for testing until actual login is implemented
   private editing: boolean = false;
 
   private id: number = -1;
-  constructor(private route: ActivatedRoute, private inventoryService: InventoryService, private cartService: CartService) {
+  constructor(private route: ActivatedRoute, private router: Router, private inventoryService: InventoryService, private cartService: CartService) {
     this.id = parseInt(String(this.route.snapshot.paramMap.get('id')));
   }
 
@@ -58,6 +58,14 @@ export class ProductDetailComponent implements OnInit {
   }
 
   leaveEditing = () => {this.editing = false}
+
+  deleteProduct(): void {
+    if(this.userIsAdmin) {
+      this.inventoryService.deleteProduct(this.id).subscribe(() => {
+        this.router.navigateByUrl("/products");
+      })
+    }
+  }
 
   getImage(): string {
     return "https://source.unsplash.com/500x500?cards";
