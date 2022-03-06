@@ -45,5 +45,17 @@ public class UserFileDAO implements UserDAO{
         }
     }
 
+    public UserAccount loginUser(string username, string password) throws IOException {
+        UserAccount user = null;
+
+        if (users.containsKey(username)) {
+            user = users.get(username);
+
+            return user;
+        }
+
+        return user;
+    }
+
     // CRUD methods need implementation
 }
