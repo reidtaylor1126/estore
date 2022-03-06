@@ -1,5 +1,7 @@
 package com.estore.api.estoreapi.persistence;
 
 public interface UserDAO {
-    // Needs method headers
+
+    public UserAccount loginUser(string username, string password) throws IOException;
+
 }
