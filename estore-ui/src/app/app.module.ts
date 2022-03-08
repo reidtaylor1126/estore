@@ -8,6 +8,10 @@ import { ProductsComponent } from './components/products/products.component';
 import { ProductComponent } from './components/product/product.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
+import { AccountNavComponent } from './components/account-nav/account-nav.component';
+import { LoginComponent } from './components/login/login.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -16,8 +20,11 @@ import { HttpClientModule } from '@angular/common/http';
         ProductsComponent,
         ProductComponent,
         NotFoundComponent,
+        MobileNavComponent,
+        AccountNavComponent,
+        LoginComponent,
     ],
-    imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+    imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
     providers: [],
     bootstrap: [AppComponent],
 })
