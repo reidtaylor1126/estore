@@ -1,6 +1,7 @@
 package com.estore.api.estoreapi.persistence;
 
 import java.io.*;
+import java.net.http.HttpRequest;
 import java.util.*;
 
 import com.estore.api.estoreapi.model.UserAccount;
@@ -45,7 +46,7 @@ public class UserFileDAO implements UserDAO{
         }
     }
 
-    public UserAccount loginUser(string username, string password) throws IOException {
+    public UserAccount loginUser(String username, String password) {
         UserAccount user = null;
 
         if (users.containsKey(username)) {

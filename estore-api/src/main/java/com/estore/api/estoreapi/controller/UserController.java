@@ -33,12 +33,12 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<Product[]> searchProduct(@RequestParam String q) {
+    public ResponseEntity<UserAccount> loginUser(@RequestParam String q) {
         LOG.info("GET /users/user?q=" + q);
         try {
-            User user = userDAO.loginUser(q);
+            UserAccount user = userDAO.loginUser(q);
             if (user != null) {
-                return new ResponseEntity<User>(user, HttpStatus.OK);
+                return new ResponseEntity<UserAccount>(user, HttpStatus.OK);
             }
             else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
