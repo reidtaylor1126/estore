@@ -10,6 +10,10 @@ export class InventoryService {
     constructor(private httpClient: HttpClient) {}
 
     getItems(): Observable<Product[]> {
-        return this.httpClient.get<Product[]>('/inventory');
+        return this.httpClient.get<Product[]>('/api/inventory');
+    }
+
+    searchItems(query: string): Observable<Product[]> {
+        return this.httpClient.get<Product[]>(`/api/inventory?q=${query}`);
     }
 }
