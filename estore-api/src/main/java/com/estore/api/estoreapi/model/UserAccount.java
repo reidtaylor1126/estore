@@ -35,4 +35,8 @@ public class UserAccount {
     public String getUsername() {
         return this.username;
     }
+
+    public int getId() {
+        return this.id;
+    }
 }
