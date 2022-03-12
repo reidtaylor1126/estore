@@ -28,4 +28,16 @@ public class UserAccount {
     public int getId() {
         return this.id;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 }
