@@ -9,8 +9,10 @@ import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
+import com.estore.api.estoreapi.model.AccountNotFoundException;
 import com.estore.api.estoreapi.model.Cart;
-import com.estore.api.estoreapi.persistence.UserDAO;
+import com.estore.api.estoreapi.model.InvalidTokenException;
+import com.estore.api.estoreapi.persistence.CartDAO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +26,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/cart")
 public class CartController {
     private static final Logger LOG = Logger.getLogger(CartController.class.getName());
-    private UserDAO cartDAO;
+    
+    private CartDAO cartDAO;
 
-    public CartController(UserDAO cartDAO) {
+    public CartController(CartDAO cartDAO) {
         this.cartDAO = cartDAO;
     }
     
@@ -36,11 +39,13 @@ public class CartController {
         try {
             Cart cart = cartDAO.getCart(token);
             System.out.printf("Controller received cart: '%s'\n", cart);
-            if(cart == null) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            else return new ResponseEntity<Cart>(cart, HttpStatus.OK);
-        } catch(IOException ioe) {
-            LOG.log(Level.SEVERE, ioe.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Cart>(cart, HttpStatus.OK);
+        } catch(AccountNotFoundException anfe) {
+            LOG.log(Level.WARNING, anfe.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch(InvalidTokenException ite) {
+            LOG.log(Level.WARNING, ite.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -51,6 +56,12 @@ public class CartController {
             Cart newCart = cartDAO.updateCart(token, cart);
             if(newCart == null) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             else return new ResponseEntity<Cart>(newCart, HttpStatus.OK);
+        } catch(AccountNotFoundException anfe) {
+            LOG.log(Level.WARNING, anfe.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch(InvalidTokenException ite) {
+            LOG.log(Level.WARNING, ite.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch(IOException ioe) {
             LOG.log(Level.SEVERE, ioe.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,6 +75,12 @@ public class CartController {
             Cart newCart = cartDAO.clearCart(token);
             if(newCart == null) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             else return new ResponseEntity<Cart>(newCart, HttpStatus.OK);
+        } catch(AccountNotFoundException anfe) {
+            LOG.log(Level.WARNING, anfe.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch(InvalidTokenException ite) {
+            LOG.log(Level.WARNING, ite.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch(IOException ioe) {
             LOG.log(Level.SEVERE, ioe.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
