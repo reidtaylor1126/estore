@@ -14,9 +14,19 @@ export class AuthService {
     currentUser = this.currentUserSubject.asObservable();
     constructor(private httpClient: HttpClient) {}
 
-    login(username: string, password: string): Observable<User> {
+    login(username: string): Observable<User> {
         console.log('login');
-        return this.fakeUserAuth(username, password).pipe(
+        return this.fakeUserAuth(username).pipe(
+            map((user) => {
+                this.currentUserSubject.next(user);
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                return user;
+            })
+        );
+    }
+
+    register(username: string): Observable<User> {
+        return this.fakeUserAuth(username).pipe(
             map((user) => {
                 this.currentUserSubject.next(user);
                 localStorage.setItem('currentUser', JSON.stringify(user));
@@ -30,10 +40,9 @@ export class AuthService {
         localStorage.removeItem('currentUser');
     }
 
-    private fakeUserAuth(username: string, password: string) {
+    private fakeUserAuth(username: string): Observable<User> {
         return of({
             username,
-            password,
             admin: username === 'admin' ? true : false,
         });
     }

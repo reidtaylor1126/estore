@@ -4,11 +4,11 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { User } from 'src/app/types/User';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css'],
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class RegisterComponent implements OnInit {
     formData: User = {
         username: '',
         admin: false,
@@ -18,13 +18,15 @@ export class LoginComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    login() {
+    register() {
         if (this.formData.username) {
-            this.authService.login(this.formData.username).subscribe((user) => {
-                if (user) {
-                    this.router.navigate(['/']);
-                }
-            });
+            this.authService
+                .register(this.formData.username)
+                .subscribe((user) => {
+                    if (user) {
+                        this.router.navigate(['/']);
+                    }
+                });
         }
     }
 }
