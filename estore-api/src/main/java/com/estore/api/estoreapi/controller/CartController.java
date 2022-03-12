@@ -38,7 +38,6 @@ public class CartController {
         LOG.info("GET /cart");
         try {
             Cart cart = cartDAO.getCart(token);
-            System.out.printf("Controller received cart: '%s'\n", cart);
             return new ResponseEntity<Cart>(cart, HttpStatus.OK);
         } catch(AccountNotFoundException anfe) {
             LOG.log(Level.WARNING, anfe.getLocalizedMessage());

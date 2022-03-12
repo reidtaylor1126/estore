@@ -50,7 +50,6 @@ public class UserFileDAO implements UserDAO{
         UserAccount[] userArray = objectMapper.readValue(new File(filename), UserAccount[].class);
         for(UserAccount account : userArray) {
             users.put(account.getUsername(), account);
-            System.out.println(users.get(account.getUsername()));
         }
     }
 
@@ -71,7 +70,6 @@ public class UserFileDAO implements UserDAO{
         String id = authFields[authFields.length - 1];
         String username = token.substring(0, token.length()-(id.length()+1));
         UserAccount account = users.get(username);
-        System.out.println(account);
         if(account == null) throw new AccountNotFoundException("User with token '" + token + "' does not exist.");
         else if(account.getId() != Integer.parseInt(id)) throw new InvalidTokenException("Token '" + token + "' does not match a registered user.");
         else return account;
