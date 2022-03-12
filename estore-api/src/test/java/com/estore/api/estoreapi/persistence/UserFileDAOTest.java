@@ -46,4 +46,9 @@ public class UserFileDAOTest {
         assertEquals(userFileDAO.loginUser(testUsers[1].getUsername()), testUsers[1]);
         assertEquals(userFileDAO.loginUser(testUsers[2].getUsername()), testUsers[2]);
     }
+
+    @Test 
+    public void testLoginUserNotFound() {
+        assertEquals(userFileDAO.loginUser("test4"), null);
+    }
 }
