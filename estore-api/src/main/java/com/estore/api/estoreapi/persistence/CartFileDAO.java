@@ -22,25 +22,12 @@ public class CartFileDAO implements CartDAO {
     private ObjectMapper objectMapper;    
 
     private UserDAO userDAO = null;
-
-    @Autowired
-    public CartFileDAO(ObjectMapper objectMapper) throws IOException  {
-        this.objectMapper = objectMapper;
-        this.acquireUserDAO();
-        readAllCarts();
-    }
     
+    @Autowired
     public CartFileDAO(ObjectMapper objectMapper, UserDAO userDAO) throws IOException {
         this.objectMapper = objectMapper;
         this.userDAO = userDAO;
         readAllCarts();
-    }
-
-    private void acquireUserDAO(){
-        if(this.userDAO == null) {
-            UserDAO found = UserFileDAO.getInstance();
-            if(found != null) this.userDAO = found;
-        }
     }
 
     public Cart createCart(UserAccount user, Cart cart) throws IOException {
@@ -50,15 +37,12 @@ public class CartFileDAO implements CartDAO {
     }
 
     public Cart getCart(String token) throws AccountNotFoundException, InvalidTokenException {
-        acquireUserDAO();
         UserAccount user = userDAO.verifyToken(token);
-        System.out.printf("User exists? %b\n", user != null);
         return carts.get(user.getId());
     }
 
     public Cart updateCart(String token, Cart cart) throws AccountNotFoundException, InvalidTokenException, IOException {
         try {
-            acquireUserDAO();
             int id = userDAO.verifyToken(token).getId();
             carts.put(id, cart);
             writeCart(id, cart);
@@ -70,7 +54,6 @@ public class CartFileDAO implements CartDAO {
     }
 
     public Cart clearCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
-        acquireUserDAO();
         int id = userDAO.verifyToken(token).getId();
         Cart old = carts.get(id);
         carts.put(id, Cart.EMPTY);
@@ -79,7 +62,6 @@ public class CartFileDAO implements CartDAO {
     }
 
     public Cart deleteCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
-        acquireUserDAO();
         int id = userDAO.verifyToken(token).getId();
         Cart old = carts.get(id);
         carts.remove(id);
@@ -97,11 +79,6 @@ public class CartFileDAO implements CartDAO {
 
     private Cart readCart(File cartFile) throws IOException {
         Product[] products = objectMapper.readValue(cartFile, Product[].class);
-        return new Cart(products);
-    }
-
-    private Cart readCart(int id) throws IOException {
-        Product[] products = objectMapper.readValue(getCartFile(id), Product[].class);
         return new Cart(products);
     }
 
