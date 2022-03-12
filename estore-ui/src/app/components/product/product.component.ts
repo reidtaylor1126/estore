@@ -22,7 +22,7 @@ export class ProductComponent implements OnInit {
     }
 
     navigate() {
-        this.router.navigate([`/products/${this.product?.name}`]);
+        this.router.navigate([`/products/${this.product?.id}`]);
     }
 
     addToCart(event: MouseEvent): void {
