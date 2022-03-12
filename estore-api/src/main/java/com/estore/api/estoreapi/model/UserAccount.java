@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserAccount {
+    public final static String AUTH_SEPARATOR = "*";
+    
     @NotNull
     @JsonProperty
     private int id;
@@ -23,5 +25,9 @@ public class UserAccount {
 
     public String getUsername() {
         return this.username;
+    }
+
+    public int getId() {
+        return this.id;
     }
 }

@@ -58,5 +58,14 @@ public class UserFileDAO implements UserDAO{
         return user;
     }
 
+    public UserAccount verifyToken(String token) throws FileNotFoundException {
+        String[] authFields = token.split(UserAccount.AUTH_SEPARATOR);
+        String id = authFields[authFields.length - 1];
+        String username = token.substring(0, token.length()-id.length());
+        UserAccount account = users.get(username);
+        if(account == null) throw new FileNotFoundException("User with token '" + token + "' does not exist.");
+        else return account;
+    }
+
     // CRUD methods need implementation
 }
