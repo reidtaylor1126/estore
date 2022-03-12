@@ -1,4 +1,4 @@
-package com.estore.api.estoreapi.persistence;
+package test.java.com.estore.api.estoreapi.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 
-import com.estore.api.estoreapi.model.Product;
 import com.estore.api.estoreapi.model.UserAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,9 +27,9 @@ public class UserFileDAOTest {
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
         testUsers = new UserAccount[3];
-        testUsers[0] = new UserAccount();
-        testUsers[1] = new UserAccount();
-        testUsers[2] = new UserAccount();
+        // testUsers[0] = new UserAccount();
+        // testUsers[1] = new UserAccount();
+        // testUsers[2] = new UserAccount();
 
         when(mockObjectMapper.readValue(
                 new File("filenotfound.txt"), UserAccount[].class)).thenReturn(testUsers);
