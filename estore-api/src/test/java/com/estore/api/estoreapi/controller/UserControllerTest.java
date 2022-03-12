@@ -31,26 +31,32 @@ public class UserControllerTest {
 
     @Test 
     public void testLoginUser() {
-        // UserAccount user = new UserAccount();
+        String username = "test";
+        int userId = 12345;
+        boolean admin = false;
+        UserAccount user = new UserAccount();
+        user.setAdmin(admin);
+        user.setUsername(username);
+        user.setId(userId);
 
-        // when(mockUserDAO.loginUser(user.getUsername()).thenReturn(user));
+        when(mockUserDAO.loginUser(user.getUsername())).thenReturn(user);
 
-        // ResponseEntity<String> response = userController.loginUser(user.getUsername());
+        ResponseEntity<String> response = userController.loginUser(username);
 
-        // String sessionKey = user.getUsername() + "*" + user.getId();
+        String sessionKey = username + "*" + userId;
 
-        // assertEquals(response.getStatusCode(), HttpStatus.OK);
-        // assertEquals(response.getBody(), sessionKey);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(response.getBody(), sessionKey);
     }
 
     @Test 
     public void testLoginUserNotFound() {
-        // UserAccount user = new UserAccount();
+        String username = "test";
 
-        // when(mockUserDAO.loginUser(user.getUsername()).thenReturn(null));
+        when(mockUserDAO.loginUser(username)).thenReturn(null);
 
-        // ResponseEntity<String> response = userController.loginUser(user.getUsername());
+        ResponseEntity<String> response = userController.loginUser(username);
 
-        // assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
     }
 }
