@@ -28,7 +28,7 @@ public class UserAccount {
     }
 
     public int getId() {
-        return this.id;
+        return this.id.intValue();
     }
 
     public String toString() {
