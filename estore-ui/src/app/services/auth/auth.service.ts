@@ -30,7 +30,7 @@ export class AuthService {
         localStorage.removeItem('currentUser');
     }
 
-    private fakeUserAuth(username: string, password: string) {
+    private fakeUserAuth(username: string, password: string): Observable<User> {
         return of({
             username,
             password,

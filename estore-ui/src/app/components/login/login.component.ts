@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
     formData: User = {
         username: '',
         password: '',
+        admin: false,
     };
 
     constructor(private authService: AuthService, private router: Router) {}
