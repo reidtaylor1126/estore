@@ -32,20 +32,27 @@ public class UserController {
         this.userDAO = _userDAO;
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<UserAccount> loginUser(@RequestParam String q) {
-        LOG.info("GET /users/user?q=" + q);
-        try {
-            UserAccount user = userDAO.loginUser(q);
-            if (user != null) {
-                return new ResponseEntity<UserAccount>(user, HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (IOException ioe) {
-            LOG.log(Level.SEVERE, ioe.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    /**
+     * loginUser - logs user in and generates a sessionKey
+     * @param q - username to log user in
+     * @return ResponseEntity<String> - returns sessionKey
+     */
+
+    @GetMapping("/useraccount")
+    public ResponseEntity<String> loginUser(@RequestParam String q) {
+        LOG.info("GET /users/useraccount?q=" + q);
+
+        String sessionKey;
+    
+        UserAccount user = userDAO.loginUser(q);
+
+        if (user != null) {
+            sessionKey = user.getUsername() + "*" + user.getId();
+
+            return new ResponseEntity<String>(sessionKey, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
