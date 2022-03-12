@@ -1,0 +1,19 @@
+<div
+    [ngClass]="navOpen ? 'nav-background active' : 'nav-background'"
+    (click)="toggleNav(false)"
+></div>
+<div [ngClass]="navOpen ? 'navbar active' : 'navbar'">
+    <div></div>
+    <ul>
+        <li><a (click)="toggleNav(false)" routerLink="/">Home</a></li>
+        <li>
+            <a (click)="toggleNav(false)" routerLink="/products">View Items</a>
+        </li>
+        <li><a (click)="toggleNav(false)" routerLink="/search">Search</a></li>
+        <li>
+            <a (click)="toggleNav(false)" routerLink="/inventory"
+                >Manage Inventory</a
+            >
+        </li>
+    </ul>
+</div>

@@ -9,6 +9,9 @@ import { ProductComponent } from './components/product/product.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
+import { AccountNavComponent } from './components/account-nav/account-nav.component';
+import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -19,6 +22,9 @@ import { FormsModule } from '@angular/forms';
         ProductComponent,
         NotFoundComponent,
         ProductDetailComponent,
+        MobileNavComponent,
+        AccountNavComponent,
+        LoginComponent,
     ],
     imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
     providers: [],
