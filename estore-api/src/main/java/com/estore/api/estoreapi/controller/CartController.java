@@ -10,26 +10,23 @@ import java.util.logging.Logger;
 import javax.validation.Valid;
 
 import com.estore.api.estoreapi.model.Cart;
-import com.estore.api.estoreapi.persistence.CartDAO;
+import com.estore.api.estoreapi.persistence.UserDAO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/cart")
 public class CartController {
-    private static final Logger LOG = Logger.getLogger(InventoryController.class.getName());
-    private CartDAO cartDAO;
+    private static final Logger LOG = Logger.getLogger(CartController.class.getName());
+    private UserDAO cartDAO;
 
-    public CartController(CartDAO cartDAO) {
+    public CartController(UserDAO cartDAO) {
         this.cartDAO = cartDAO;
     }
     
@@ -38,6 +35,7 @@ public class CartController {
         LOG.info("GET /cart");
         try {
             Cart cart = cartDAO.getCart(token);
+            System.out.printf("Controller received cart: '%s'\n", cart);
             if(cart == null) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             else return new ResponseEntity<Cart>(cart, HttpStatus.OK);
         } catch(IOException ioe) {

@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserAccount {
-    public final static String AUTH_SEPARATOR = "*";
+    public final static String AUTH_SEPARATOR = "\\*";
     
     @NotNull
     @JsonProperty
-    private int id;
+    private Integer id;
 
     @NotNull
     @JsonProperty
@@ -29,5 +29,9 @@ public class UserAccount {
 
     public int getId() {
         return this.id;
+    }
+
+    public String toString() {
+        return String.format("UserAccount [username='%s', id='%d', isAdmin='%b']", username, id, isAdmin);
     }
 }
