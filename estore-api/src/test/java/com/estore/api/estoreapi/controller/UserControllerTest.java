@@ -1,4 +1,4 @@
-package test.java.com.estore.api.estoreapi.controller;
+package com.estore.api.estoreapi.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import main.java.com.estore.api.estoreapi.controller.UserController;
+import com.estore.api.estoreapi.controller.UserController;
 
 @Tag("Controller")
 public class UserControllerTest {
@@ -29,7 +29,7 @@ public class UserControllerTest {
         userController = new UserController(mockUserDAO);
     }
 
-    @Test 
+    @Test
     public void testLoginUser() {
         String username = "test";
         int userId = 12345;
@@ -44,12 +44,12 @@ public class UserControllerTest {
         ResponseEntity<String> response = userController.loginUser(username);
 
         String sessionKey = username + "*" + userId + "*" + admin;
-        
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(response.getBody(), sessionKey);
     }
 
-    @Test 
+    @Test
     public void testLoginUserNotFound() {
         String username = "test";
 
