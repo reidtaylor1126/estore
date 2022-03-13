@@ -53,6 +53,19 @@ public class UserController {
             return new ResponseEntity<String>(sessionKey, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    @PostMapping("/user")
+    public ResponseEntity<UserAccount> createUser(@Valid @RequestBody UserAccount userAccount) {
+        LOG.info("POST /users " + userAccount);
+        try {
+            UserAccount newUser = userDAO.createUser(userAccount);
+            return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
