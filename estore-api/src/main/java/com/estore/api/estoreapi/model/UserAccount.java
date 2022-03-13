@@ -29,6 +29,10 @@ public class UserAccount {
         return this.id;
     }
 
+    public boolean getIsAdmin() {
+        return this.isAdmin;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

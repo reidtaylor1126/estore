@@ -47,7 +47,7 @@ public class UserController {
         UserAccount user = userDAO.loginUser(q);
 
         if (user != null) {
-            sessionKey = user.getUsername() + "*" + user.getId();
+            sessionKey = user.getUsername() + "*" + user.getId() + "*" + user.getIsAdmin();
 
             return new ResponseEntity<String>(sessionKey, HttpStatus.OK);
         }

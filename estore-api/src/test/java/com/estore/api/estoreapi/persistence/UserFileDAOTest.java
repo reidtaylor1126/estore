@@ -40,6 +40,9 @@ public class UserFileDAOTest {
                 mockObjectMapper);
     }
 
+    /**
+     * Tests loginUser method with valid username
+     */
     @Test
     public void testLoginUser() {
         assertEquals(userFileDAO.loginUser(testUsers[0].getUsername()), testUsers[0]);
@@ -47,6 +50,9 @@ public class UserFileDAOTest {
         assertEquals(userFileDAO.loginUser(testUsers[2].getUsername()), testUsers[2]);
     }
 
+    /**
+     * Tests loginUser method with invalid username
+     */
     @Test 
     public void testLoginUserNotFound() {
         assertEquals(userFileDAO.loginUser("test4"), null);
