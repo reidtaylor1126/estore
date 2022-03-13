@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Cart {
     @NotNull
     @JsonProperty
-    Product[] products;
+    private Product[] products;
 
     @JsonProperty
     private int numItems;
