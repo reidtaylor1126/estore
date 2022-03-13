@@ -23,6 +23,13 @@ public class UserAccount {
     @JsonProperty
     private boolean isAdmin;
 
+    // Placeholder constructor for unit testing
+    public UserAccount(int id, String username, boolean isAdmin) {
+        this.id = id;
+        this.username = username;
+        this.isAdmin = isAdmin;
+    }
+
     public String getUsername() {
         return this.username;
     }
