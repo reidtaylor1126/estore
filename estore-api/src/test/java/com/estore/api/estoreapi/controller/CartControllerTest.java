@@ -42,6 +42,6 @@ public class CartControllerTest {
 
     @Test
     public void testGetCartValid() {
-        
+        when(mockCartDAO.getCart(authValid)).thenReturn(testCart);
     }
 }
