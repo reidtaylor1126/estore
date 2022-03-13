@@ -43,8 +43,8 @@ public class UserControllerTest {
 
         ResponseEntity<String> response = userController.loginUser(username);
 
-        String sessionKey = username + "*" + userId;
-
+        String sessionKey = username + "*" + userId + "*" + admin;
+        
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(response.getBody(), sessionKey);
     }
