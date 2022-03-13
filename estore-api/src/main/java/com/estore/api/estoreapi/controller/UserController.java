@@ -1,4 +1,4 @@
-package main.java.com.estore.api.estoreapi.controller;
+package com.estore.api.estoreapi.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     private static final Logger LOG = Logger.getLogger(UserController.class.getName());
     private UserDAO userDAO;
@@ -34,6 +34,7 @@ public class UserController {
 
     /**
      * loginUser - logs user in and generates a sessionKey
+     * 
      * @param q - username to log user in
      * @return ResponseEntity<String> - returns sessionKey
      */
@@ -43,15 +44,14 @@ public class UserController {
         LOG.info("GET /users/useraccount?q=" + q);
 
         String sessionKey;
-    
+
         UserAccount user = userDAO.loginUser(q);
 
         if (user != null) {
             sessionKey = user.getUsername() + "*" + user.getId() + "*" + user.getIsAdmin();
 
             return new ResponseEntity<String>(sessionKey, HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
