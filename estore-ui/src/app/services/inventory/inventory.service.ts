@@ -12,4 +12,8 @@ export class InventoryService {
     getItems(): Observable<Product[]> {
         return this.httpClient.get<Product[]>('/api/inventory');
     }
+
+    searchItems(query: string): Observable<Product[]> {
+        return this.httpClient.get<Product[]>(`/api/inventory?q=${query}`);
+    }
 }
