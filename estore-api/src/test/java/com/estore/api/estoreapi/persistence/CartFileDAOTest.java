@@ -41,7 +41,7 @@ public class CartFileDAOTest {
 
     private String mockToken = "token";
 
-    @BeforeAll
+    @BeforeEach
     public void init() throws IOException, AccountNotFoundException, InvalidTokenException {
         mockObjectMapper = mock(ObjectMapper.class);
         mockUserDAO = mock(UserDAO.class);
@@ -68,6 +68,8 @@ public class CartFileDAOTest {
 
     @Test
     public void testClearCart() throws IOException, AccountNotFoundException, InvalidTokenException {
+        cartFileDAO.createCart(mockUser, testCart1);
+
         Cart result = cartFileDAO.clearCart(mockToken);
 
         assertEquals(testCart1, result);
@@ -76,9 +78,11 @@ public class CartFileDAOTest {
 
     @Test
     public void deleteCart() throws IOException, AccountNotFoundException, InvalidTokenException {
+        cartFileDAO.createCart(mockUser, testCart1);
+
         Cart result = cartFileDAO.deleteCart(mockToken);
 
-        assertEquals(Cart.EMPTY, result);
+        assertEquals(testCart1, result);
         File cartFile = new File("data/carts/1.json");
         assertEquals(false, cartFile.exists());
     }

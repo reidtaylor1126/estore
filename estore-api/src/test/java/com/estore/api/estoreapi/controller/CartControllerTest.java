@@ -82,7 +82,7 @@ public class CartControllerTest {
         when(mockCartDAO.clearCart(authValid)).thenReturn(testCart);
         ResponseEntity<Cart> responseValid = cartController.clearCart(authValid);
         assertEquals(HttpStatus.OK, responseValid.getStatusCode());
-        assertEquals(Cart.EMPTY, responseValid.getBody());
+        assertEquals(testCart, responseValid.getBody());
 
         when(mockCartDAO.clearCart(authInvalid)).thenThrow(new InvalidTokenException("Token does not match a registered user."));
         ResponseEntity<Cart> responseInvalid = cartController.clearCart(authInvalid);
