@@ -11,7 +11,6 @@ import { User } from 'src/app/types/User';
 export class LoginComponent implements OnInit {
     formData: User = {
         username: '',
-        password: '',
         admin: false,
     };
 
@@ -20,14 +19,12 @@ export class LoginComponent implements OnInit {
     ngOnInit(): void {}
 
     login() {
-        if (this.formData.username !== '' && this.formData.password !== '') {
-            this.authService
-                .login(this.formData.username, this.formData.password)
-                .subscribe((user) => {
-                    if (user) {
-                        this.router.navigate(['/']);
-                    }
-                });
+        if (this.formData.username) {
+            this.authService.login(this.formData.username).subscribe((user) => {
+                if (user) {
+                    this.router.navigate(['/']);
+                }
+            });
         }
     }
 }

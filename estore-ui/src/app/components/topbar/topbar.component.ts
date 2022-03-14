@@ -11,10 +11,14 @@ import { User } from 'src/app/types/User';
 export class TopbarComponent implements OnInit {
     navOpen = false;
     acctOpen = false;
-    username?: string;
-    constructor() {}
+    isAdmin: boolean = false;
+    constructor(private authService: AuthService) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.authService.currentUser.subscribe((user) => {
+            user && user.admin ? (this.isAdmin = true) : (this.isAdmin = false);
+        });
+    }
 
     toggleNav(value?: boolean): void {
         if (typeof value !== 'undefined') {
