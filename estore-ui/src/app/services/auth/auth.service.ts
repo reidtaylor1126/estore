@@ -14,27 +14,35 @@ export class AuthService {
     currentUser = this.currentUserSubject.asObservable();
     constructor(private httpClient: HttpClient) {}
 
-    login(username: string, password: string): Observable<User> {
-        console.log('login');
-        return this.fakeUserAuth(username, password).pipe(
-            map((user) => {
-                this.currentUserSubject.next(user);
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                return user;
+    login(username: string): Observable<User> {
+        return this.httpClient
+            .get(`/api/users?q=${username}`, {
+                responseType: 'text',
             })
-        );
+            .pipe(
+                map((user) => {
+                    const userArr = user.split('*');
+                    const userObj = {
+                        username: userArr[0],
+                        admin: userArr[2] === 'true',
+                    };
+                    this.currentUserSubject.next(userObj);
+                    localStorage.setItem(
+                        'currentUser',
+                        JSON.stringify(userObj)
+                    );
+                    return userObj;
+                })
+            );
+    }
+
+    register(username: string): Observable<User> {
+        console.log('login');
+        return this.httpClient.post<User>('/api/users', { username });
     }
 
     logout(): void {
         this.currentUserSubject.next(undefined);
         localStorage.removeItem('currentUser');
-    }
-
-    private fakeUserAuth(username: string, password: string): Observable<User> {
-        return of({
-            username,
-            password,
-            admin: username === 'admin' ? true : false,
-        });
     }
 }

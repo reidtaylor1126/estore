@@ -13,6 +13,7 @@ import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component
 import { AccountNavComponent } from './components/account-nav/account-nav.component';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
+import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import { FormsModule } from '@angular/forms';
         MobileNavComponent,
         AccountNavComponent,
         LoginComponent,
+        RegisterComponent,
     ],
     imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
     providers: [],
