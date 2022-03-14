@@ -27,12 +27,12 @@ public class UserControllerTest {
         userController = new UserController(mockUserDAO);
     }
 
-    @Test 
+    @Test
     public void testLoginUser() {
         String username = "test";
         int userId = 12345;
         boolean admin = false;
-        UserAccount user = new UserAccount();
+        UserAccount user = new UserAccount(1, "1");
         user.setAdmin(admin);
         user.setUsername(username);
         user.setId(userId);
@@ -42,12 +42,12 @@ public class UserControllerTest {
         ResponseEntity<String> response = userController.loginUser(username);
 
         String sessionKey = username + "*" + userId + "*" + admin;
-        
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(response.getBody(), sessionKey);
     }
 
-    @Test 
+    @Test
     public void testLoginUserNotFound() {
         String username = "test";
 

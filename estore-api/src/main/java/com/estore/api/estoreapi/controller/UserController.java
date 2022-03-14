@@ -38,7 +38,7 @@ public class UserController {
      * @param userAccount a new userAccount to add
      * @return a ResponseEntity with the HttpStatus of the request
      */
-    @PostMapping("/user")
+    @PostMapping("")
     public ResponseEntity<UserAccount> createUser(@RequestBody UserAccount userAccount) {
         LOG.info("POST /users " + userAccount);
         try {
@@ -67,9 +67,9 @@ public class UserController {
      * 
      * @return ResponseEntity<String> - returns sessionKey
      */
-    @GetMapping("/useraccount")
+    @GetMapping(value = "", params = "q")
     public ResponseEntity<String> loginUser(@RequestParam String q) {
-        LOG.info("GET /users/useraccount?q=" + q);
+        LOG.info("GET /users?q=" + q);
 
         String sessionKey;
 

@@ -27,17 +27,16 @@ public class UserFileDAOTest {
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
         testUsers = new UserAccount[3];
-        testUsers[0] = new UserAccount();
-        testUsers[1] = new UserAccount();
-        testUsers[2] = new UserAccount();
+        testUsers[0] = new UserAccount(1, "1");
+        testUsers[1] = new UserAccount(2, "2");
+        testUsers[2] = new UserAccount(3, "3");
         testUsers[0].setUsername("test1");
         testUsers[1].setUsername("test2");
         testUsers[2].setUsername("test3");;
 
-        when(mockObjectMapper.readValue(
-                new File("filenotfound.txt"), UserAccount[].class)).thenReturn(testUsers);
-        userFileDAO = new UserFileDAO("filenotfound.txt",
-                mockObjectMapper);
+        when(mockObjectMapper.readValue(new File("filenotfound.txt"), UserAccount[].class))
+                .thenReturn(testUsers);
+        userFileDAO = new UserFileDAO("filenotfound.txt", mockObjectMapper);
     }
 
     /**
@@ -53,7 +52,7 @@ public class UserFileDAOTest {
     /**
      * Tests loginUser method with invalid username
      */
-    @Test 
+    @Test
     public void testLoginUserNotFound() {
         assertEquals(userFileDAO.loginUser("test4"), null);
     }
