@@ -36,21 +36,10 @@ export class AuthService {
             );
     }
 
-    // register(username: string): Observable<User> {
-    //     console.log('login');
-    //     return this.httpClient.get<string>(`/api/users?q=${username}`).pipe(
-    //         map((user) => {
-    //             const userArr = user.split('*');
-    //             const userObj = {
-    //                 username: userArr[0],
-    //                 admin: userArr[1] === 'true',
-    //             };
-    //             this.currentUserSubject.next(userObj);
-    //             localStorage.setItem('currentUser', JSON.stringify(user));
-    //             return userObj;
-    //         })
-    //     );
-    // }
+    register(username: string): Observable<User> {
+        console.log('login');
+        return this.httpClient.post<User>('/api/users/user', { username });
+    }
 
     logout(): void {
         this.currentUserSubject.next(undefined);

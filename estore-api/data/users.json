@@ -1,1 +1,1 @@
-[{"id":0, "username":"admin", "cart":{}, "isAdmin":true}]
+[{"id":0,"username":"admin","isAdmin":true},{"id":2,"username":"hello","isAdmin":false}]

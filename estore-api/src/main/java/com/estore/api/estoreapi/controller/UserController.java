@@ -53,16 +53,16 @@ public class UserController {
             return new ResponseEntity<String>(sessionKey, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping("/user")
     public ResponseEntity<UserAccount> createUser(@RequestBody UserAccount userAccount) {
         LOG.info("POST /users " + userAccount);
         try {
-            if(userAccount.getUsername() == null || userAccount.getUsername().isEmpty())
-            {
+            if (userAccount.getUsername() == null || userAccount.getUsername().isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            else{
+            } else {
                 UserAccount newUser = userDAO.createUser(userAccount);
                 return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
             }

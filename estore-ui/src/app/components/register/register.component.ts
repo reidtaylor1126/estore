@@ -18,14 +18,17 @@ export class RegisterComponent implements OnInit {
 
     ngOnInit(): void {}
 
+    /**
+     *
+     */
     register() {
         if (this.formData.username) {
             this.authService
                 .register(this.formData.username)
                 .subscribe((user) => {
-                    if (user) {
+                    this.authService.login(user.username).subscribe(() => {
                         this.router.navigate(['/']);
-                    }
+                    });
                 });
         }
     }
