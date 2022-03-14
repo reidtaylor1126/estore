@@ -1,0 +1,21 @@
+<div
+    [ngClass]="navOpen ? 'nav-background active' : 'nav-background'"
+    (click)="toggleNav(false)"
+></div>
+<div [ngClass]="navOpen ? 'navbar active' : 'navbar'">
+    <div></div>
+    <ul>
+        <li *ngIf="username">
+            <h3>Hello, {{ username }}</h3>
+        </li>
+        <li *ngIf="!username">
+            <a (click)="toggleNav(false)" routerLink="/login">Login</a>
+        </li>
+        <li *ngIf="!username">
+            <a (click)="toggleNav(false)" routerLink="/register">Register</a>
+        </li>
+        <li *ngIf="username">
+            <a (click)="logout()" routerLink="/">Logout</a>
+        </li>
+    </ul>
+</div>
