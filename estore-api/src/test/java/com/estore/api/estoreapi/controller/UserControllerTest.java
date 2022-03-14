@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.estore.api.estoreapi.controller.UserController;
-
 @Tag("Controller")
 public class UserControllerTest {
     private UserController userController;

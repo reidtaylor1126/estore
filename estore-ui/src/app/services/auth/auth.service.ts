@@ -16,7 +16,7 @@ export class AuthService {
 
     login(username: string): Observable<User> {
         return this.httpClient
-            .get(`/api/users/useraccount?q=${username}`, {
+            .get(`/api/users?q=${username}`, {
                 responseType: 'text',
             })
             .pipe(
