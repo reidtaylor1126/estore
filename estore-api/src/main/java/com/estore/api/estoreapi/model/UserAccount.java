@@ -18,17 +18,22 @@ public class UserAccount {
     @JsonProperty
     private String username;
 
+<<<<<<< HEAD
     // @JsonProperty
     // private Cart cart;
+=======
+    //@JsonProperty
+    //private Cart cart;
+>>>>>>> origin/create-account
 
     @JsonProperty
-    private boolean isAdmin;
+    private Boolean isAdmin;
 
     public UserAccount(@NotNull @JsonProperty("id") int id,
             @NotNull @JsonProperty("username") String username) {
         this.id = id;
         this.username = username;
-        this.cart = null; // unsure how to set up cart
+        //this.cart = null; // unsure how to set up cart
         this.isAdmin = false;
     }
 
