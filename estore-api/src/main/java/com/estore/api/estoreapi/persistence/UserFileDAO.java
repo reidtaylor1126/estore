@@ -31,8 +31,12 @@ public class UserFileDAO implements UserDAO {
 
     private static int nextId;
 
+<<<<<<< HEAD
     public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper)
             throws IOException {
+=======
+    public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper) throws IOException {
+>>>>>>> origin/user-accounts
         this.filename = filename;
         this.objectMapper = objectMapper;
         loadUsers();
@@ -95,6 +99,11 @@ public class UserFileDAO implements UserDAO {
 
     // CRUD methods need implementation
 
+    /**
+     * Creates a new user with the next available id.
+     * @param user a UserAccount to add
+     * @return the new user
+     */
     @Override
     public UserAccount createUser(UserAccount user) throws IOException, IllegalArgumentException {
         synchronized (users) {
