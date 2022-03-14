@@ -1,0 +1,14 @@
+<div class="login-container">
+    <form (ngSubmit)="login()" class="login-form">
+        <div class="input-group">
+            <label for="username" class="form-label">Username</label>
+            <input
+                name="username"
+                [(ngModel)]="formData.username"
+                type="text"
+                class="form-input"
+            />
+        </div>
+        <button type="submit" class="form-submit">Login</button>
+    </form>
+</div>

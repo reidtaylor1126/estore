@@ -12,28 +12,19 @@
         <h2>StraightFlush</h2>
     </div>
     <div class="shop">
-        <i class="bi bi-bag">
+        <i *ngIf="!isAdmin" class="bi bi-bag">
             <p>99</p>
         </i>
-        <i class="bi bi-person-circle"></i>
+        <i (click)="toggleAcct()" class="bi bi-person-circle"></i>
     </div>
 </div>
-<div
-    [ngClass]="navOpen ? 'nav-background active' : 'nav-background'"
-    (click)="toggleNav(false)"
-></div>
-<div [ngClass]="navOpen ? 'navbar active' : 'navbar'">
-    <div></div>
-    <ul>
-        <li><a (click)="toggleNav(false)" routerLink="/">Home</a></li>
-        <li>
-            <a (click)="toggleNav(false)" routerLink="/products">View Items</a>
-        </li>
-        <li><a (click)="toggleNav(false)" routerLink="/search">Search</a></li>
-        <li>
-            <a (click)="toggleNav(false)" routerLink="/inventory"
-                >Manage Inventory</a
-            >
-        </li>
-    </ul>
-</div>
+
+<app-mobile-nav
+    [navOpen]="navOpen"
+    (toggleMenu)="toggleNav($event)"
+></app-mobile-nav>
+
+<app-account-nav
+    [navOpen]="acctOpen"
+    (toggleMenu)="toggleAcct($event)"
+></app-account-nav>
