@@ -1,0 +1,41 @@
+<div class="login-container">
+    <form (ngSubmit)="createProduct()" class="login-form">
+        <div class="input-group">
+            <label for="name" class="form-label">Name</label>
+            <input
+                name="name"
+                [(ngModel)]="formData.name"
+                type="text"
+                class="form-input"
+            />
+        </div>
+        <div class="input-group">
+            <label for="description" class="form-label">Description</label>
+            <input
+                name="name"
+                [(ngModel)]="formData.description"
+                type="text"
+                class="form-input"
+            />
+        </div>
+        <div class="input-group">
+            <label for="name" class="form-label">Price</label>
+            <input
+                name="name"
+                [(ngModel)]="formData.price"
+                type="number"
+                class="form-input"
+            />
+        </div>
+        <div class="input-group">
+            <label for="name" class="form-label">Quantity</label>
+            <input
+                name="name"
+                [(ngModel)]="formData.quantity"
+                type="number"
+                class="form-input"
+            />
+        </div>
+        <button type="submit" class="form-submit">Create</button>
+    </form>
+</div>
