@@ -58,7 +58,7 @@ public class CartFileDAO implements CartDAO {
         writeCart(id, Cart.EMPTY);
         return old;
     }
-
+    
     public Cart deleteCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
         int id = userDAO.verifyToken(token).getId();
         Cart old = new Cart(carts.get(id).getProducts());
