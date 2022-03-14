@@ -108,6 +108,7 @@ public class UserFileDAO implements UserDAO {
         if(account == null) throw new AccountNotFoundException("User with token '" + token + "' does not exist.");
         else if(account.getId() != Integer.parseInt(id)) throw new InvalidTokenException("Token '" + token + "' does not match a registered user.");
         else return account;
+    }
 
     /**
      * Creates a new user with the next available id.
