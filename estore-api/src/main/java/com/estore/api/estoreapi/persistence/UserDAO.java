@@ -8,4 +8,5 @@ public interface UserDAO {
     // Needs method headers
 
     public UserAccount createUser(UserAccount user) throws IOException;
+    public UserAccount loginUser(String username);
 }

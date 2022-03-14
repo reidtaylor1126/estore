@@ -1,9 +1,11 @@
 package com.estore.api.estoreapi.persistence;
 
 import java.io.*;
+import java.net.http.HttpRequest;
 import java.util.*;
 
 import com.estore.api.estoreapi.model.UserAccount;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -69,6 +71,24 @@ public class UserFileDAO implements UserDAO{
             }
             ++nextId;
         }
+    }
+
+    /**
+     * loginUser - checks if username is in users, returns user if found, if not return null user
+     * @param username - username of account
+     * @return UserAccount - logged in user, or null user if none were found.
+     */
+
+    public UserAccount loginUser(String username) {
+        UserAccount user = null;
+
+        if (users.containsKey(username)) {
+            user = users.get(username);
+
+            return user;
+        }
+
+        return user;
     }
 
     // CRUD methods need implementation
