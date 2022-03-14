@@ -1,0 +1,16 @@
+<div class="search-container">
+    <input
+        [(ngModel)]="searchQuery"
+        (change)="updateSearch()"
+        type="text"
+        class="search"
+    />
+    <button class="search-submit">Go</button>
+</div>
+<div *ngIf="products" class="products-container">
+    <div *ngFor="let product of products">
+        <app-product [product]="product"></app-product>
+    </div>
+</div>
+
+<h3 class="not-found" *ngIf="!hasProducts()">No products were found</h3>
