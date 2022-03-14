@@ -14,6 +14,7 @@ import { AccountNavComponent } from './components/account-nav/account-nav.compon
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register/register.component';
+import { CreateProductComponent } from './components/create-product/create-product.component';
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import { RegisterComponent } from './components/register/register.component';
         AccountNavComponent,
         LoginComponent,
         RegisterComponent,
+        CreateProductComponent,
     ],
     imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
     providers: [],
