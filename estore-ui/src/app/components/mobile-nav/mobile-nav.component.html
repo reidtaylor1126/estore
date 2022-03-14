@@ -1,0 +1,18 @@
+<div
+    [ngClass]="navOpen ? 'nav-background active' : 'nav-background'"
+    (click)="toggleNav(false)"
+></div>
+<div [ngClass]="navOpen ? 'navbar active' : 'navbar'">
+    <div></div>
+    <ul>
+        <li><a (click)="toggleNav(false)" routerLink="/">Home</a></li>
+        <li>
+            <a (click)="toggleNav(false)" routerLink="/products">View Items</a>
+        </li>
+        <li *ngIf="isAdmin">
+            <a (click)="toggleNav(false)" routerLink="/create"
+                >Create Product</a
+            >
+        </li>
+    </ul>
+</div>

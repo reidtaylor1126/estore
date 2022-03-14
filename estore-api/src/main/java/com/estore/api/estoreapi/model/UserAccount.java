@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserAccount {
     public final static String AUTH_SEPARATOR = "\\*";
-    
+
+    static final String STRING_FORMAT = "UserAccount = [id=%d, name=%s]";
+
     @NotNull
     @JsonProperty
     private Integer id;
@@ -17,11 +19,19 @@ public class UserAccount {
     @JsonProperty
     private String username;
 
-    @JsonProperty
-    private Cart cart;
+    // @JsonProperty
+    // private Cart cart;
 
     @JsonProperty
-    private boolean isAdmin;
+    private Boolean isAdmin;
+
+    public UserAccount(@NotNull @JsonProperty("id") int id,
+            @NotNull @JsonProperty("username") String username) {
+        this.id = id;
+        this.username = username;
+        // this.cart = null; // unsure how to set up cart
+        this.isAdmin = false;
+    }
 
     // Placeholder constructor for unit testing
     public UserAccount(int id, String username, boolean isAdmin) {
@@ -40,5 +50,21 @@ public class UserAccount {
 
     public String toString() {
         return String.format("UserAccount [username='%s', id='%d', isAdmin='%b']", username, id, isAdmin);
+    }
+
+    public boolean getIsAdmin() {
+        return this.isAdmin;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }
