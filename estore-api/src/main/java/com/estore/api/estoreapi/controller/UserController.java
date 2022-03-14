@@ -33,39 +33,12 @@ public class UserController {
     }
 
     /**
-<<<<<<< HEAD
-     * loginUser - logs user in and generates a sessionKey
-     * 
-     * @param q - username to log user in
-     * @return ResponseEntity<String> - returns sessionKey
-     */
-
-    @GetMapping("/useraccount")
-    public ResponseEntity<String> loginUser(@RequestParam String q) {
-        LOG.info("GET /users/useraccount?q=" + q);
-
-        String sessionKey;
-
-        UserAccount user = userDAO.loginUser(q);
-
-        if (user != null) {
-            sessionKey = user.getUsername() + "*" + user.getId() + "*" + user.getIsAdmin();
-
-            return new ResponseEntity<String>(sessionKey, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/user")
-=======
      * Creates a new user and adds it to the users.json file
      * 
      * @param userAccount a new userAccount to add
      * @return a ResponseEntity with the HttpStatus of the request
      */
     @PostMapping("")
->>>>>>> origin/user-accounts
     public ResponseEntity<UserAccount> createUser(@RequestBody UserAccount userAccount) {
         LOG.info("POST /users " + userAccount);
         try {
