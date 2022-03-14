@@ -77,6 +77,9 @@ public class UserFileDAO implements UserDAO{
     public UserAccount createUser(UserAccount user) throws IOException, IllegalArgumentException{
         synchronized(users) {
             UserAccount newUser = new UserAccount(nextId(), user.getUsername());
+            if( users.containsKey(newUser.getUsername())){
+                return null;
+            }
             users.put(newUser.getUsername(), newUser);
             saveUsers();
             return newUser;

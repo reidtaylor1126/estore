@@ -33,11 +33,17 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<UserAccount> createUser(@Valid @RequestBody UserAccount userAccount) {
+    public ResponseEntity<UserAccount> createUser(@RequestBody UserAccount userAccount) {
         LOG.info("POST /users " + userAccount);
         try {
-            UserAccount newUser = userDAO.createUser(userAccount);
-            return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
+            if(userAccount.getUsername() == null || userAccount.getUsername().isEmpty())
+            {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            else{
+                UserAccount newUser = userDAO.createUser(userAccount);
+                return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
+            }
         } catch (IllegalArgumentException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
