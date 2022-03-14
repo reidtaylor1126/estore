@@ -68,6 +68,20 @@ public class Product {
     }
 
     @Override
+    public boolean equals(Object other) {
+        if(other instanceof Product) {
+            Product otherProduct = (Product) other;
+            return(
+                this.name.equals(otherProduct.getName()) &&
+                this.description.equals(otherProduct.getDescription()) &&
+                this.price == otherProduct.price &&
+                this.quantity == otherProduct.quantity
+            );
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         return String.format(STRING_FORMAT, name, description, price, quantity);
     }
