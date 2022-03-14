@@ -36,11 +36,13 @@ public class CartFileDAO implements CartDAO {
         return cart;
     }
 
+    @Override
     public Cart getCart(String token) throws AccountNotFoundException, InvalidTokenException {
         UserAccount user = userDAO.verifyToken(token);
         return carts.get(user.getId());
     }
 
+    @Override
     public Cart updateCart(String token, Cart cart) throws AccountNotFoundException, InvalidTokenException, IOException {
         int id = userDAO.verifyToken(token).getId();
         carts.put(id, cart);
@@ -48,6 +50,7 @@ public class CartFileDAO implements CartDAO {
         return carts.get(id);
     }
 
+    @Override
     public Cart clearCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
         int id = userDAO.verifyToken(token).getId();
         Cart old = new Cart(carts.get(id).getProducts());
