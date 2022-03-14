@@ -29,22 +29,47 @@ public class UserFileDAO implements UserDAO{
      */
     private ObjectMapper objectMapper;
 
-    public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper) 
-            throws IOException {
+    private static int nextId;
+
+    public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper) throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
         loadUsers();
     }
 
-    private ArrayList<UserAccount> getUserList() {
-        return new ArrayList<>(users.values());
+    private synchronized static int nextId() {
+        int id = nextId;
+        ++nextId;
+        return id;
+    }
+
+    private UserAccount[] getUserArray() {
+        ArrayList<UserAccount> userArrayList = new ArrayList<>();
+
+        for (UserAccount user : users.values()) {
+            userArrayList.add(user);
+        }
+
+        UserAccount[] userArray = new UserAccount[userArrayList.size()];
+        userArrayList.toArray(userArray);
+        return userArray;
+    }
+
+    private void saveUsers() throws IOException {
+        UserAccount[] userArray = getUserArray();
+        objectMapper.writeValue(new File(filename),userArray);
     }
 
     private void loadUsers() throws IOException{
         users = new TreeMap<>();
+        nextId = 0; // May need to be changed to 1
         UserAccount[] userArray = objectMapper.readValue(new File(filename), UserAccount[].class);
         for(UserAccount account : userArray) {
             users.put(account.getUsername(), account);
+            if (account.getId() > nextId()) {
+                nextId = account.getId();
+            }
+            ++nextId;
         }
     }
 
@@ -67,4 +92,22 @@ public class UserFileDAO implements UserDAO{
     }
 
     // CRUD methods need implementation
+
+    /**
+     * Creates a new user with the next available id.
+     * @param user a UserAccount to add
+     * @return the new user
+     */
+    @Override
+    public UserAccount createUser(UserAccount user) throws IOException, IllegalArgumentException{
+        synchronized(users) {
+            UserAccount newUser = new UserAccount(nextId(), user.getUsername());
+            if( users.containsKey(newUser.getUsername())){
+                return null;
+            }
+            users.put(newUser.getUsername(), newUser);
+            saveUsers();
+            return newUser;
+        }
+    }
 }

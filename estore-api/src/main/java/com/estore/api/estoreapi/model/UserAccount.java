@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserAccount {
+
+    static final String STRING_FORMAT = "UserAccount = [id=%d, name=%s]";
+
     @NotNull
     @JsonProperty
     private int id;
@@ -19,7 +22,15 @@ public class UserAccount {
     //private Cart cart;
 
     @JsonProperty
-    private boolean isAdmin;
+    private Boolean isAdmin;
+
+    public UserAccount(@NotNull @JsonProperty("id") int id, @NotNull @JsonProperty("username") String username)
+    {
+        this.id = id;
+        this.username = username;
+        //this.cart = null; // unsure how to set up cart
+        this.isAdmin = false;
+    }
 
     public String getUsername() {
         return this.username;

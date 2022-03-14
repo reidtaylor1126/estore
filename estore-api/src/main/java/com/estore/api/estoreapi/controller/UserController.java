@@ -33,25 +33,53 @@ public class UserController {
     }
 
     /**
+     * Creates a new user and adds it to the users.json file
+     * 
+     * @param userAccount a new userAccount to add
+     * @return a ResponseEntity with the HttpStatus of the request
+     */
+    @PostMapping("/user")
+    public ResponseEntity<UserAccount> createUser(@RequestBody UserAccount userAccount) {
+        LOG.info("POST /users " + userAccount);
+        try {
+            if (userAccount.getUsername() == null || userAccount.getUsername().isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                UserAccount newUser = userDAO.createUser(userAccount);
+                if (newUser == null) {
+                    return new ResponseEntity<>(HttpStatus.CONFLICT);
+                }
+                return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
+            }
+        } catch (IllegalArgumentException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /*
      * loginUser - logs user in and generates a sessionKey
+     * 
      * @param q - username to log user in
+     * 
      * @return ResponseEntity<String> - returns sessionKey
      */
-
     @GetMapping("/useraccount")
     public ResponseEntity<String> loginUser(@RequestParam String q) {
         LOG.info("GET /users/useraccount?q=" + q);
 
         String sessionKey;
-    
+
         UserAccount user = userDAO.loginUser(q);
 
         if (user != null) {
             sessionKey = user.getUsername() + "*" + user.getId() + "*" + user.getIsAdmin();
 
             return new ResponseEntity<String>(sessionKey, HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
