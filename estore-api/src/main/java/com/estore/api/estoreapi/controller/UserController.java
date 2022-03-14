@@ -47,6 +47,10 @@ public class UserController {
             }
             else{
                 UserAccount newUser = userDAO.createUser(userAccount);
+                if (newUser == null)
+                {
+                    return new ResponseEntity<>(HttpStatus.CONFLICT);
+                }
                 return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
             }
         } catch (IllegalArgumentException e) {
