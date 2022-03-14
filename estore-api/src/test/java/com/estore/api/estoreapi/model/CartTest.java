@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 @Tag("Model")
 public class CartTest {
     private static Product[] testProducts = {
-        new Product("test-1", "test 1", 1.0, 1),
-        new Product("test-2", "test 2", 2.0, 2),
-        new Product("test-3", "test 3", 3.0, 3)
+        new Product(1, "test-1", "test 1", 1.0, 1),
+        new Product(2, "test-2", "test 2", 2.0, 2),
+        new Product(3, "test-3", "test 3", 3.0, 3)
     };
 
     @Test

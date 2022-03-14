@@ -27,13 +27,13 @@ public class CartFileDAOTest {
     private UserAccount mockUser = new UserAccount(1, "user1", false);
 
     private Product[] testProducts0 = {
-        new Product("test-1", "test 1", 1.0, 2)
+        new Product(1, "test-1", "test 1", 1.0, 2)
     };
 
     private Product[] testProducts1 = {
-        new Product("test-1", "test 1", 1.0, 1),
-        new Product("test-2", "test 2", 2.0, 2),
-        new Product("test-3", "test 3", 3.0, 3)
+        new Product(1, "test-1", "test 1", 1.0, 1),
+        new Product(2, "test-2", "test 2", 2.0, 2),
+        new Product(3, "test-3", "test 3", 3.0, 3)
     };
 
     private Cart testCart0 = new Cart(testProducts0);
