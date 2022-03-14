@@ -8,6 +8,7 @@ import { ProductsComponent } from './components/products/products.component';
 import { ProductComponent } from './components/product/product.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -17,7 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
         ProductComponent,
         NotFoundComponent,
     ],
-    imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+    imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
     providers: [],
     bootstrap: [AppComponent],
 })
