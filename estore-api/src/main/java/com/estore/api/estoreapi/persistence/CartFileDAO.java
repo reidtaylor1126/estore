@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CartFileDAO implements CartDAO {
     
-    private final static File CARTS_DIRECTORY = new File("data/carts");
+    private static File cartsDirectory = new File("data/carts");
 
-    Map<Integer, Cart> carts;
+    private Map<Integer, Cart> carts;
 
     /**
      * The object mapper.
@@ -42,15 +42,10 @@ public class CartFileDAO implements CartDAO {
     }
 
     public Cart updateCart(String token, Cart cart) throws AccountNotFoundException, InvalidTokenException, IOException {
-        try {
-            int id = userDAO.verifyToken(token).getId();
-            carts.put(id, cart);
-            writeCart(id, cart);
-            return carts.get(id);
-        } catch(FileNotFoundException fnfe) {
-            System.out.printf("Invalid token: '%s'\n", token);
-            return null;
-        }
+        int id = userDAO.verifyToken(token).getId();
+        carts.put(id, cart);
+        writeCart(id, cart);
+        return carts.get(id);
     }
 
     public Cart clearCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
@@ -71,7 +66,7 @@ public class CartFileDAO implements CartDAO {
 
     private void readAllCarts() throws IOException {
         this.carts = new TreeMap<Integer, Cart>();
-        for(File cartFile : CARTS_DIRECTORY.listFiles()) {
+        for(File cartFile : cartsDirectory.listFiles()) {
             Integer id = Integer.parseInt(cartFile.getName().replaceAll(".json", ""));
             this.carts.put(id, readCart(cartFile));
         }
@@ -83,15 +78,15 @@ public class CartFileDAO implements CartDAO {
     }
 
     private void writeCart(int id, Cart cart) throws IOException {
-        File newCart = new File(CARTS_DIRECTORY, id + ".json");
+        File newCart = new File(cartsDirectory, id + ".json");
         objectMapper.writeValue(newCart, cart.getProducts());
     }
 
-    private File getCartFile(int id) throws IOException {
-        return(new File(CARTS_DIRECTORY, id + ".json"));
+    private File getCartFile(int id) {
+        return(new File(cartsDirectory, id + ".json"));
     }
 
-    private void deleteCartFile(File cartFile) throws IOException {
+    private void deleteCartFile(File cartFile) {
         cartFile.delete();
     }
 }

@@ -1,5 +1,7 @@
 package com.estore.api.estoreapi.model;
 
+import java.util.Arrays;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -64,6 +66,18 @@ public class Cart {
         return total;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if(other instanceof Cart) {
+            Cart otherCart = (Cart) other;
+            return(
+                Arrays.equals(this.products, otherCart.getProducts())
+            );
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         return String.format(STRING_FORMAT, numItems, totalPrice);
     }
