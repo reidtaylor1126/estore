@@ -19,7 +19,7 @@
 .settings
 .springBeans
 .vscode
-/code
+code/
 MANIFEST.MF
 _site/
 activemq-data
@@ -43,15 +43,15 @@ secrets.yml
 
 
 # compiled output  
-/dist
-/tmp
-/out-tsc
+dist/
+tmp/
+out-tsc/
 
 # dependencies
-/node_modules
+node_modules/
 
 # IDEs and editors
-/.idea
+.idea/
 .project
 .classpath
 .c9/
@@ -67,15 +67,16 @@ secrets.yml
 !.vscode/extensions.json
 
 # misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
+.sass-cache/
+connect.lock/
+coverage/
+libpeerconnection.log/
 npm-debug.log
 yarn-error.log
 testem.log
-/typings
+typings/
 
 # System Files
 .DS_Store
 Thumbs.db
+.angular/
