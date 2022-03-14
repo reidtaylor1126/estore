@@ -32,6 +32,11 @@ public class UserController {
         this.userDAO = _userDAO;
     }
 
+    /**
+     * Creates a new user and adds it to the users.json file
+     * @param userAccount a new userAccount to add
+     * @return a ResponseEntity with the HttpStatus of the request
+     */
     @PostMapping("/user")
     public ResponseEntity<UserAccount> createUser(@RequestBody UserAccount userAccount) {
         LOG.info("POST /users " + userAccount);
