@@ -51,7 +51,7 @@ export class ProductDetailComponent implements OnInit {
     }
 
     saveEdit(): void {
-        if (this.userIsAdmin) {
+        if (this.isAdmin()) {
             //console.log('Attempting to save edits...');
             this.inventoryService
                 .updateProduct(this.product)
@@ -63,7 +63,7 @@ export class ProductDetailComponent implements OnInit {
     }
 
     cancelEdit(): void {
-        if (this.userIsAdmin) {
+        if (this.isAdmin()) {
             this.inventoryService.getProduct(this.id).subscribe((value) => {
                 this.product = value;
             });
