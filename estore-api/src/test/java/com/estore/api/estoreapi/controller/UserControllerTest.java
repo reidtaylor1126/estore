@@ -57,4 +57,49 @@ public class UserControllerTest {
 
         assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
     }
+
+    @Test
+    public void testCreateUser() throws IOException {
+        UserAccount userAccount = new UserAccount(99, "99");
+
+        when(mockUserDAO.createUser(userAccount)).thenReturn(userAccount);
+
+        ResponseEntity<UserAccount> response = userController.createUser(userAccount);
+
+        assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+        assertEquals(response.getBody(), userAccount);
+    }
+
+    @Test
+    public void testCreateUserDuplicate() throws IOException {
+        UserAccount userAccount = new UserAccount(99, "99");
+
+        when(mockUserDAO.createUser(userAccount)).thenReturn(null);
+
+        ResponseEntity<UserAccount> response = userController.createUser(userAccount);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
+    @Test
+    public void testCreateUserEmptyName() throws IOException{
+        UserAccount userAccount = new UserAccount(99, "");
+
+        when(mockUserDAO.createUser(userAccount)).thenReturn(null);
+
+        ResponseEntity<UserAccount> response = userController.createUser(userAccount);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testError() throws IOException{
+        UserAccount userAccount = new UserAccount(99, "99");
+
+        when(mockUserDAO.createUser(userAccount)).thenThrow(new IOException());
+
+        ResponseEntity<UserAccount> response = userController.createUser(userAccount);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
 }
