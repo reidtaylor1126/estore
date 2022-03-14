@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.validation.Valid;
 
 import com.estore.api.estoreapi.model.UserAccount;
+import com.estore.api.estoreapi.model.Cart;
 import com.estore.api.estoreapi.persistence.UserDAO;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +33,7 @@ public class UserController {
     public UserController(UserDAO _userDAO) {
         this.userDAO = _userDAO;
     }
-
+  
     /**
      * Creates a new user and adds it to the users.json file
      * 
