@@ -34,7 +34,7 @@ public class UserControllerTest {
         String username = "test";
         int userId = 12345;
         boolean admin = false;
-        UserAccount user = new UserAccount();
+        UserAccount user = new UserAccount(1, "1");
         user.setAdmin(admin);
         user.setUsername(username);
         user.setId(userId);
