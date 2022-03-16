@@ -35,6 +35,7 @@
     justify-content: space-around;
     align-items: center;
     width: 100%;
+    min-height: 60vh;
 }
 
 .not-found {
