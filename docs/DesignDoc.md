@@ -49,7 +49,7 @@ Secondly the goal is to implement product variations, such as products being pur
 
 ## Application Domain
 
-!['Domain Model']('Domain Model.pdf')
+![Domain Model](<Domain Model.pdf>)
 
 First we have the Customer, whom has access to a cart in which they can add, edit and view products in the cart, and this cart defines items to be purchased. The cart contains products, which are viewed/searched for by the customer, these products are able to added, viewed, editted or deleted by the product owner, who is an admin user. After a transaction the product owner receives payment from the customer, who receives confirmation of the transaction. Both users must login using Auth, which grants access to user specific data, or admin priviledges if applicable. The user specific data is saved and accessed from a File Database.
 
@@ -73,7 +73,7 @@ Both the ViewModel and Model are built using Java and Spring Framework. Details 
 
 ### Overview of User Interface
 
-!['Web Application Interface Statechart']('State Chart.pdf')
+!['Web Application Interface Statechart'](<State Chart.pdf>)
 
 The user interface is comprised of 6 pages
 On the home page, the user has access to both the Home and View Items buttons on the navbar, and the account icon will open a menu that allows any user to log in, register, or logout dependent on whether the user is logged in at first.
