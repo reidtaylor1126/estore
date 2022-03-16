@@ -97,17 +97,6 @@ The Product model includes an id, name, description, price, and quantity. The Us
 
 The main area in which our code could be improved is in unity and parity between code written by different developers. Not only do we have different code styles, but we also have different ideas and levels of experience that result in vast differences in implementation. Assigning responsibilities of team members provides some help in mitigating this, but as the required functionality becomes more complex, more connection between classes implemented by different team members is required.
 
-> _Discuss design improvements that you would make if the project were
-> to continue. These improvement should be based on your direct
-> analysis of where there are problems in the code base which could be
-> addressed with design changes, and describe those suggested design
-> improvements._
-
-> _With the results from the Static Code Analysis exercise,
-> discuss the resulting issues/metrics measurements along with your analysis
-> and recommendations for further improvements. Where relevant, include
-> screenshots from the tool and/or corresponding source code that was flagged._
-
 ## Testing
 
 Testing for the program was performed using both unit testing and human functional testing. The potential conditions were layed out and actions were performed with these conditions to confirm the program was working as intended. So far all components passed their tests except a few bugs found related to the carts.
