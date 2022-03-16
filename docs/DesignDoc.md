@@ -73,7 +73,7 @@ Both the ViewModel and Model are built using Java and Spring Framework. Details 
 
 ### Overview of User Interface
 
-![Web Application Interface Statechart]('State Chart.pdf')
+!['Web Application Interface Statechart']('State Chart.pdf')
 
 The user interface is comprised of 6 pages
 On the home page, the user has access to both the Home and View Items buttons on the navbar, and the account icon will open a menu that allows any user to log in, register, or logout dependent on whether the user is logged in at first.
