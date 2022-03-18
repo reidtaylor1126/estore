@@ -188,6 +188,10 @@ public class InventoryFileDAO implements InventoryDAO {
         Product[] inventoryArray = objectMapper.readValue(new File(filename), Product[].class);
         for (Product product : inventoryArray) {
             inventory.put(product.getId(), product);
+            if (product.getId() > nextId()) {
+                nextId = product.getId();
+            }
+            ++nextId;
         }
     }
 
