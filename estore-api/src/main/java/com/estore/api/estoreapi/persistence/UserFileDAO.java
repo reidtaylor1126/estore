@@ -44,16 +44,14 @@ public class UserFileDAO implements UserDAO {
     //     if(instance == null) instance = this;
     // }
 
-    public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper)
+    @Autowired
+    public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper, CartFileDAO cartFileDAO)
             throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
+        this.cartFileDAO = cartFileDAO;
         loadUsers();
         if(instance == null) instance = this;
-    }
-
-    private void getCartFileDAO() {
-        if(this.cartFileDAO == null) this.cartFileDAO = CartFileDAO.getInstance();
     }
 
     public static UserFileDAO getInstance() {

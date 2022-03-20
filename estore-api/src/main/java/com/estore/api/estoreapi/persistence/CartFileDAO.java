@@ -32,17 +32,32 @@ public class CartFileDAO implements CartDAO {
         if(instance == null) instance = this;
     }
 
+    /**
+     * Used only for testing
+     * @param objectMapper
+     * @param userDAO
+     * @param inventoryDAO
+     */
+    public CartFileDAO(ObjectMapper objectMapper, UserDAO userDAO, InventoryDAO inventoryDAO) throws IOException {
+        this.userDAO = userDAO;
+        this.inventoryDAO = inventoryDAO;
+        this.objectMapper = objectMapper;
+        readAllCarts();
+        if(instance == null) instance = this;
+    }
+
     public static CartFileDAO getInstance() {
         return instance;
     }
 
-    private void getDependentInstances() {
+    private void getSingletonDependencies() {
         if(this.userDAO == null) this.userDAO = UserFileDAO.getInstance();
         if(this.inventoryDAO == null) this.inventoryDAO = InventoryFileDAO.getInstance();
     }
 
     @Override
     public Cart createCart(UserAccount user, Cart cart) throws IOException {
+        getSingletonDependencies();
         this.carts.put(user.getId(), verifyCart(cart));
         this.writeCart(user.getId(), verifyCart(cart));
         return cart;
@@ -50,12 +65,14 @@ public class CartFileDAO implements CartDAO {
 
     @Override
     public Cart getCart(String token) throws AccountNotFoundException, InvalidTokenException {
+        getSingletonDependencies();
         UserAccount user = userDAO.verifyToken(token);
         return verifyCart(carts.get(user.getId()));
     }
 
     @Override
     public Cart updateCart(String token, Cart cart) throws AccountNotFoundException, InvalidTokenException, IOException {
+        getSingletonDependencies();
         int id = userDAO.verifyToken(token).getId();
         carts.put(id, cart);
         writeCart(id, cart);
@@ -64,6 +81,7 @@ public class CartFileDAO implements CartDAO {
 
     @Override
     public Cart clearCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
+        getSingletonDependencies();
         int id = userDAO.verifyToken(token).getId();
         Cart old = new Cart(carts.get(id).getProducts());
         carts.put(id, Cart.EMPTY);
@@ -72,6 +90,7 @@ public class CartFileDAO implements CartDAO {
     }
     
     public Cart deleteCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
+        getSingletonDependencies();
         int id = userDAO.verifyToken(token).getId();
         Cart old = new Cart(carts.get(id).getProducts());
         carts.remove(id);
@@ -80,6 +99,7 @@ public class CartFileDAO implements CartDAO {
     }
 
     private Cart verifyCart(Cart cart) {
+        getSingletonDependencies();
         ArrayList<CartProduct> products = new ArrayList<>();
         for(CartProduct product : cart.getProducts()) {
             try{

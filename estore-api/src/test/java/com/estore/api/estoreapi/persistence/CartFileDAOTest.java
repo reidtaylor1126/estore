@@ -10,16 +10,19 @@ import java.io.IOException;
 import com.estore.api.estoreapi.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 @Tag("Persistence")
 public class CartFileDAOTest {
     private CartFileDAO cartFileDAO;
     private ObjectMapper mockObjectMapper;
-    private UserDAO mockUserDAO;
-    private InventoryDAO mockInventoryDAO;
+    private static UserFileDAO mockUserDAO;
+    private static InventoryFileDAO mockInventoryDAO;
 
     private UserAccount mockUser = new UserAccount(9999, "user9999", false);
 
@@ -50,14 +53,25 @@ public class CartFileDAOTest {
 
     private String mockToken = "token";
 
+    private static MockedStatic<UserFileDAO> mockStaticUFD;
+    private static MockedStatic<InventoryFileDAO> mockStaticIFD;
+
+    @BeforeAll
+    public static void init() {
+        mockStaticUFD = Mockito.mockStatic(UserFileDAO.class);
+        mockStaticIFD = Mockito.mockStatic(InventoryFileDAO.class);
+        mockStaticUFD.when(UserFileDAO::getInstance).thenReturn(mockUserDAO);
+        mockStaticIFD.when(InventoryFileDAO::getInstance).thenReturn(mockInventoryDAO);
+    }
+
     @BeforeEach
-    public void init() throws IOException, AccountNotFoundException, InvalidTokenException {
+    public void prepare() throws IOException, AccountNotFoundException, InvalidTokenException {
         mockObjectMapper = mock(ObjectMapper.class);
-        mockUserDAO = mock(UserDAO.class);
-        mockInventoryDAO = mock(InventoryDAO.class);
+        mockUserDAO = mock(UserFileDAO.class);
+        mockInventoryDAO = mock(InventoryFileDAO.class);
         when(mockObjectMapper.readValue(new File("data/carts/9999.json"), CartProduct[].class)).thenReturn(new CartProduct[0]);
-        cartFileDAO = new CartFileDAO(mockObjectMapper, mockUserDAO, mockInventoryDAO);
         when(mockUserDAO.verifyToken(mockToken)).thenReturn(mockUser);
+        cartFileDAO = new CartFileDAO(mockObjectMapper);
     }
 
     @Test
