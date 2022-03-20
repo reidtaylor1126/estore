@@ -23,7 +23,6 @@ export class ProductDetailComponent implements OnInit {
 
     private userIsAdmin: boolean = false;
     private editing: boolean = false;
-    private isNullValue = false;
 
     private id: number = -1;
     constructor(
@@ -37,13 +36,8 @@ export class ProductDetailComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.inventoryService.getProduct(this.id).subscribe({
-            next: (value) => {
-                this.product = value;
-            },
-            error: (err) => {
-                this.isNullValue = true;
-            },
+        this.inventoryService.getProduct(this.id).subscribe((value) => {
+            this.product = value;
         });
         this.authService.currentUser.subscribe((value) => {
             if (value) {
@@ -66,10 +60,6 @@ export class ProductDetailComponent implements OnInit {
                 });
         }
         this.leaveEditing();
-    }
-
-    isNull(): boolean {
-        return this.isNullValue;
     }
 
     cancelEdit(): void {
