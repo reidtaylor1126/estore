@@ -1,9 +1,6 @@
 package com.estore.api.estoreapi.persistence;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +10,6 @@ import java.io.IOException;
 import com.estore.api.estoreapi.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,17 +19,30 @@ public class CartFileDAOTest {
     private CartFileDAO cartFileDAO;
     private ObjectMapper mockObjectMapper;
     private UserDAO mockUserDAO;
+    private InventoryDAO mockInventoryDAO;
 
-    private UserAccount mockUser = new UserAccount(1, "user1", false);
+    private UserAccount mockUser = new UserAccount(9999, "user9999", false);
 
-    private Product[] testProducts0 = {
-        new Product(1, "test-1", "test 1", 1.0, 2)
+    // Maintained for context since CartProducts contain no information about the product they reference
+    // private Product[] testInventory = {
+    //     new Product(1, "test-1", "test 1", 1.0, 1),
+    //     new Product(2, "test-2", "test 2", 2.0, 2),
+    //     new Product(3, "test-3", "test 3", 3.0, 3)
+    // };
+
+    private static CartProduct[] testProducts0 = {
+        new CartProduct(1, 1),
+        new CartProduct(3, 2)
     };
 
-    private Product[] testProducts1 = {
-        new Product(1, "test-1", "test 1", 1.0, 1),
-        new Product(2, "test-2", "test 2", 2.0, 2),
-        new Product(3, "test-3", "test 3", 3.0, 3)
+    private static CartProduct[] testProducts1 = {
+        new CartProduct(1, 1),
+        new CartProduct(3, 2)
+    };
+    
+    private static CartProduct[] testProducts2 = {
+        new CartProduct(1, 1),
+        new CartProduct(4, 2)
     };
 
     private Cart testCart0 = new Cart(testProducts0);
@@ -45,8 +54,9 @@ public class CartFileDAOTest {
     public void init() throws IOException, AccountNotFoundException, InvalidTokenException {
         mockObjectMapper = mock(ObjectMapper.class);
         mockUserDAO = mock(UserDAO.class);
-        when(mockObjectMapper.readValue(new File("data/carts/1.json"), Product[].class)).thenReturn(new Product[0]);
-        cartFileDAO = new CartFileDAO(mockObjectMapper, mockUserDAO);
+        mockInventoryDAO = mock(InventoryDAO.class);
+        when(mockObjectMapper.readValue(new File("data/carts/9999.json"), CartProduct[].class)).thenReturn(new CartProduct[0]);
+        cartFileDAO = new CartFileDAO(mockObjectMapper, mockUserDAO, mockInventoryDAO);
         when(mockUserDAO.verifyToken(mockToken)).thenReturn(mockUser);
     }
 
@@ -83,7 +93,7 @@ public class CartFileDAOTest {
         Cart result = cartFileDAO.deleteCart(mockToken);
 
         assertEquals(testCart1, result);
-        File cartFile = new File("data/carts/1.json");
+        File cartFile = new File("data/carts/9999.json");
         assertEquals(false, cartFile.exists());
     }
 }

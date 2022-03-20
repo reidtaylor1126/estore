@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class CartFileDAO implements CartDAO {
     
     private static File cartsDirectory = new File("data/carts");
+    private static CartFileDAO instance = null;
 
     private Map<Integer, Cart> carts;
 
@@ -22,24 +23,35 @@ public class CartFileDAO implements CartDAO {
     private ObjectMapper objectMapper;    
 
     private UserDAO userDAO = null;
+    private InventoryDAO inventoryDAO = null;
     
     @Autowired
-    public CartFileDAO(ObjectMapper objectMapper, UserDAO userDAO) throws IOException {
+    public CartFileDAO(ObjectMapper objectMapper) throws IOException {
         this.objectMapper = objectMapper;
-        this.userDAO = userDAO;
         readAllCarts();
+        if(instance == null) instance = this;
     }
 
+    public static CartFileDAO getInstance() {
+        return instance;
+    }
+
+    private void getDependentInstances() {
+        if(this.userDAO == null) this.userDAO = UserFileDAO.getInstance();
+        if(this.inventoryDAO == null) this.inventoryDAO = InventoryFileDAO.getInstance();
+    }
+
+    @Override
     public Cart createCart(UserAccount user, Cart cart) throws IOException {
-        this.carts.put(user.getId(), cart);
-        this.writeCart(user.getId(), cart);
+        this.carts.put(user.getId(), verifyCart(cart));
+        this.writeCart(user.getId(), verifyCart(cart));
         return cart;
     }
 
     @Override
     public Cart getCart(String token) throws AccountNotFoundException, InvalidTokenException {
         UserAccount user = userDAO.verifyToken(token);
-        return carts.get(user.getId());
+        return verifyCart(carts.get(user.getId()));
     }
 
     @Override
@@ -47,7 +59,7 @@ public class CartFileDAO implements CartDAO {
         int id = userDAO.verifyToken(token).getId();
         carts.put(id, cart);
         writeCart(id, cart);
-        return carts.get(id);
+        return verifyCart(carts.get(id));
     }
 
     @Override
@@ -67,6 +79,18 @@ public class CartFileDAO implements CartDAO {
         return old;
     }
 
+    private Cart verifyCart(Cart cart) {
+        ArrayList<CartProduct> products = new ArrayList<>();
+        for(CartProduct product : cart.getProducts()) {
+            try{
+                inventoryDAO.getProduct(product.getId());
+                products.add(product);
+            } catch(IOException ioe) {}
+        }
+        if(products.size() == cart.getProducts().length) return cart;
+        else return new Cart(products.toArray(new CartProduct[0]));
+    }
+
     private void readAllCarts() throws IOException {
         this.carts = new TreeMap<Integer, Cart>();
         for(File cartFile : cartsDirectory.listFiles()) {
@@ -76,7 +100,7 @@ public class CartFileDAO implements CartDAO {
     }
 
     private Cart readCart(File cartFile) throws IOException {
-        Product[] products = objectMapper.readValue(cartFile, Product[].class);
+        CartProduct[] products = objectMapper.readValue(cartFile, CartProduct[].class);
         return new Cart(products);
     }
 

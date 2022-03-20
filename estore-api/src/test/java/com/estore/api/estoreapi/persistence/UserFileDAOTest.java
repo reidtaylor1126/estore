@@ -24,10 +24,12 @@ public class UserFileDAOTest {
     UserFileDAO userFileDAO;
     UserAccount[] testUsers;
     ObjectMapper mockObjectMapper;
+    CartFileDAO mockCartFileDAO;
 
     @BeforeEach
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
+        mockCartFileDAO = mock(CartFileDAO.class);
         testUsers = new UserAccount[3];
         testUsers[0] = new UserAccount(1, "1");
         testUsers[1] = new UserAccount(2, "2");
@@ -35,7 +37,7 @@ public class UserFileDAOTest {
 
         when(mockObjectMapper.readValue(new File("filenotfound.txt"), UserAccount[].class))
                 .thenReturn(testUsers);
-        userFileDAO = new UserFileDAO("filenotfound.txt", mockObjectMapper);
+        userFileDAO = new UserFileDAO("filenotfound.txt", mockObjectMapper, mockCartFileDAO);
     }
 
     /**

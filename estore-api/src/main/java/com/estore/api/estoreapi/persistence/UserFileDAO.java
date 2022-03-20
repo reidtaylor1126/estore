@@ -8,6 +8,7 @@ import com.estore.api.estoreapi.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,17 @@ public class UserFileDAO implements UserDAO {
      */
     private ObjectMapper objectMapper;    
 
+    private CartFileDAO cartFileDAO = null;
+
     private static int nextId;
+
+    // public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper)
+    //         throws IOException {
+    //     this.filename = filename;
+    //     this.objectMapper = objectMapper;
+    //     loadUsers();
+    //     if(instance == null) instance = this;
+    // }
 
     public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper)
             throws IOException {
@@ -39,6 +50,10 @@ public class UserFileDAO implements UserDAO {
         this.objectMapper = objectMapper;
         loadUsers();
         if(instance == null) instance = this;
+    }
+
+    private void getCartFileDAO() {
+        if(this.cartFileDAO == null) this.cartFileDAO = CartFileDAO.getInstance();
     }
 
     public static UserFileDAO getInstance() {
@@ -124,6 +139,7 @@ public class UserFileDAO implements UserDAO {
                 return null;
             }
             users.put(newUser.getUsername(), newUser);
+            cartFileDAO.createCart(newUser, Cart.EMPTY);
             saveUsers();
             return newUser;
         }

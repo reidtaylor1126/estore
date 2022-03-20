@@ -6,37 +6,37 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * @author Reid Taylor
+ * 
+ * The cart class represents a currently active cart, storing a list of references to products in the inventory
+ */
 public class Cart {
     @NotNull
     @JsonProperty
-    private Product[] products;
+    private CartProduct[] products;
 
     @JsonProperty
     private int numItems;
 
-    @JsonProperty
-    private Double totalPrice;
-
     public static final Cart EMPTY = new Cart();
-    private static final String STRING_FORMAT = "Cart [numItems=%d, totalPrice=%.2f]";
+    private static final String STRING_FORMAT = "Cart [numItems=%d]";
 
     public Cart() {
-        this.products = new Product[0];
+        this.products = new CartProduct[0];
         this.numItems = 0;
-        this.totalPrice = 0.0;
     }
 
-    public Cart(Product[] products) {
+    public Cart(CartProduct[] products) {
         this.products = products;
         this.numItems = getNumItems();
-        this.totalPrice = getTotalPrice();
     }
 
     /**
      * Returns an array of the {@link Product}s in this cart
      * @return an array of the {@link Product}s in this cart
      */
-    public Product[] getProducts() {
+    public CartProduct[] getProducts() {
         return this.products;
     }
 
@@ -46,21 +46,8 @@ public class Cart {
      */
     public int getNumItems() {
         int total = 0;
-        for (Product product : products) {
+        for (CartProduct product : this.products) {
             total += product.getQuantity();
-        }
-
-        return total;
-    }
-
-    /**
-     * Returns the total price of all of the items in the cart
-     * @return
-     */
-    public Double getTotalPrice() {
-        Double total = 0.0;
-        for (Product product : products) {
-            total += product.getPrice()*product.getQuantity();
         }
 
         return total;
@@ -79,6 +66,6 @@ public class Cart {
 
     @Override
     public String toString() {
-        return String.format(STRING_FORMAT, numItems, totalPrice);
+        return String.format(STRING_FORMAT, numItems);
     }
 }
