@@ -8,10 +8,9 @@ import org.junit.jupiter.api.Test;
 
 @Tag("Model")
 public class CartTest {
-    private static Product[] testProducts = {
-        new Product(1, "test-1", "test 1", 1.0, 1),
-        new Product(2, "test-2", "test 2", 2.0, 2),
-        new Product(3, "test-3", "test 3", 3.0, 3)
+    private static CartProduct[] testProducts = {
+        new CartProduct(1, 1),
+        new CartProduct(3, 2)
     };
 
     @Test
@@ -19,8 +18,7 @@ public class CartTest {
         Cart testCart = new Cart(testProducts);
 
         assertArrayEquals(testProducts, testCart.getProducts());
-        assertEquals(6, testCart.getNumItems());
-        assertEquals(14.0, testCart.getTotalPrice());
+        assertEquals(3, testCart.getNumItems());
     }
 
     @Test
@@ -29,6 +27,5 @@ public class CartTest {
 
         assertArrayEquals(new Product[0], emptyCart.getProducts());
         assertEquals(0, emptyCart.getNumItems());
-        assertEquals(0.0, emptyCart.getTotalPrice());
     }
 }

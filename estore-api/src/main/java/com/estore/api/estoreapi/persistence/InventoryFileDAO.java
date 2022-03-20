@@ -27,6 +27,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class InventoryFileDAO implements InventoryDAO {
 
+    private static InventoryFileDAO instance;
+
     /**
      * The current inventory.
      */
@@ -59,6 +61,11 @@ public class InventoryFileDAO implements InventoryDAO {
         this.filename = filename;
         this.objectMapper = objectMapper;
         loadInventory();
+        if(instance == null) instance = this;
+    }
+
+    public static InventoryFileDAO getInstance() {
+        return instance;
     }
 
     /**

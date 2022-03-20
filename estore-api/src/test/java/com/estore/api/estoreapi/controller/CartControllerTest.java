@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 
 import com.estore.api.estoreapi.model.*;
-import com.estore.api.estoreapi.persistence.CartDAO;
+import com.estore.api.estoreapi.persistence.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -20,10 +20,9 @@ public class CartControllerTest {
     private CartController cartController;
     private CartDAO mockCartDAO;
 
-    private static Product[] testProducts = {
-        new Product(1, "test-1", "test 1", 1.0, 1),
-        new Product(2, "test-2", "test 2", 2.0, 2),
-        new Product(3, "test-3", "test 3", 3.0, 3)
+    private static CartProduct[] testProducts = {
+        new CartProduct(1, 1),
+        new CartProduct(3, 2)
     };
 
     private static Cart testCart = new Cart(testProducts);
