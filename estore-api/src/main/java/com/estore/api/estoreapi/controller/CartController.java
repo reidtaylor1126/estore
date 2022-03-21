@@ -14,6 +14,7 @@ import com.estore.api.estoreapi.model.Cart;
 import com.estore.api.estoreapi.model.InvalidTokenException;
 import com.estore.api.estoreapi.persistence.CartDAO;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +30,7 @@ public class CartController {
     
     private CartDAO cartDAO;
 
+    @Autowired
     public CartController(CartDAO cartDAO) {
         this.cartDAO = cartDAO;
     }
