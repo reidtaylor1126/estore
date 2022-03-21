@@ -19,6 +19,9 @@ public class Cart {
     @JsonProperty
     private int numItems;
 
+    @JsonProperty
+    private Double totalPrice;
+
     public static final Cart EMPTY = new Cart();
     private static final String STRING_FORMAT = "Cart [numItems=%d]";
 
@@ -51,6 +54,14 @@ public class Cart {
         }
 
         return total;
+    }
+
+    public Double getTotalPrice() {
+        return this.totalPrice;
+    }
+
+    public void setTotalPrice(Double price) {
+        this.totalPrice = price;
     }
 
     @Override

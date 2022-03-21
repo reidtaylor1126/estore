@@ -1,6 +1,8 @@
 package com.estore.api.estoreapi.persistence;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CartFileDAO implements CartDAO {
-    
+    private static final Logger LOG = Logger.getLogger(CartFileDAO.class.getName());
     private File cartsDirectory = new File("data/carts");
     private static CartFileDAO instance = null;
 
@@ -101,14 +103,19 @@ public class CartFileDAO implements CartDAO {
     private Cart verifyCart(Cart cart) {
         getSingletonDependencies();
         ArrayList<CartProduct> products = new ArrayList<>();
-        for(CartProduct product : cart.getProducts()) {
+        Double totalPrice = 0.0;
+        for(CartProduct cartProduct : cart.getProducts()) {
             try{
-                inventoryDAO.getProduct(product.getId());
-                products.add(product);
-            } catch(IOException ioe) {}
+                Product product = inventoryDAO.getProduct(cartProduct.getId());
+                products.add(cartProduct);
+                totalPrice += product.getPrice()*cartProduct.getQuantity();
+            } catch(IOException ioe) {
+                LOG.log(Level.INFO, String.format("An item of ID %d was removed from a cart because it does not exist in the inventory.", cartProduct.getId()));
+            }
         }
-        if(products.size() == cart.getProducts().length) return cart;
-        else return new Cart(products.toArray(new CartProduct[0]));
+        Cart verified = products.size() == cart.getProducts().length ? cart : new Cart(products.toArray(new CartProduct[0]));
+        verified.setTotalPrice(totalPrice);
+        return verified;
     }
 
     private void readAllCarts() throws IOException {
