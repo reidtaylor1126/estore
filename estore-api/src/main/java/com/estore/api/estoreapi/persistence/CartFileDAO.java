@@ -2,6 +2,7 @@ package com.estore.api.estoreapi.persistence;
 
 import java.util.*;
 import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
 
 import com.estore.api.estoreapi.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CartFileDAO implements CartDAO {
     
-    private static File cartsDirectory = new File("data/carts");
+    private File cartsDirectory = new File("data/carts");
     private static CartFileDAO instance = null;
 
     private Map<Integer, Cart> carts;
@@ -32,16 +33,9 @@ public class CartFileDAO implements CartDAO {
         if(instance == null) instance = this;
     }
 
-    /**
-     * Used only for testing
-     * @param objectMapper
-     * @param userDAO
-     * @param inventoryDAO
-     */
-    public CartFileDAO(ObjectMapper objectMapper, UserDAO userDAO, InventoryDAO inventoryDAO) throws IOException {
-        this.userDAO = userDAO;
-        this.inventoryDAO = inventoryDAO;
+    public CartFileDAO(ObjectMapper objectMapper, String cartsDirectory) throws IOException {
         this.objectMapper = objectMapper;
+        this.cartsDirectory = new File(cartsDirectory);
         readAllCarts();
         if(instance == null) instance = this;
     }
@@ -58,9 +52,15 @@ public class CartFileDAO implements CartDAO {
     @Override
     public Cart createCart(UserAccount user, Cart cart) throws IOException {
         getSingletonDependencies();
-        this.carts.put(user.getId(), verifyCart(cart));
-        this.writeCart(user.getId(), verifyCart(cart));
-        return cart;
+        File newCart = new File(cartsDirectory, user.getId() + ".json");
+        if(newCart.createNewFile()) {
+            Cart verified = verifyCart(cart);
+            this.carts.put(user.getId(), verified);
+            this.writeCart(user.getId(), verified);
+            return cart;
+        } else {
+            throw new FileAlreadyExistsException(newCart.getName());
+        }
     }
 
     @Override
@@ -115,17 +115,20 @@ public class CartFileDAO implements CartDAO {
         this.carts = new TreeMap<Integer, Cart>();
         for(File cartFile : cartsDirectory.listFiles()) {
             Integer id = Integer.parseInt(cartFile.getName().replaceAll(".json", ""));
+            System.out.printf("Reading cart %s%n",cartFile.getPath());
             this.carts.put(id, readCart(cartFile));
         }
     }
 
     private Cart readCart(File cartFile) throws IOException {
         CartProduct[] products = objectMapper.readValue(cartFile, CartProduct[].class);
+        System.out.printf("Got cart with %d products\n",products.length);
         return new Cart(products);
     }
 
     private void writeCart(int id, Cart cart) throws IOException {
         File newCart = new File(cartsDirectory, id + ".json");
+        if(!newCart.exists()) newCart.createNewFile();
         objectMapper.writeValue(newCart, cart.getProducts());
     }
 

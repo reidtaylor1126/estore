@@ -19,7 +19,6 @@ import org.mockito.Mockito;
 
 @Tag("Persistence")
 public class CartFileDAOTest {
-    private CartFileDAO cartFileDAO;
     private ObjectMapper mockObjectMapper;
     private static UserFileDAO mockUserDAO;
     private static InventoryFileDAO mockInventoryDAO;
@@ -58,6 +57,8 @@ public class CartFileDAOTest {
 
     @BeforeAll
     public static void init() {
+        mockUserDAO = mock(UserFileDAO.class);
+        mockInventoryDAO = mock(InventoryFileDAO.class);
         mockStaticUFD = Mockito.mockStatic(UserFileDAO.class);
         mockStaticIFD = Mockito.mockStatic(InventoryFileDAO.class);
         mockStaticUFD.when(UserFileDAO::getInstance).thenReturn(mockUserDAO);
@@ -67,47 +68,59 @@ public class CartFileDAOTest {
     @BeforeEach
     public void prepare() throws IOException, AccountNotFoundException, InvalidTokenException {
         mockObjectMapper = mock(ObjectMapper.class);
-        mockUserDAO = mock(UserFileDAO.class);
-        mockInventoryDAO = mock(InventoryFileDAO.class);
-        when(mockObjectMapper.readValue(new File("data/carts/9999.json"), CartProduct[].class)).thenReturn(new CartProduct[0]);
+        when(mockObjectMapper.readValue(new File("data/test-carts/test-instance/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
+        when(mockObjectMapper.readValue(new File("data/test-carts/test-instance/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         when(mockUserDAO.verifyToken(mockToken)).thenReturn(mockUser);
-        cartFileDAO = new CartFileDAO(mockObjectMapper);
     }
 
     @Test
     public void testCreateCart() throws IOException, AccountNotFoundException, InvalidTokenException {
+        CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-create");
         Cart result = cartFileDAO.createCart(mockUser, testCart0);
 
         assertEquals(testCart0, result);
         assertEquals(testCart0, cartFileDAO.getCart(mockToken));
+
+        File cartFile = new File("data/carts-tests/test-create/9999.json");
+        cartFile.delete();
     }
 
     @Test
     public void testUpdateCart() throws IOException, AccountNotFoundException, InvalidTokenException {
+        CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-update");
+        cartFileDAO.createCart(mockUser, Cart.EMPTY);
         Cart result = cartFileDAO.updateCart(mockToken, testCart1);
 
         assertEquals(testCart1, result);
         assertEquals(testCart1, cartFileDAO.getCart(mockToken));
+
+        File cartFile = new File("data/carts-tests/test-update/9999.json");
+        cartFile.delete();
     }
 
     @Test
     public void testClearCart() throws IOException, AccountNotFoundException, InvalidTokenException {
-        cartFileDAO.createCart(mockUser, testCart1);
+        CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-clear");
+        cartFileDAO.createCart(mockUser, testCart0);
 
         Cart result = cartFileDAO.clearCart(mockToken);
 
         assertEquals(testCart1, result);
         assertEquals(Cart.EMPTY, cartFileDAO.getCart(mockToken));
+        File cartFile = new File("data/carts-tests/test-clear/9999.json");
+        cartFile.delete();
     }
 
     @Test
     public void deleteCart() throws IOException, AccountNotFoundException, InvalidTokenException {
-        cartFileDAO.createCart(mockUser, testCart1);
+        CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-delete");
+        cartFileDAO.createCart(mockUser, testCart0);
 
         Cart result = cartFileDAO.deleteCart(mockToken);
 
         assertEquals(testCart1, result);
-        File cartFile = new File("data/carts/9999.json");
+        
+        File cartFile = new File("data/carts-tests/test-delete/9999.json");
         assertEquals(false, cartFile.exists());
     }
 }
