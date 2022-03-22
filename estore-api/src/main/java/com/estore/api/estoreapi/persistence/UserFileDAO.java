@@ -133,10 +133,10 @@ public class UserFileDAO implements UserDAO {
     @Override
     public UserAccount createUser(UserAccount user) throws IOException, IllegalArgumentException {
         synchronized (users) {
-            if (users.containsKey(user.getUsername())) {
+            UserAccount newUser = new UserAccount(nextId(), user.getUsername());
+            if (users.containsKey(newUser.getUsername())) {
                 return null;
             }
-            UserAccount newUser = new UserAccount(nextId(), user.getUsername());
             users.put(newUser.getUsername(), newUser);
             cartFileDAO.createCart(newUser, Cart.EMPTY);
             saveUsers();
