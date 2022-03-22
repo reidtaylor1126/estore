@@ -107,10 +107,13 @@ public class CartFileDAO implements CartDAO {
         for(CartProduct cartProduct : cart.getProducts()) {
             try{
                 Product product = inventoryDAO.getProduct(cartProduct.getId());
-                products.add(cartProduct);
-                totalPrice += product.getPrice()*cartProduct.getQuantity();
+                if(product == null) {LOG.log(Level.INFO, String.format("An item of ID %d was removed from a cart because it does not exist in the inventory.", cartProduct.getId()));}
+                else {
+                    products.add(cartProduct);
+                    totalPrice += product.getPrice()*cartProduct.getQuantity();
+                }
             } catch(IOException ioe) {
-                LOG.log(Level.INFO, String.format("An item of ID %d was removed from a cart because it does not exist in the inventory.", cartProduct.getId()));
+                
             }
         }
         Cart verified = products.size() == cart.getProducts().length ? cart : new Cart(products.toArray(new CartProduct[0]));
