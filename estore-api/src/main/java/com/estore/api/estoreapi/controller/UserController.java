@@ -33,7 +33,7 @@ public class UserController {
     public UserController(UserDAO _userDAO) {
         this.userDAO = _userDAO;
     }
-  
+
     /**
      * Creates a new user and adds it to the users.json file
      * 
@@ -53,9 +53,6 @@ public class UserController {
                 }
                 return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
             }
-        } catch (IllegalArgumentException e) {
-            LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

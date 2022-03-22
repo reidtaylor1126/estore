@@ -30,18 +30,23 @@ public class InventoryControllerTest {
     @Test
     public void testCreateProduct() throws IOException {
         Product product = new Product(1, "test", "testdes", 1.0, 1);
+        Product product2 = new Product(1, null, "testdes", 1.0, 1);
 
         when(mockInventoryDAO.createProduct(product)).thenReturn(product);
 
         ResponseEntity<Product> response = inventoryController.createProduct(product);
-
         assertEquals(response.getStatusCode(), HttpStatus.CREATED);
         assertEquals(response.getBody(), product);
+        when(mockInventoryDAO.createProduct(product2)).thenReturn(null);
+        ResponseEntity<Product> response2 = inventoryController.createProduct(product2);
+        assertEquals(response2.getStatusCode(), HttpStatus.BAD_REQUEST);
+
     }
 
     @Test
     public void testUpdateProduct() throws IOException {
         Product product = new Product(1, "test", "testdes", 1.0, 1);
+        Product product2 = new Product(null, "test", "testdes", 1.0, 1);
 
         when(mockInventoryDAO.updateProduct(product)).thenReturn(product);
 
@@ -51,6 +56,10 @@ public class InventoryControllerTest {
         assertEquals(response2.getStatusCode(), HttpStatus.NOT_FOUND);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
         assertEquals(response.getBody(), product);
+
+        when(mockInventoryDAO.updateProduct(product2)).thenReturn(null);
+        ResponseEntity<Product> response3 = inventoryController.updateProduct(product2);
+        assertEquals(response3.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
