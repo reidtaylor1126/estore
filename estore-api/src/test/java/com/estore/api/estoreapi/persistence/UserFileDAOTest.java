@@ -4,12 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-
+import com.estore.api.estoreapi.model.AccountNotFoundException;
+import com.estore.api.estoreapi.model.InvalidTokenException;
 import com.estore.api.estoreapi.model.UserAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,6 +40,13 @@ public class UserFileDAOTest {
         userFileDAO = new UserFileDAO("filenotfound.txt", mockObjectMapper, mockCartFileDAO);
     }
 
+    @Test
+    void testVerifyToken() {
+        assertThrows(AccountNotFoundException.class, () -> userFileDAO.verifyToken("4*1"));
+        assertDoesNotThrow(() -> userFileDAO.verifyToken("1*1"));
+        assertThrows(InvalidTokenException.class, () -> userFileDAO.verifyToken("1*2"));
+    }
+
     /**
      * Tests loginUser method with valid username
      */
@@ -59,14 +68,15 @@ public class UserFileDAOTest {
     @Test
     public void testCreateUser() {
         UserAccount userAccount = new UserAccount(99, "test99");
-        UserAccount result = assertDoesNotThrow((() -> userFileDAO.createUser(userAccount)), "Unexpected Exception Thrown");
+        UserAccount result = assertDoesNotThrow((() -> userFileDAO.createUser(userAccount)),
+                "Unexpected Exception Thrown");
         assertNotNull(result);
         UserAccount actual = userFileDAO.loginUser(result.getUsername());
         assertEquals(actual.getId(), result.getId());
     }
 
     @Test
-    public void testDuplicates() throws IOException{
+    public void testDuplicates() throws IOException {
         UserAccount userAccount = new UserAccount(3, "3");
 
         userAccount = userFileDAO.createUser(userAccount);

@@ -23,23 +23,25 @@ public class CartFileDAO implements CartDAO {
     /**
      * The object mapper.
      */
-    private ObjectMapper objectMapper;    
+    private ObjectMapper objectMapper;
 
     private UserDAO userDAO = null;
     private InventoryDAO inventoryDAO = null;
-    
+
     @Autowired
     public CartFileDAO(ObjectMapper objectMapper) throws IOException {
         this.objectMapper = objectMapper;
         readAllCarts();
-        if(instance == null) instance = this;
+        if (instance == null)
+            instance = this;
     }
 
     public CartFileDAO(ObjectMapper objectMapper, String cartsDirectory) throws IOException {
         this.objectMapper = objectMapper;
         this.cartsDirectory = new File(cartsDirectory);
         readAllCarts();
-        if(instance == null) instance = this;
+        if (instance == null)
+            instance = this;
     }
 
     public static CartFileDAO getInstance() {
@@ -47,15 +49,17 @@ public class CartFileDAO implements CartDAO {
     }
 
     private void getSingletonDependencies() {
-        if(this.userDAO == null) this.userDAO = UserFileDAO.getInstance();
-        if(this.inventoryDAO == null) this.inventoryDAO = InventoryFileDAO.getInstance();
+        if (this.userDAO == null)
+            this.userDAO = UserFileDAO.getInstance();
+        if (this.inventoryDAO == null)
+            this.inventoryDAO = InventoryFileDAO.getInstance();
     }
 
     @Override
     public Cart createCart(UserAccount user, Cart cart) throws IOException {
         getSingletonDependencies();
         File newCart = new File(cartsDirectory, user.getId() + ".json");
-        if(newCart.createNewFile()) {
+        if (newCart.createNewFile()) {
             Cart verified = verifyCart(cart);
             this.carts.put(user.getId(), verified);
             this.writeCart(user.getId(), verified);
@@ -66,14 +70,16 @@ public class CartFileDAO implements CartDAO {
     }
 
     @Override
-    public Cart getCart(String token) throws AccountNotFoundException, InvalidTokenException {
+    public Cart getCart(String token)
+            throws AccountNotFoundException, InvalidTokenException, IOException {
         getSingletonDependencies();
         UserAccount user = userDAO.verifyToken(token);
         return verifyCart(carts.get(user.getId()));
     }
 
     @Override
-    public Cart updateCart(String token, Cart cart) throws AccountNotFoundException, InvalidTokenException, IOException {
+    public Cart updateCart(String token, Cart cart)
+            throws AccountNotFoundException, InvalidTokenException, IOException {
         getSingletonDependencies();
         int id = userDAO.verifyToken(token).getId();
         carts.put(id, cart);
@@ -82,7 +88,8 @@ public class CartFileDAO implements CartDAO {
     }
 
     @Override
-    public Cart clearCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
+    public Cart clearCart(String token)
+            throws AccountNotFoundException, InvalidTokenException, IOException {
         getSingletonDependencies();
         int id = userDAO.verifyToken(token).getId();
         Cart old = new Cart(carts.get(id).getProducts());
@@ -90,8 +97,9 @@ public class CartFileDAO implements CartDAO {
         writeCart(id, Cart.EMPTY);
         return old;
     }
-    
-    public Cart deleteCart(String token) throws AccountNotFoundException, InvalidTokenException, IOException {
+
+    public Cart deleteCart(String token)
+            throws AccountNotFoundException, InvalidTokenException, IOException {
         getSingletonDependencies();
         int id = userDAO.verifyToken(token).getId();
         Cart old = new Cart(carts.get(id).getProducts());
@@ -100,33 +108,33 @@ public class CartFileDAO implements CartDAO {
         return old;
     }
 
-    private Cart verifyCart(Cart cart) {
+    private Cart verifyCart(Cart cart) throws IOException {
         getSingletonDependencies();
         ArrayList<CartProduct> products = new ArrayList<>();
         Double totalPrice = 0.0;
-        for(CartProduct cartProduct : cart.getProducts()) {
-            try{
-                Product product = inventoryDAO.getProduct(cartProduct.getId());
-                if(product == null) {LOG.log(Level.INFO, String.format("An item of ID %d was removed from a cart because it does not exist in the inventory.", cartProduct.getId()));}
-                else {
-                    products.add(cartProduct);
-                    totalPrice += product.getPrice()*cartProduct.getQuantity();
-                }
-            } catch(IOException ioe) {
-                
+        for (CartProduct cartProduct : cart.getProducts()) {
+            Product product = inventoryDAO.getProduct(cartProduct.getId());
+            if (product == null) {
+                LOG.log(Level.INFO, String.format(
+                        "An item of ID %d was removed from a cart because it does not exist in the inventory.",
+                        cartProduct.getId()));
+            } else {
+                products.add(cartProduct);
+                totalPrice += product.getPrice() * cartProduct.getQuantity();
             }
         }
-        Cart verified = products.size() == cart.getProducts().length ? cart : new Cart(products.toArray(new CartProduct[0]));
+        Cart verified = products.size() == cart.getProducts().length ? cart
+                : new Cart(products.toArray(new CartProduct[0]));
         verified.setTotalPrice(totalPrice);
         return verified;
     }
 
     private void readAllCarts() throws IOException {
         this.carts = new TreeMap<Integer, Cart>();
-        for(File cartFile : cartsDirectory.listFiles()) {
-            if(cartFile.getName().substring(cartFile.getName().length()-4).equals("json")) {
+        for (File cartFile : cartsDirectory.listFiles()) {
+            if (cartFile.getName().substring(cartFile.getName().length() - 4).equals("json")) {
                 Integer id = Integer.parseInt(cartFile.getName().replaceAll(".json", ""));
-                System.out.printf("Reading cart %s%n",cartFile.getPath());
+                System.out.printf("Reading cart %s%n", cartFile.getPath());
                 this.carts.put(id, readCart(cartFile));
             }
         }
@@ -134,7 +142,7 @@ public class CartFileDAO implements CartDAO {
 
     private Cart readCart(File cartFile) throws IOException {
         CartProduct[] products = objectMapper.readValue(cartFile, CartProduct[].class);
-        System.out.printf("Got cart with %d products\n",products.length);
+        System.out.printf("Got cart with %d products\n", products.length);
         return new Cart(products);
     }
 
@@ -144,7 +152,7 @@ public class CartFileDAO implements CartDAO {
     }
 
     private File getCartFile(int id) {
-        return(new File(cartsDirectory, id + ".json"));
+        return (new File(cartsDirectory, id + ".json"));
     }
 
     private void deleteCartFile(File cartFile) {
