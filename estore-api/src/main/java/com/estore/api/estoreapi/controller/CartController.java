@@ -4,14 +4,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
-import com.estore.api.estoreapi.model.AccountNotFoundException;
-import com.estore.api.estoreapi.model.Cart;
-import com.estore.api.estoreapi.model.InvalidTokenException;
+import com.estore.api.estoreapi.model.*;
 import com.estore.api.estoreapi.persistence.CartDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +50,10 @@ public class CartController {
     }
 
     @PutMapping("")
-    public ResponseEntity<Cart> updateCart(@Valid @RequestHeader("token") String token, @Valid @RequestBody Cart cart) {
-        LOG.info("PUT /cart " + token + " " + cart);
+    public ResponseEntity<Cart> updateCart(@Valid @RequestHeader("token") String token, @Valid @RequestBody CartProduct[] products) {
+        LOG.info("PUT /cart " + token + " " + Arrays.deepToString(products));
         try {
-            Cart newCart = cartDAO.updateCart(token, cart);
+            Cart newCart = cartDAO.updateCart(token, new Cart(products));
             if(newCart == null) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             else return new ResponseEntity<Cart>(newCart, HttpStatus.OK);
         } catch(AccountNotFoundException anfe) {

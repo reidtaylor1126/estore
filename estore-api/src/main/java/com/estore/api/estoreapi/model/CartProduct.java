@@ -13,12 +13,12 @@ public class CartProduct {
     /**
      * The quantity of the product in the cart, not the total quantity in the inventory.
      */
-    @JsonProperty("name")
+    @JsonProperty("quantity")
     private Integer quantity;
 
     private static final String STRING_FORMAT = "CartProduct [id=%d, quantity=%d]";
 
-    public CartProduct(int id, int quantity) {
+    public CartProduct(@JsonProperty("id") int id, @JsonProperty("quantity") int quantity) {
         this.id = id;
         this.quantity = quantity;
     }

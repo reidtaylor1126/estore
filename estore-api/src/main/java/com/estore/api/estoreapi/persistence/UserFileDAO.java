@@ -3,6 +3,7 @@ package com.estore.api.estoreapi.persistence;
 import java.io.*;
 import java.net.http.HttpRequest;
 import java.util.*;
+import java.util.logging.Logger;
 
 import com.estore.api.estoreapi.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Component("userDAO")
 public class UserFileDAO implements UserDAO {
-
+    private static final Logger LOG = Logger.getLogger(UserFileDAO.class.getName());
     private static UserFileDAO instance = null;
 
     /**
