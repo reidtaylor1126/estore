@@ -30,9 +30,9 @@ public interface InventoryDAO {
     /**
      * @param id
      * @return the product with the given id
-     * @throws IOException if cannot get product
+     * @return null if no product with the given id exists
      */
-    public Product getProduct(Integer id) throws IOException;
+    public Product getProduct(Integer id);
 
     /**
      * @param product
