@@ -70,7 +70,7 @@ public class CartFileDAOTest {
 
     @Test
     public void testCreateCart() throws IOException, AccountNotFoundException, InvalidTokenException {
-        when(mockObjectMapper.readValue(new File("data/test-carts/test-create/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
+        when(mockObjectMapper.readValue(new File("data/carts-tests/test-create/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-create");
         Cart result = cartFileDAO.createCart(mockUser, testCart0);
 
@@ -83,7 +83,7 @@ public class CartFileDAOTest {
 
     @Test
     public void testUpdateCart() throws IOException, AccountNotFoundException, InvalidTokenException {
-        when(mockObjectMapper.readValue(new File("data/test-carts/test-update/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
+        when(mockObjectMapper.readValue(new File("data/carts-tests/test-update/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-update");
         cartFileDAO.createCart(mockUser, Cart.EMPTY);
         Cart result = cartFileDAO.updateCart(mockToken, testCart1);
@@ -97,7 +97,7 @@ public class CartFileDAOTest {
 
     @Test
     public void testClearCart() throws IOException, AccountNotFoundException, InvalidTokenException {
-        when(mockObjectMapper.readValue(new File("data/test-carts/test-clear/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
+        when(mockObjectMapper.readValue(new File("data/carts-tests/test-clear/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-clear");
         cartFileDAO.createCart(mockUser, testCart0);
 
@@ -111,13 +111,13 @@ public class CartFileDAOTest {
 
     @Test
     public void deleteCart() throws IOException, AccountNotFoundException, InvalidTokenException {
-        when(mockObjectMapper.readValue(new File("data/test-carts/test-delete/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
+        when(mockObjectMapper.readValue(new File("data/carts-tests/test-delete/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-delete");
         cartFileDAO.createCart(mockUser, testCart0);
 
         Cart result = cartFileDAO.deleteCart(mockToken);
 
-        assertEquals(testCart1, result);
+        assertEquals(testCart0, result);
         
         File cartFile = new File("data/carts-tests/test-delete/9999.json");
         assertEquals(false, cartFile.exists());
