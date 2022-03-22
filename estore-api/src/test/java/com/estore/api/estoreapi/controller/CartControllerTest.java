@@ -56,23 +56,23 @@ public class CartControllerTest {
     @Test
     public void testUpdateCart() throws AccountNotFoundException, InvalidTokenException, IOException {
         when(mockCartDAO.updateCart(authValid, testCart)).thenReturn(testCart);
-        ResponseEntity<Cart> responseValid = cartController.updateCart(authValid, testCart);
+        ResponseEntity<Cart> responseValid = cartController.updateCart(authValid, testProducts);
         assertEquals(HttpStatus.OK, responseValid.getStatusCode());
         assertEquals(testCart, responseValid.getBody());
 
         when(mockCartDAO.updateCart(authInvalid, testCart)).thenThrow(new InvalidTokenException("Token does not match a registered user."));
-        ResponseEntity<Cart> responseInvalid = cartController.updateCart(authInvalid, testCart);
+        ResponseEntity<Cart> responseInvalid = cartController.updateCart(authInvalid, testProducts);
         assertEquals(HttpStatus.FORBIDDEN, responseInvalid.getStatusCode());
 
         when(mockCartDAO.updateCart(authNotExist, testCart)).thenThrow(new AccountNotFoundException("User with token does not exist."));
-        ResponseEntity<Cart> responseNotExist = cartController.updateCart(authNotExist, testCart);
+        ResponseEntity<Cart> responseNotExist = cartController.updateCart(authNotExist, testProducts);
         assertEquals(HttpStatus.NOT_FOUND, responseNotExist.getStatusCode());
     }
 
     @Test
     public void testUpdateIOException() throws AccountNotFoundException, InvalidTokenException, IOException  {
         when(mockCartDAO.updateCart("", testCart)).thenThrow(new IOException("Artificial IOException"));
-        ResponseEntity<Cart> responseIOE = cartController.updateCart("", testCart);
+        ResponseEntity<Cart> responseIOE = cartController.updateCart("", testProducts);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseIOE.getStatusCode());
     }
 

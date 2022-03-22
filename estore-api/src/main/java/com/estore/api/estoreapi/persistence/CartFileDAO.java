@@ -135,7 +135,6 @@ public class CartFileDAO implements CartDAO {
 
     private void writeCart(int id, Cart cart) throws IOException {
         File newCart = new File(cartsDirectory, id + ".json");
-        if(!newCart.exists()) newCart.createNewFile();
         objectMapper.writeValue(newCart, cart.getProducts());
     }
 

@@ -25,12 +25,11 @@ public class CartFileDAOTest {
 
     private UserAccount mockUser = new UserAccount(9999, "user9999", false);
 
-    // Maintained for context since CartProducts contain no information about the product they reference
-    // private Product[] testInventory = {
-    //     new Product(1, "test-1", "test 1", 1.0, 1),
-    //     new Product(2, "test-2", "test 2", 2.0, 2),
-    //     new Product(3, "test-3", "test 3", 3.0, 3)
-    // };
+    private Product[] testInventory = {
+        new Product(1, "test-1", "test 1", 1.0, 1),
+        new Product(2, "test-2", "test 2", 2.0, 2),
+        new Product(3, "test-3", "test 3", 3.0, 3)
+    };
 
     private static CartProduct[] testProducts0 = {
         new CartProduct(1, 1),
@@ -40,11 +39,6 @@ public class CartFileDAOTest {
     private static CartProduct[] testProducts1 = {
         new CartProduct(1, 1),
         new CartProduct(3, 2)
-    };
-    
-    private static CartProduct[] testProducts2 = {
-        new CartProduct(1, 1),
-        new CartProduct(4, 2)
     };
 
     private Cart testCart0 = new Cart(testProducts0);
@@ -68,13 +62,15 @@ public class CartFileDAOTest {
     @BeforeEach
     public void prepare() throws IOException, AccountNotFoundException, InvalidTokenException {
         mockObjectMapper = mock(ObjectMapper.class);
-        when(mockObjectMapper.readValue(new File("data/test-carts/test-instance/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
-        when(mockObjectMapper.readValue(new File("data/test-carts/test-instance/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         when(mockUserDAO.verifyToken(mockToken)).thenReturn(mockUser);
+        when(mockInventoryDAO.getProduct(1)).thenReturn(testInventory[0]);
+        when(mockInventoryDAO.getProduct(2)).thenReturn(testInventory[1]);
+        when(mockInventoryDAO.getProduct(3)).thenReturn(testInventory[2]);
     }
 
     @Test
     public void testCreateCart() throws IOException, AccountNotFoundException, InvalidTokenException {
+        when(mockObjectMapper.readValue(new File("data/test-carts/test-create/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-create");
         Cart result = cartFileDAO.createCart(mockUser, testCart0);
 
@@ -87,6 +83,7 @@ public class CartFileDAOTest {
 
     @Test
     public void testUpdateCart() throws IOException, AccountNotFoundException, InvalidTokenException {
+        when(mockObjectMapper.readValue(new File("data/test-carts/test-update/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-update");
         cartFileDAO.createCart(mockUser, Cart.EMPTY);
         Cart result = cartFileDAO.updateCart(mockToken, testCart1);
@@ -100,6 +97,7 @@ public class CartFileDAOTest {
 
     @Test
     public void testClearCart() throws IOException, AccountNotFoundException, InvalidTokenException {
+        when(mockObjectMapper.readValue(new File("data/test-carts/test-clear/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-clear");
         cartFileDAO.createCart(mockUser, testCart0);
 
@@ -113,6 +111,7 @@ public class CartFileDAOTest {
 
     @Test
     public void deleteCart() throws IOException, AccountNotFoundException, InvalidTokenException {
+        when(mockObjectMapper.readValue(new File("data/test-carts/test-delete/9999.json"), CartProduct[].class)).thenReturn(testProducts0);
         CartFileDAO cartFileDAO = new CartFileDAO(mockObjectMapper, "data/carts-tests/test-delete");
         cartFileDAO.createCart(mockUser, testCart0);
 
