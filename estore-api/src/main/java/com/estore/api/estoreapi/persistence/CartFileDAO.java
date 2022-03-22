@@ -121,7 +121,7 @@ public class CartFileDAO implements CartDAO {
     private void readAllCarts() throws IOException {
         this.carts = new TreeMap<Integer, Cart>();
         for(File cartFile : cartsDirectory.listFiles()) {
-            if(cartFile.getName().split(".")[1].equals("json")) {
+            if(cartFile.getName().substring(cartFile.getName().length()-4).equals("json")) {
                 Integer id = Integer.parseInt(cartFile.getName().replaceAll(".json", ""));
                 System.out.printf("Reading cart %s%n",cartFile.getPath());
                 this.carts.put(id, readCart(cartFile));
