@@ -82,9 +82,10 @@ public class CartFileDAO implements CartDAO {
             throws AccountNotFoundException, InvalidTokenException, IOException {
         getSingletonDependencies();
         int id = userDAO.verifyToken(token).getId();
+        cart = verifyCart(cart);
         carts.put(id, cart);
         writeCart(id, cart);
-        return verifyCart(carts.get(id));
+        return cart;
     }
 
     @Override
