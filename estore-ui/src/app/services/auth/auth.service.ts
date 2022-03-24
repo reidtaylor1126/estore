@@ -24,6 +24,7 @@ export class AuthService {
                     const userArr = user.split('*');
                     const userObj = {
                         username: userArr[0],
+                        id: parseInt(userArr[1], 10),
                         admin: userArr[2] === 'true',
                     };
                     this.currentUserSubject.next(userObj);
@@ -44,5 +45,16 @@ export class AuthService {
     logout(): void {
         this.currentUserSubject.next(undefined);
         localStorage.removeItem('currentUser');
+    }
+
+    getCurrentUser(): User | undefined {
+        return this.currentUserSubject.value;
+    }
+
+    getToken(): string | undefined {
+        const currentUser = this.getCurrentUser();
+        return currentUser
+            ? `${currentUser.username}*${currentUser.id}`
+            : undefined;
     }
 }
