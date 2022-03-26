@@ -52,7 +52,6 @@ export class ProductDetailComponent implements OnInit {
 
     saveEdit(): void {
         if (this.isAdmin()) {
-            //console.log('Attempting to save edits...');
             this.inventoryService
                 .updateProduct(this.product)
                 .subscribe((value) => {
@@ -97,16 +96,10 @@ export class ProductDetailComponent implements OnInit {
     }
 
     addToCart(event: MouseEvent): void {
-        if (this.localQuantity <= this.product.quantity) {
-            this.cartService.addToCart({
-                id: this.product.id,
-                name: this.product.name,
-                description: this.product.description,
-                price: this.product.price,
-                quantity: this.localQuantity,
-            });
-            this.product.quantity = 1;
-        }
+        this.cartService
+            .addToCart(this.product, this.localQuantity)
+            .subscribe();
+        this.product.quantity = 1;
     }
 
     inStock(): boolean {

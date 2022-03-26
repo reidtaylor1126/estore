@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { CartService } from 'src/app/services/cart/cart.service';
 import { User } from 'src/app/types/User';
 
 @Component({
@@ -12,11 +13,20 @@ export class TopbarComponent implements OnInit {
     navOpen = false;
     acctOpen = false;
     isAdmin: boolean = false;
-    constructor(private authService: AuthService) {}
+    isLoggedIn: boolean = false;
+    numItems: number = 0;
+    constructor(
+        private authService: AuthService,
+        private cartService: CartService
+    ) {}
 
     ngOnInit(): void {
         this.authService.currentUser.subscribe((user) => {
             user && user.admin ? (this.isAdmin = true) : (this.isAdmin = false);
+            this.isLoggedIn = user ? true : false;
+        });
+        this.cartService.getNumItemsObservable().subscribe((num) => {
+            this.numItems = num;
         });
     }
 

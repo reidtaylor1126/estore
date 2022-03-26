@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CartService } from 'src/app/services/cart/cart.service';
 import { Product } from 'src/app/types/Product';
 
 @Component({
@@ -8,7 +9,7 @@ import { Product } from 'src/app/types/Product';
     styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
-    constructor(private router: Router) {}
+    constructor(private router: Router, private cartService: CartService) {}
 
     @Input() product?: Product;
 
@@ -28,6 +29,7 @@ export class ProductComponent implements OnInit {
     addToCart(event: MouseEvent): void {
         event.preventDefault();
         event.stopPropagation();
-        //TODO add to cart
+        if (!this.product) return;
+        this.cartService.addToCart(this.product).subscribe();
     }
 }

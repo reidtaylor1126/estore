@@ -12,10 +12,8 @@ export class AppComponent implements OnInit {
     constructor(private authService: AuthService) {}
     ngOnInit(): void {
         const currentUser = localStorage.getItem('currentUser');
-        console.log(currentUser);
         if (currentUser) {
             const user: User = JSON.parse(currentUser);
-            console.log(user);
             this.authService.login(user.username).subscribe();
         }
     }

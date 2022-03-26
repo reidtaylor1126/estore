@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -10,11 +11,10 @@ export class AccountNavComponent implements OnInit {
     @Input() navOpen: boolean = false;
     @Output() toggleMenu = new EventEmitter<boolean>();
     username?: string;
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService, private router: Router) {}
 
     ngOnInit(): void {
         this.authService.currentUser.subscribe((value) => {
-            console.log(value);
             if (value) {
                 this.username = value.username;
             } else {
@@ -30,5 +30,19 @@ export class AccountNavComponent implements OnInit {
     logout() {
         this.authService.logout();
         this.toggleNav(false);
+    }
+
+    goToLogin() {
+        this.toggleNav(false);
+        this.router.navigate(['/login'], {
+            queryParams: { redirect: this.router.url },
+        });
+    }
+
+    goToRegister() {
+        this.toggleNav(false);
+        this.router.navigate(['/register'], {
+            queryParams: { redirect: this.router.url },
+        });
     }
 }

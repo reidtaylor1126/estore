@@ -113,19 +113,32 @@ public class CartFileDAO implements CartDAO {
         getSingletonDependencies();
         ArrayList<CartProduct> products = new ArrayList<>();
         Double totalPrice = 0.0;
+        boolean changed = false;
         for (CartProduct cartProduct : cart.getProducts()) {
             Product product = inventoryDAO.getProduct(cartProduct.getId());
             if (product == null) {
                 LOG.log(Level.INFO, String.format(
                         "An item of ID %d was removed from a cart because it does not exist in the inventory.",
                         cartProduct.getId()));
-            } else {
+                changed = true;
+            } else if (product.getQuantity() != null
+                    && product.getQuantity() < cartProduct.getQuantity()) {
+                LOG.log(Level.INFO, String.format(
+                        "An item of ID %d has exceeded the max in the inventory, trimmed down.",
+                        cartProduct.getId()));
+                changed = true;
+                products.add(new CartProduct(product.getId(), product.getQuantity()));
+                totalPrice += product.getQuantity() * product.getPrice();
+            } else if (cartProduct.getQuantity() != null && product.getPrice() != null) {
                 products.add(cartProduct);
                 totalPrice += product.getPrice() * cartProduct.getQuantity();
+            } else if (cartProduct.getQuantity() != null) {
+                products.add(cartProduct);
+            } else {
+                changed = true;
             }
         }
-        Cart verified = products.size() == cart.getProducts().length ? cart
-                : new Cart(products.toArray(new CartProduct[0]));
+        Cart verified = !changed ? cart : new Cart(products.toArray(new CartProduct[0]));
         verified.setTotalPrice(totalPrice);
         return verified;
     }

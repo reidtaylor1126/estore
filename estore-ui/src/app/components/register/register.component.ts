@@ -14,9 +14,23 @@ export class RegisterComponent implements OnInit {
         admin: false,
     };
 
+    redirect = '/';
+
     constructor(private authService: AuthService, private router: Router) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        const url = this.router
+            .parseUrl(this.router.url)
+            .queryParamMap.get('redirect');
+        if (url) {
+            this.redirect = url;
+        }
+        this.authService.currentUser.subscribe((user) => {
+            if (user) {
+                this.router.navigate([this.redirect]);
+            }
+        });
+    }
 
     /**
      *
@@ -27,7 +41,7 @@ export class RegisterComponent implements OnInit {
                 .register(this.formData.username)
                 .subscribe((user) => {
                     this.authService.login(user.username).subscribe(() => {
-                        this.router.navigate(['/']);
+                        this.router.navigate([this.redirect]);
                     });
                 });
         }
