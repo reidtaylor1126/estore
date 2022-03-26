@@ -1,11 +1,13 @@
 <div class="product-detail">
     <div class="image-pane">
         <img
+            *ngIf="isImageLoaded()"
             [src]="imgSource"
             (error)="imageError()"
             width="500"
             height="500"
         />
+        <div *ngIf="!isImageLoaded()" style="width: 500px; height: 500px"></div>
         <div *ngIf="isEditing()" class="image-upload">
             <input
                 type="file"

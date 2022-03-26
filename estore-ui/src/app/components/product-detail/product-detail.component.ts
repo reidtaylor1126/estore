@@ -109,6 +109,10 @@ export class ProductDetailComponent implements OnInit {
         return this.newImage;
     }
 
+    isImageLoaded(): boolean {
+        return this.imageLoaded;
+    }
+
     onFileSelected(event: Event): void {
         const fileArr: FileList | null = (event.target as HTMLInputElement)
             .files;
