@@ -12,12 +12,16 @@
     border-radius: 10px;
 }
 
+.file-input {
+    display: none;
+}
+
 .product-name {
     margin-bottom: 10px;
 }
 
 .product-price {
-    color:#465772;
+    color: #465772;
     margin-left: 5px;
     margin-bottom: 10px;
 }

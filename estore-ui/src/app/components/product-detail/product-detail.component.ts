@@ -20,9 +20,14 @@ export class ProductDetailComponent implements OnInit {
     };
 
     @Input() localQuantity: number = 1;
-
     private userIsAdmin: boolean = false;
     private editing: boolean = false;
+    private imageFile: string = 'https://source.unsplash.com/500x500?cards';
+    private newImage: string = '';
+    private imageUpdated: boolean = false;
+    private updatedImageFile?: File;
+    imgSource: string = '';
+    private imageLoaded: boolean = false;
 
     private id: number = -1;
     constructor(
@@ -36,8 +41,14 @@ export class ProductDetailComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log(this.product.id);
         this.inventoryService.getProduct(this.id).subscribe((value) => {
             this.product = value;
+            this.imgSource =
+                this.product?.id !== undefined
+                    ? `/api/inventory/image?id=${this.product.id}`
+                    : 'https://source.unsplash.com/500x500?cards';
+            this.imageLoaded = true;
         });
         this.authService.currentUser.subscribe((value) => {
             if (value) {
@@ -53,6 +64,13 @@ export class ProductDetailComponent implements OnInit {
     saveEdit(): void {
         if (this.isAdmin()) {
             //console.log('Attempting to save edits...');
+            if (this.imageUpdated && this.updatedImageFile && this.product.id) {
+                this.inventoryService
+                    .uploadImage(this.updatedImageFile, this.product.id)
+                    .subscribe((value) => {
+                        this.imageFile = value;
+                    });
+            }
             this.inventoryService
                 .updateProduct(this.product)
                 .subscribe((value) => {
@@ -84,8 +102,31 @@ export class ProductDetailComponent implements OnInit {
     }
 
     getImage(): string {
-        return 'https://source.unsplash.com/500x500?cards';
-        // Placeholder until cards have their own images
+        return this.imageFile;
+    }
+
+    getNewImage(): string {
+        return this.newImage;
+    }
+
+    onFileSelected(event: Event): void {
+        const fileArr: FileList | null = (event.target as HTMLInputElement)
+            .files;
+        if (!fileArr) return;
+        const file: File = fileArr[0];
+        if (file) {
+            if (!file.type.match('image.*')) return;
+            if (file.size > 10000000) return;
+            // Create url to display uploaded image
+            const reader: FileReader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                this.imgSource = reader.result as string;
+            };
+            this.newImage = file.name;
+            this.imageUpdated = true;
+            this.updatedImageFile = file;
+        }
     }
 
     isEditing(): boolean {
@@ -111,5 +152,12 @@ export class ProductDetailComponent implements OnInit {
 
     inStock(): boolean {
         return this.product.quantity > 0;
+    }
+
+    imageError(): string {
+        if (!this.imageLoaded) return 'Loading...';
+        console.log('Image error');
+        this.imgSource = 'https://source.unsplash.com/500x500?cards';
+        return 'https://source.unsplash.com/500x500?cards';
     }
 }

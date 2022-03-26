@@ -1,6 +1,7 @@
 <div (click)="navigate()" class="product">
     <img
-        src="https://source.unsplash.com/500x500?cards"
+        [src]="getProductImage()"
+        (error)="imageError()"
         alt=""
         height="200"
         width="200"

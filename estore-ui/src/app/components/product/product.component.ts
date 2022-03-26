@@ -11,8 +11,14 @@ export class ProductComponent implements OnInit {
     constructor(private router: Router) {}
 
     @Input() product?: Product;
+    imgSource: string = '';
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.imgSource =
+            this.product?.id !== undefined
+                ? `/api/inventory/image?id=${this.product.id}`
+                : 'https://source.unsplash.com/500x500?cards';
+    }
 
     inStock(): boolean {
         return (
@@ -29,5 +35,15 @@ export class ProductComponent implements OnInit {
         event.preventDefault();
         event.stopPropagation();
         //TODO add to cart
+    }
+
+    getProductImage(): string {
+        return this.imgSource;
+    }
+
+    imageError(): string {
+        console.log('Image error');
+        this.imgSource = 'https://source.unsplash.com/500x500?cards';
+        return 'https://source.unsplash.com/500x500?cards';
     }
 }
