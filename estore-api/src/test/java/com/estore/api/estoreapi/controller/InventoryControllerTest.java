@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag("Controller")
 public class InventoryControllerTest {
@@ -29,8 +30,8 @@ public class InventoryControllerTest {
 
     @Test
     public void testCreateProduct() throws IOException {
-        Product product = new Product(1, "test", "testdes", 1.0, 1);
-        Product product2 = new Product(1, null, "testdes", 1.0, 1);
+        Product product = new Product(1, "test", "testdes", 1.0, 1, "file");
+        Product product2 = new Product(1, null, "testdes", 1.0, 1, "file");
 
         when(mockInventoryDAO.createProduct(product)).thenReturn(product);
 
@@ -45,8 +46,8 @@ public class InventoryControllerTest {
 
     @Test
     public void testUpdateProduct() throws IOException {
-        Product product = new Product(1, "test", "testdes", 1.0, 1);
-        Product product2 = new Product(null, "test", "testdes", 1.0, 1);
+        Product product = new Product(1, "test", "testdes", 1.0, 1, "file");
+        Product product2 = new Product(null, "test", "testdes", 1.0, 1, "file");
 
         when(mockInventoryDAO.updateProduct(product)).thenReturn(product);
 
@@ -65,9 +66,9 @@ public class InventoryControllerTest {
     @Test
     public void testGetInventory() throws IOException {
         Product[] products = new Product[3];
-        products[0] = new Product(1, "test", "testdes", 1.0, 1);
-        products[1] = new Product(2, "test1", "test2des", 1.0, 1);
-        products[2] = new Product(3, "test2", "test3des", 1.0, 1);
+        products[0] = new Product(1, "test", "testdes", 1.0, 1, "file");
+        products[1] = new Product(2, "test1", "test2des", 1.0, 1, "file");
+        products[2] = new Product(3, "test2", "test3des", 1.0, 1, "file");
 
         when(mockInventoryDAO.getInventory()).thenReturn(products);
 
@@ -79,7 +80,7 @@ public class InventoryControllerTest {
 
     @Test
     public void testDuplicates() throws IOException {
-        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        Product product = new Product(1, "test", "testdes", 1.0, 1, "file");
 
         when(mockInventoryDAO.createProduct(product)).thenThrow(new IllegalArgumentException());
 
@@ -90,7 +91,7 @@ public class InventoryControllerTest {
 
     @Test
     public void testError() throws IOException {
-        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        Product product = new Product(1, "test", "testdes", 1.0, 1, "file");
 
         when(mockInventoryDAO.createProduct(product)).thenThrow(new IOException());
         when(mockInventoryDAO.updateProduct(product)).thenThrow(new IOException());
@@ -140,9 +141,9 @@ public class InventoryControllerTest {
 
     @Test
     public void testGetProduct() throws IOException {
-        Product product1 = new Product(1, "test", "description", 1.0, 1);
-        Product product2 = new Product(2, "test2", "description", 1.0, 1);
-        Product product3 = new Product(3, "test3", "description", 1.0, 1);
+        Product product1 = new Product(1, "test", "description", 1.0, 1, "file");
+        Product product2 = new Product(2, "test2", "description", 1.0, 1, "file");
+        Product product3 = new Product(3, "test3", "description", 1.0, 1, "file");
 
         when(mockInventoryDAO.getProduct(product1.getId())).thenReturn(product1);
 
@@ -162,8 +163,8 @@ public class InventoryControllerTest {
     @Test
     public void testSearchProduct() throws IOException {
         String searchTerm = "1";
-        Product[] products = {new Product(1, "test1", "test desc 1", 10.0, 1),
-                new Product(10, "test10", "test desc 10", 7.0, 6),};
+        Product[] products = {new Product(1, "test1", "test desc 1", 10.0, 1, "file"),
+                new Product(10, "test10", "test desc 10", 7.0, 6, "file"),};
 
         when(mockInventoryDAO.searchProducts(searchTerm)).thenReturn(products);
 

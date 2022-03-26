@@ -2,10 +2,12 @@ package com.estore.api.estoreapi.persistence;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -15,6 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Ryan Yocum
@@ -61,7 +66,8 @@ public class InventoryFileDAO implements InventoryDAO {
         this.filename = filename;
         this.objectMapper = objectMapper;
         loadInventory();
-        if(instance == null) instance = this;
+        if (instance == null)
+            instance = this;
     }
 
     public static InventoryFileDAO getInstance() {
@@ -92,7 +98,7 @@ public class InventoryFileDAO implements InventoryDAO {
     public Product createProduct(Product product) throws IOException, IllegalArgumentException {
         synchronized (inventory) {
             Product newProduct = new Product(nextId(), product.getName(), product.getDescription(),
-                    product.getPrice(), product.getQuantity());
+                    product.getPrice(), product.getQuantity(), product.getImage());
 
 
             // Checks if the name is unique
@@ -170,8 +176,9 @@ public class InventoryFileDAO implements InventoryDAO {
                     product.getDescription() != null ? product.getDescription()
                             : tempProduct.getDescription(),
                     product.getPrice() != null ? product.getPrice() : tempProduct.getPrice(),
-                    product.getQuantity() != null ? product.getQuantity()
-                            : tempProduct.getQuantity());
+                    product.getQuantity() != null ? tempProduct.getQuantity()
+                            : tempProduct.getQuantity(),
+                    product.getImage() != null ? product.getImage() : tempProduct.getImage());
 
             // Update the inventory
             inventory.put(updatedProduct.getId(), updatedProduct);
@@ -231,5 +238,48 @@ public class InventoryFileDAO implements InventoryDAO {
         List<Product> inventory = getInventoryArray();
         Stream<Product> inventoryStream = inventory.stream();
         return !inventoryStream.anyMatch(p -> p.getName().equals(name));
+    }
+
+    @Override
+    public Product updateProductImage(String product, MultipartFile image)
+            throws IOException, IllegalArgumentException {
+        synchronized (inventory) {
+            try {
+                Product productToUpdate = inventory.get(Integer.parseInt(product));
+                String imageName = "product_" + product + ".jpg";
+                File file = new File("src/main/resources/static/images/products/" + imageName);
+                if (file.createNewFile()) {
+                    System.out.println("File is created!");
+                    Files.write(file.toPath(), image.getBytes());
+                } else {
+                    Files.write(file.toPath(), image.getBytes());
+                }
+                System.out.println(file.getPath());
+                productToUpdate.setImage(file.getPath());
+                System.out.println(productToUpdate.getImage());
+                System.out.println(inventory.get(Integer.parseInt(product)).getImage());
+
+                System.out.println(productToUpdate);
+                return null;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Product id must be an integer");
+            }
+        }
+
+    }
+
+    @Override
+    public byte[] getImage(int id) throws IOException {
+        synchronized (inventory) {
+            Product product = inventory.get(id);
+            if (product == null) {
+                throw new IllegalArgumentException("Product with id " + id + " does not exist");
+            }
+            if (product.getImage() == null) {
+                return null;
+            }
+            File file = new File(product.getImage());
+            return Files.readAllBytes(file.toPath());
+        }
     }
 }

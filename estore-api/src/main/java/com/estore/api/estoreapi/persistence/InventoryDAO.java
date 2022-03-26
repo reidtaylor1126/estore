@@ -3,6 +3,7 @@ package com.estore.api.estoreapi.persistence;
 import java.io.IOException;
 
 import com.estore.api.estoreapi.model.Product;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Ryan Yocum
@@ -53,4 +54,8 @@ public interface InventoryDAO {
      * @throws IOException if cannot delete the product
      */
     public boolean deleteProduct(Integer id) throws IOException;
+
+    public Product updateProductImage(String product, MultipartFile image) throws IOException;
+
+    public byte[] getImage(int product) throws IOException;
 }

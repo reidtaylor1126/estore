@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag("Persistence")
 public class InventoryFileDAOTest {
@@ -27,9 +28,10 @@ public class InventoryFileDAOTest {
         public void setUp() throws IOException {
                 mockObjectMapper = mock(ObjectMapper.class);
                 testProducts = new Product[3];
-                testProducts[0] = new Product(1, "test", "testdes", 1.0, 1);
-                testProducts[1] = new Product(2, "test1", "test2des", 1.0, 1);
-                testProducts[2] = new Product(3, "test2", "test3des", 1.0, 1);
+                String file = "file";
+                testProducts[0] = new Product(1, "test", "testdes", 1.0, 1, file);
+                testProducts[1] = new Product(2, "test1", "test2des", 1.0, 1, file);
+                testProducts[2] = new Product(3, "test2", "test3des", 1.0, 1, file);
 
                 when(mockObjectMapper.readValue(new File("filenotfound.txt"), Product[].class))
                                 .thenReturn(testProducts);
@@ -38,7 +40,8 @@ public class InventoryFileDAOTest {
 
         @Test
         public void testCreateProduct() {
-                Product product = new Product(234, "test234", "test2314", 1.0, 1);
+                String file = "file";
+                Product product = new Product(234, "test234", "test2314", 1.0, 1, file);
 
                 Product result = assertDoesNotThrow((() -> inventoryFileDAO.createProduct(product)),
                                 "Unexpected exception thrown");
@@ -50,8 +53,9 @@ public class InventoryFileDAOTest {
 
         @Test
         public void testDuplicates() throws IOException {
-                Product product = new Product(4, "test4", "testdes", 1.0, 1);
-                Product product2 = new Product(45, "test4dasfsdfasda", "testdes", 1.0, 1);
+                String file = "file";
+                Product product = new Product(4, "test4", "testdes", 1.0, 1, file);
+                Product product2 = new Product(45, "test4dasfsdfasda", "testdes", 1.0, 1, file);
 
                 inventoryFileDAO.createProduct(product);
                 assertThrows(IllegalArgumentException.class,
@@ -65,7 +69,8 @@ public class InventoryFileDAOTest {
 
         @Test
         public void testUpdateProduct() {
-                Product product = new Product(1, "test", "testdes", 1.0, 1);
+                String file = "file";
+                Product product = new Product(1, "test", "testdes", 1.0, 1, file);
 
                 Product result = assertDoesNotThrow((() -> inventoryFileDAO.updateProduct(product)),
                                 "Unexpected exception thrown");
