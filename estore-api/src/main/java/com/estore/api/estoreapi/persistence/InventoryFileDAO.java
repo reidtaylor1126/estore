@@ -243,7 +243,7 @@ public class InventoryFileDAO implements InventoryDAO {
     }
 
     @Override
-    public void updateProductImage(String product, MultipartFile image)
+    public void addProductImage(String product, MultipartFile image)
             throws IOException, IllegalArgumentException {
         synchronized (inventory) {
             try {

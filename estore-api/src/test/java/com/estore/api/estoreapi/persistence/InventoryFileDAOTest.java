@@ -3,6 +3,7 @@ package com.estore.api.estoreapi.persistence;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -126,5 +127,141 @@ public class InventoryFileDAOTest {
                 Product[] products = inventoryFileDAO.searchProducts(searchTerms);
 
                 assertEquals(testProducts[1], products[0]);
+        }
+
+        @Test
+        public void testSearchProductNotFound() throws IOException {
+                String searchTerms = "asdfasdf";
+
+                Product[] products = inventoryFileDAO.searchProducts(searchTerms);
+
+                assertEquals(0, products.length);
+        }
+
+        @Test
+        public void testAddProductImage() throws IOException {
+                MultipartFile file = mock(MultipartFile.class);
+                when(file.getOriginalFilename()).thenReturn("test.jpg");
+                when(file.getBytes()).thenReturn(new byte[0]);
+
+                Product product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 0);
+
+                inventoryFileDAO.addProductImage("1", file);
+
+                product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 1);
+                inventoryFileDAO.deleteProductImage(1, 0);
+        }
+
+        @Test
+        public void testAddProductImageNotFound() throws IOException {
+                MultipartFile file = mock(MultipartFile.class);
+                when(file.getOriginalFilename()).thenReturn("test.jpg");
+                when(file.getBytes()).thenReturn(new byte[0]);
+
+                assertThrows(IllegalArgumentException.class,
+                                () -> inventoryFileDAO.addProductImage("18", file),
+                                "Unexpected exception thrown");
+                assertThrows(IllegalArgumentException.class,
+                                () -> inventoryFileDAO.addProductImage("a", file),
+                                "Unexpected exception thrown");
+        }
+
+        @Test
+        public void testDeleteProductImage() throws IOException {
+                MultipartFile file = mock(MultipartFile.class);
+                when(file.getOriginalFilename()).thenReturn("test.jpg");
+                when(file.getBytes()).thenReturn(new byte[0]);
+
+                Product product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 0);
+
+                inventoryFileDAO.addProductImage("1", file);
+
+                product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 1);
+
+                inventoryFileDAO.addProductImage("1", file);
+
+                product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 2);
+
+                inventoryFileDAO.deleteProductImage(1, 0);
+                inventoryFileDAO.deleteProductImage(1, 0);
+
+                product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 0);
+        }
+
+        @Test
+        public void testDeleteProductImageNotFound() throws IOException {
+                MultipartFile file = mock(MultipartFile.class);
+                when(file.getOriginalFilename()).thenReturn("test.jpg");
+                when(file.getBytes()).thenReturn(new byte[0]);
+
+                assertThrows(IllegalArgumentException.class,
+                                () -> inventoryFileDAO.deleteProductImage(18, 0),
+                                "Unexpected exception thrown");
+                assertThrows(IllegalArgumentException.class,
+                                () -> inventoryFileDAO.deleteProductImage(3, 0),
+                                "Unexpected exception thrown");
+        }
+
+        @Test
+        public void testGetProductImage() throws IOException {
+                MultipartFile file = mock(MultipartFile.class);
+                when(file.getOriginalFilename()).thenReturn("test.jpg");
+                when(file.getBytes()).thenReturn(new byte[0]);
+
+                Product product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 0);
+
+                inventoryFileDAO.addProductImage("1", file);
+
+                product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 1);
+
+                byte[] result = inventoryFileDAO.getImage(1, 0);
+                assertNotNull(result);
+
+                inventoryFileDAO.deleteProductImage(1, 0);
+        }
+
+        @Test
+        public void testGetProductImageDefault() throws IOException {
+
+                byte[] result = inventoryFileDAO.getImage(-1, -1);
+                assertNotNull(result);
+
+                result = inventoryFileDAO.getImage(1, 0);
+                assertNotNull(result);
+
+        }
+
+        @Test
+        public void testGetProductImageNullProduct() throws IOException {
+                assertThrows(IllegalArgumentException.class, () -> inventoryFileDAO.getImage(18, 0),
+                                "Unexpected exception thrown");
+        }
+
+        @Test
+        public void testGetProductImageNotFound() throws IOException {
+                MultipartFile file = mock(MultipartFile.class);
+                when(file.getOriginalFilename()).thenReturn("test.jpg");
+                when(file.getBytes()).thenReturn(new byte[0]);
+
+                Product product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 0);
+
+                inventoryFileDAO.addProductImage("1", file);
+
+                product = inventoryFileDAO.getProduct(1);
+                assertEquals(product.getNumImages(), 1);
+
+                byte[] result = inventoryFileDAO.getImage(1, 1);
+                assertNull(result);
+
+                inventoryFileDAO.deleteProductImage(1, 0);
         }
 }

@@ -169,7 +169,7 @@ public class InventoryController {
     }
 
     @PutMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> updateProductImage(@Valid @RequestPart String product,
+    public ResponseEntity<Void> addProductImage(@Valid @RequestPart String product,
             @Valid @RequestPart MultipartFile image) {
 
         LOG.info("PUT /inventory/image");
@@ -182,10 +182,8 @@ public class InventoryController {
         }
 
         try {
-            inventoryDAO.updateProductImage(product, image);
+            inventoryDAO.addProductImage(product, image);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (MaxUploadSizeExceededException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

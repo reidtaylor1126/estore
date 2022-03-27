@@ -43,6 +43,34 @@ public class ProductTest {
     }
 
     @Test
+    public void testAddImage() {
+        Integer id = 1;
+        String name = "test";
+        String description = "test";
+        double price = 99.99;
+        int quantity = 99;
+        Integer numImages = 1;
+        Product product = new Product(id, name, description, price, quantity, numImages);
+        product.addImage();
+
+        assert product.getNumImages() == 2;
+    }
+
+    @Test
+    public void testRemoveImage() {
+        Integer id = 1;
+        String name = "test";
+        String description = "test";
+        double price = 99.99;
+        int quantity = 99;
+        Integer numImages = 1;
+        Product product = new Product(id, name, description, price, quantity, numImages);
+        product.removeImage();
+
+        assert product.getNumImages() == 0;
+    }
+
+    @Test
     public void testToString() {
         Integer id = 1;
         String name = "test";
