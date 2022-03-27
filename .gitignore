@@ -80,3 +80,6 @@ typings/
 .DS_Store
 Thumbs.db
 .angular/
+
+static/images/products/*
+!static/images/products/.gitkeep
