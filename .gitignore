@@ -81,5 +81,5 @@ typings/
 Thumbs.db
 .angular/
 
-static/images/products/*
-!static/images/products/.gitkeep
+estore-api/src/main/resources/static/images/products/*
+!estore-api/src/main/resources/static/images/products/.gitkeep
