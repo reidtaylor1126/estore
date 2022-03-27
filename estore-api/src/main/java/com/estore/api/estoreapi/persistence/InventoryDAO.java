@@ -55,7 +55,9 @@ public interface InventoryDAO {
      */
     public boolean deleteProduct(Integer id) throws IOException;
 
-    public Product updateProductImage(String product, MultipartFile image) throws IOException;
+    public void updateProductImage(String product, MultipartFile image) throws IOException;
 
-    public byte[] getImage(int product) throws IOException;
+    public void deleteProductImage(int productId, int imageId) throws IOException;
+
+    public byte[] getImage(int product, int imageId) throws IOException;
 }

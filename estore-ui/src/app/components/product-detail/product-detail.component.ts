@@ -17,15 +17,13 @@ export class ProductDetailComponent implements OnInit {
         description: 'Placeholder description',
         price: 0.0,
         quantity: 1,
+        numImages: 0,
     };
 
     @Input() localQuantity: number = 1;
     private userIsAdmin: boolean = false;
     private editing: boolean = false;
-    private imageFile: string = 'https://source.unsplash.com/500x500?cards';
-    private newImage: string = '';
-    private imageUpdated: boolean = false;
-    private updatedImageFile?: File;
+    private currentImage: number = 0;
     imgSource: string = '';
     private imageLoaded: boolean = false;
 
@@ -46,8 +44,8 @@ export class ProductDetailComponent implements OnInit {
             this.product = value;
             this.imgSource =
                 this.product?.id !== undefined
-                    ? `/api/inventory/image?id=${this.product.id}`
-                    : 'https://source.unsplash.com/500x500?cards';
+                    ? `/api/inventory/image?productId=${this.product.id}`
+                    : '/api/inventory/image?productId=-1&imageId=-1';
             this.imageLoaded = true;
         });
         this.authService.currentUser.subscribe((value) => {
@@ -64,13 +62,8 @@ export class ProductDetailComponent implements OnInit {
     saveEdit(): void {
         if (this.isAdmin()) {
             //console.log('Attempting to save edits...');
-            if (this.imageUpdated && this.updatedImageFile && this.product.id) {
-                this.inventoryService
-                    .uploadImage(this.updatedImageFile, this.product.id)
-                    .subscribe((value) => {
-                        this.imageFile = value;
-                    });
-            }
+            console.log('Image updated');
+            console.log(this.product.id);
             this.inventoryService
                 .updateProduct(this.product)
                 .subscribe((value) => {
@@ -101,36 +94,12 @@ export class ProductDetailComponent implements OnInit {
         }
     }
 
-    getImage(): string {
-        return this.imageFile;
-    }
-
-    getNewImage(): string {
-        return this.newImage;
-    }
-
     isImageLoaded(): boolean {
         return this.imageLoaded;
     }
 
-    onFileSelected(event: Event): void {
-        const fileArr: FileList | null = (event.target as HTMLInputElement)
-            .files;
-        if (!fileArr) return;
-        const file: File = fileArr[0];
-        if (file) {
-            if (!file.type.match('image.*')) return;
-            if (file.size > 10000000) return;
-            // Create url to display uploaded image
-            const reader: FileReader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                this.imgSource = reader.result as string;
-            };
-            this.newImage = file.name;
-            this.imageUpdated = true;
-            this.updatedImageFile = file;
-        }
+    getCurrentImg(): number {
+        return this.currentImage;
     }
 
     isEditing(): boolean {
@@ -149,6 +118,7 @@ export class ProductDetailComponent implements OnInit {
                 description: this.product.description,
                 price: this.product.price,
                 quantity: this.localQuantity,
+                numImages: this.product.numImages,
             });
             this.product.quantity = 1;
         }
@@ -158,10 +128,27 @@ export class ProductDetailComponent implements OnInit {
         return this.product.quantity > 0;
     }
 
-    imageError(): string {
-        if (!this.imageLoaded) return 'Loading...';
-        console.log('Image error');
-        this.imgSource = 'https://source.unsplash.com/500x500?cards';
-        return 'https://source.unsplash.com/500x500?cards';
+    nextImg(): void {
+        if (this.product.numImages > 0) {
+            this.currentImage =
+                (this.currentImage + 1) % this.product.numImages;
+            this.imgSource = `/api/inventory/image?productId=${this.product.id}&imageId=${this.currentImage}`;
+            console.log(this.currentImage);
+            console.log(this.product.numImages);
+        }
+    }
+
+    prevImg(): void {
+        if (this.product.numImages > 0) {
+            this.currentImage =
+                (this.currentImage - 1 + this.product.numImages) %
+                this.product.numImages;
+            this.imgSource = `/api/inventory/image?productId=${this.product.id}&imageId=${this.currentImage}`;
+        }
+    }
+
+    goToImg(id: number): void {
+        this.currentImage = id;
+        this.imgSource = `/api/inventory/image?productId=${this.product.id}&imageId=${this.currentImage}`;
     }
 }

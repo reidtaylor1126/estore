@@ -37,6 +37,7 @@ export class CreateProductComponent implements OnInit {
             description: this.formData.description,
             price: Number(this.formData.price),
             quantity: Number(this.formData.quantity),
+            numImages: 0,
         };
 
         this.inventoryService.createProduct(product).subscribe(() => {

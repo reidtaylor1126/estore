@@ -16,8 +16,8 @@ export class ProductComponent implements OnInit {
     ngOnInit(): void {
         this.imgSource =
             this.product?.id !== undefined
-                ? `/api/inventory/image?id=${this.product.id}`
-                : 'https://source.unsplash.com/500x500?cards';
+                ? `/api/inventory/image?productId=${this.product.id}`
+                : '/api/inventory/image?productId=-1&imageId=-1';
     }
 
     inStock(): boolean {
@@ -39,11 +39,5 @@ export class ProductComponent implements OnInit {
 
     getProductImage(): string {
         return this.imgSource;
-    }
-
-    imageError(): string {
-        console.log('Image error');
-        this.imgSource = 'https://source.unsplash.com/500x500?cards';
-        return 'https://source.unsplash.com/500x500?cards';
     }
 }

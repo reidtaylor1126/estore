@@ -33,10 +33,10 @@ export class InventoryService {
         return this.httpClient.post<Product>('/api/inventory', product);
     }
 
-    uploadImage(file: File, productId: number): Observable<string> {
+    uploadImage(file: File, productId: number): Observable<void> {
         const formData = new FormData();
         formData.append('product', productId.toString());
         formData.append('image', file);
-        return this.httpClient.put<string>('/api/inventory/image', formData);
+        return this.httpClient.put<void>('/api/inventory/image', formData);
     }
 }

@@ -27,10 +27,8 @@ public class CartFileDAOTest {
     private static InventoryFileDAO mockInventoryDAO;
 
     private UserAccount mockUser = new UserAccount(9999, "user9999", false);
-    String image = "file1";
-    private Product[] testInventory = {new Product(1, "test-1", "test 1", 1.0, 1, image),
-            new Product(2, "test-2", "test 2", 2.0, 2, image),
-            new Product(3, "test-3", "test 3", 3.0, 3, image)};
+    private Product[] testInventory = {new Product(1, "test-1", "test 1", 1.0, 1),
+            new Product(2, "test-2", "test 2", 2.0, 2), new Product(3, "test-3", "test 3", 3.0, 3)};
 
     private static CartProduct[] testProducts0 = {new CartProduct(1, 1), new CartProduct(3, 2)};
 

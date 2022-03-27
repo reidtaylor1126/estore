@@ -169,9 +169,10 @@ public class InventoryController {
     }
 
     @PutMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> updateProductImage(@Valid @RequestPart String product,
+    public ResponseEntity<Void> updateProductImage(@Valid @RequestPart String product,
             @Valid @RequestPart MultipartFile image) {
 
+        LOG.info("PUT /inventory/image");
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -181,8 +182,8 @@ public class InventoryController {
         }
 
         try {
-            Product updatedProduct = inventoryDAO.updateProductImage(product, image);
-            return new ResponseEntity<String>("ok", HttpStatus.OK);
+            inventoryDAO.updateProductImage(product, image);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (MaxUploadSizeExceededException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
@@ -192,18 +193,39 @@ public class InventoryController {
     }
 
     @GetMapping(value = "/image",
+
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity<byte[]> getProductImage(@RequestParam Integer id) {
-        LOG.info("GET /inventory/image?id=" + id);
+    public ResponseEntity<byte[]> getProductImage(@RequestParam Integer productId,
+            @RequestParam(required = false) Integer imageId) {
+        LOG.info("GET /inventory/image?id=" + productId);
 
         try {
-            LOG.log(Level.INFO, "Getting image for product " + id);
-            byte[] image = inventoryDAO.getImage(id);
+            LOG.log(Level.INFO, "Getting image for product " + productId);
+            if (imageId == null) {
+                imageId = 0;
+            }
+            byte[] image = inventoryDAO.getImage(productId, imageId);
             if (image != null) {
                 return new ResponseEntity<byte[]>(image, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/image")
+    public ResponseEntity<Void> deleteProductImage(@RequestParam Integer productId,
+            @RequestParam Integer imageId) {
+        LOG.info("DELETE /inventory/image?id=" + productId);
+
+        try {
+            inventoryDAO.deleteProductImage(productId, imageId);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IOException e) {
