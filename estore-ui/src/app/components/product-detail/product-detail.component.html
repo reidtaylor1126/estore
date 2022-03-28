@@ -1,60 +1,62 @@
 <div *ngIf="product" class="product-detail">
-    <div class="image-slides">
-        <div
-            *ngFor="
-                let item of [].constructor(product.numImages + 1);
-                let i = index
-            "
-        >
-            <div
-                *ngIf="i < product.numImages"
-                [ngClass]="getCurrentImg() === i ? 'image selected' : 'image'"
-                (click)="goToImg(i)"
-            >
-                <h3>{{ i + 1 }}</h3>
-            </div>
-            <div *ngIf="!(i < product.numImages) && isEditing()" class="image">
-                <h3>+</h3>
-            </div>
-        </div>
-    </div>
-    <div class="image-pane">
-        <img
-            *ngIf="isImageLoaded()"
-            [src]="imgSource"
-            width="500"
-            height="500"
+    <div class="image-upload">
+        <input
+            type="file"
+            class="file-input"
+            id="file-input"
+            accept="image/jpeg"
+            (change)="onFileChange($event)"
+            #fileUpload
         />
-        <div class="nav-buttons">
-            <button (click)="prevImg()" class="left">
-                <i class="bi bi-arrow-left-circle"></i>
-            </button>
-            <div *ngIf="isEditing()" class="image-upload">
-                <input
-                    type="file"
-                    class="file-input"
-                    accept="image/png, image/jpeg"
-                    #fileUpload
-                />
-
-                <div class="file-upload">
-                    {{ "No file uploaded yet." }}
-
-                    <button
-                        mat-mini-fab
-                        color="primary"
-                        class="upload-btn"
-                        (click)="fileUpload.click()"
-                    >
-                        <i class="bi bi-paperclip"></i>
-                    </button>
+    </div>
+    <div class="images">
+        <div class="image-slides">
+            <div
+                *ngFor="
+                    let item of [].constructor(product.numImages + 1);
+                    let i = index
+                "
+            >
+                <div
+                    *ngIf="i < product.numImages"
+                    [ngClass]="
+                        getCurrentImg() === i ? 'image selected' : 'image'
+                    "
+                    (click)="goToImg(i)"
+                >
+                    <img [src]="getImgLocation(i)" />
+                </div>
+                <div
+                    *ngIf="!(i < product.numImages) && isEditing()"
+                    (click)="fileUpload ? fileUpload.click() : null"
+                    class="upload"
+                >
+                    <h3>+</h3>
                 </div>
             </div>
-            <button (click)="nextImg()" class="right">
-                <i class="bi bi-arrow-right-circle"></i>
-            </button>
         </div>
-        <div *ngIf="!isImageLoaded()" style="width: 500px; height: 500px"></div>
+        <div class="image-pane">
+            <img *ngIf="isImageLoaded()" [src]="imgSource" />
+            <div class="nav-buttons">
+                <button (click)="prevImg()" class="left">
+                    <i class="bi bi-arrow-left-circle"></i>
+                </button>
+                <button
+                    class="danger"
+                    *ngIf="isEditing() && product.numImages > 0"
+                    (click)="stageDeleteImage()"
+                >
+                    Delete This Image
+                </button>
+                <button (click)="nextImg()" class="right">
+                    <i class="bi bi-arrow-right-circle"></i>
+                </button>
+            </div>
+            <div
+                *ngIf="!isImageLoaded()"
+                style="width: 500px; height: 500px"
+            ></div>
+        </div>
     </div>
     <div class="detail">
         <div class="title-bar">
@@ -101,7 +103,9 @@
             class="description"
             [innerHtml]="product.description"
         ></div>
-        <h3 *ngIf="isEditing()">Edit Description</h3>
+        <h3 class="description-edit-label" *ngIf="isEditing()">
+            Edit Description
+        </h3>
         <textarea
             *ngIf="isEditing()"
             id="description-edit"
@@ -143,8 +147,6 @@
         <div *ngIf="isEditing()" class="edit-controls">
             <button class="save-edit" (click)="saveEdit()">Save Edits</button>
             <button class="cancel-edit" (click)="cancelEdit()">Cancel</button>
-        </div>
-        <div *ngIf="isEditing()" class="edit-controls">
             <button class="delete-product" (click)="deleteProduct()">
                 Delete Product
             </button>

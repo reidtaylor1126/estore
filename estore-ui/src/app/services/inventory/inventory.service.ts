@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Product } from 'src/app/types/Product';
+import { map, Observable } from 'rxjs';
+import { Product, ProductNoId, ProductNoImage } from 'src/app/types/Product';
 
 @Injectable({
     providedIn: 'root',
@@ -17,7 +17,7 @@ export class InventoryService {
         return this.httpClient.get<Product>(`/api/inventory/${id}`);
     }
 
-    updateProduct(product: Product): Observable<Product> {
+    updateProduct(product: ProductNoImage): Observable<Product> {
         return this.httpClient.put<Product>('/api/inventory', product);
     }
 
@@ -29,14 +29,25 @@ export class InventoryService {
         return this.httpClient.get<Product[]>(`/api/inventory?q=${query}`);
     }
 
-    createProduct(product: Product): Observable<Product> {
-        return this.httpClient.post<Product>('/api/inventory', product);
+    createProduct(product: ProductNoId): Observable<Product> {
+        return this.httpClient.post<Product>('/api/inventory', product).pipe(
+            map((p) => {
+                console.log(p);
+                return p;
+            })
+        );
     }
 
-    uploadImage(file: File, productId: number): Observable<void> {
+    addImage(file: File, productId: number): Observable<void> {
         const formData = new FormData();
         formData.append('product', productId.toString());
         formData.append('image', file);
         return this.httpClient.put<void>('/api/inventory/image', formData);
+    }
+
+    deleteImage(productId: number, imageId: number): Observable<void> {
+        return this.httpClient.delete<void>(
+            `/api/inventory/image?productId=${productId}&imageId=${imageId}`
+        );
     }
 }

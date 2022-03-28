@@ -14,7 +14,6 @@ export class AccountNavComponent implements OnInit {
 
     ngOnInit(): void {
         this.authService.currentUser.subscribe((value) => {
-            console.log(value);
             if (value) {
                 this.username = value.username;
             } else {

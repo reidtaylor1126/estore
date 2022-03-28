@@ -30,9 +30,9 @@ public class InventoryFileDAOTest {
                 mockObjectMapper = mock(ObjectMapper.class);
                 testProducts = new Product[3];
                 String file = "file";
-                testProducts[0] = new Product(1, "test", "testdes", 1.0, 1);
-                testProducts[1] = new Product(2, "test1", "test2des", 1.0, 1);
-                testProducts[2] = new Product(3, "test2", "test3des", 1.0, 1);
+                testProducts[0] = new Product(1, "test", "testdes", 1.0, 0);
+                testProducts[1] = new Product(2, "test1", "test2des", 1.0, 0);
+                testProducts[2] = new Product(3, "test2", "test3des", 1.0, 0);
 
                 when(mockObjectMapper.readValue(new File("filenotfound.txt"), Product[].class))
                                 .thenReturn(testProducts);

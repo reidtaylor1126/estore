@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { InventoryService } from 'src/app/services/inventory/inventory.service';
-import { Product } from 'src/app/types/Product';
+import { Product, ProductNoId } from 'src/app/types/Product';
 
 @Component({
     selector: 'app-create-product',
@@ -15,6 +15,8 @@ export class CreateProductComponent implements OnInit {
         price: '',
         quantity: '',
     };
+
+    image: File | undefined;
 
     constructor(
         private inventoryService: InventoryService,
@@ -32,7 +34,7 @@ export class CreateProductComponent implements OnInit {
         )
             return;
 
-        const product: Product = {
+        const product: ProductNoId = {
             name: this.formData.name,
             description: this.formData.description,
             price: Number(this.formData.price),
@@ -40,8 +42,38 @@ export class CreateProductComponent implements OnInit {
             numImages: 0,
         };
 
-        this.inventoryService.createProduct(product).subscribe(() => {
-            this.router.navigate(['/products']);
+        this.inventoryService.createProduct(product).subscribe((value) => {
+            if (this.image && value.id) {
+                this.inventoryService
+                    .addImage(this.image, value.id)
+                    .subscribe(() => {
+                        this.router.navigate(['/products']);
+                    });
+            } else {
+                this.router.navigate(['/products']);
+            }
         });
+    }
+
+    onFileSelected(event: any): void {
+        if (event.target.files && event.target.files.length) {
+            const file = event.target.files[0];
+            if (file.size > 5000000) {
+                alert('File is too large. Plase select a smaller file.');
+                return;
+            }
+            if (file.type !== 'image/jpeg') {
+                alert('File is not a jpeg. Please select a jpeg file.');
+                return;
+            }
+            this.image = file;
+        }
+    }
+
+    getImageName(): string {
+        if (this.image) {
+            return this.image.name;
+        }
+        return '';
     }
 }

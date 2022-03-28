@@ -221,6 +221,10 @@ public class InventoryFileDAO implements InventoryDAO {
 
         synchronized (inventory) {
             if (inventory.containsKey(id)) {
+                int numImages = inventory.get(id).getNumImages();
+                for (int i = 0; i < numImages; i++) {
+                    deleteProductImage(id, 0);
+                }
                 inventory.remove(id);
                 saveInventory();
             } else {
