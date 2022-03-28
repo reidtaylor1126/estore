@@ -29,7 +29,7 @@ public class TransactionControllerTest {
     public void setUp()
     {
         mockTransactionDAO = mock(TransactionDAO.class);
-        transactionController = new TransactionController(mockTransactionDAO);
+        transactionController = new TransactionController(mockTransactionDAO, null);
     }
 
     @Test

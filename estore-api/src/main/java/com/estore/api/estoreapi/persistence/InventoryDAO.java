@@ -3,6 +3,7 @@ package com.estore.api.estoreapi.persistence;
 import java.io.IOException;
 
 import com.estore.api.estoreapi.model.Product;
+import com.estore.api.estoreapi.model.Transaction;
 
 /**
  * @author Ryan Yocum
@@ -53,4 +54,6 @@ public interface InventoryDAO {
      * @throws IOException if cannot delete the product
      */
     public boolean deleteProduct(Integer id) throws IOException;
+
+    public boolean confirmTransaction(Transaction transaction);
 }

@@ -9,9 +9,12 @@ import java.util.logging.Logger;
 
 
 import com.estore.api.estoreapi.model.Transaction;
+import com.estore.api.estoreapi.persistence.InventoryDAO;
+import com.estore.api.estoreapi.persistence.InventoryFileDAO;
 import com.estore.api.estoreapi.persistence.TransactionDAO;
 
 import org.apache.commons.logging.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,14 +38,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TransactionController {
     private static final Logger LOG = Logger.getLogger(TransactionController.class.getName());
     private TransactionDAO transactionDAO;
+    private InventoryDAO inventoryDAO;
 
     /**
      * Constructor.
      *
      * @param TransactionDAO the transaction DAO
      */
-    public TransactionController(TransactionDAO transactionDAO) {
+    @Autowired
+    public TransactionController(TransactionDAO transactionDAO, InventoryDAO inventoryDAO) {
         this.transactionDAO = transactionDAO;
+        this.inventoryDAO = inventoryDAO;
     }
 
     /**
@@ -73,6 +79,7 @@ public class TransactionController {
         Transaction transaction = transactionDAO.getTransaction(id);            
         if (transaction != null) 
         {
+            inventoryDAO.confirmTransaction(transaction);
             return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
         } else
         {

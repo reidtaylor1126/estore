@@ -85,7 +85,7 @@ public class TransactionFileDAO implements TransactionDAO {
         }
     }
 
-    public Transaction createTransaction(Transaction transaction) throws IOException {
+    public Transaction createTransaction(Transaction transaction) throws IOException, IllegalArgumentException {
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         String dateTime = dateFormat.format(date);
@@ -95,6 +95,7 @@ public class TransactionFileDAO implements TransactionDAO {
             transactions.put(id, newTransaction);
             saveTransactions();
         }
+        //confirmTransaction(transaction);
         return newTransaction;
     }
 
@@ -105,31 +106,9 @@ public class TransactionFileDAO implements TransactionDAO {
         {
             transaction = transactions.get(id);
         }
-
         return transaction;
     }
 
     
-    private boolean confirmTransaction(Transaction transaction) throws IOException
-    {
-        try
-        {
-            CartProduct[] cartItems = transaction.getProducts();
-            InventoryFileDAO inventory = new InventoryFileDAO("inventory.json", objectMapper);
-            for (int i = 0; i < cartItems.length; i++)
-            {
-                int tempProductID = cartItems[i].getId();
-                int tempProductQty = cartItems[i].getQuantity();
-                Product tempProduct = inventory.getProduct(tempProductID);
-                int oldStock = tempProduct.getQuantity();
-                int newStock = oldStock - tempProductQty;
-                inventory.updateProduct(new Product(tempProductID, null, null, null, newStock));
-            }
-            return true;
-        } catch(IOException e) 
-        {
-            return false;
-        }
-
-    }
+    
 }
