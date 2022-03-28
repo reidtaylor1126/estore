@@ -21,6 +21,7 @@ public class TransactionFileDAO implements TransactionDAO {
     private InventoryDAO inventoryDAO = null;
     private CartDAO cartDAO = null;
 
+
     /**
      * The set of transactions
      */
@@ -89,6 +90,7 @@ public class TransactionFileDAO implements TransactionDAO {
         }
     }
 
+
     public Transaction createTransaction(Transaction transaction, String token) throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -99,6 +101,7 @@ public class TransactionFileDAO implements TransactionDAO {
             transactions.put(id, newTransaction);
             saveTransactions();
         }
+
         inventoryDAO.confirmTransaction(transaction);
         cartDAO.clearCart(token);
         return newTransaction;

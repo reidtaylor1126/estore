@@ -55,13 +55,21 @@ public class Transaction {
         return paymentMethod;
     }
 
-    private static final String STRING_FORMAT = "Transaction [id=%d, user=%d Date/Time=%s Payment Method=%s Products Purchased=%s]";
+    public static final String STRING_FORMAT = "Transaction [id=%d, user=%d Date/Time=%s Payment Method=%s Products Purchased=%s]";
 
     public Transaction(@JsonProperty("id") int id, @JsonProperty("user") int user, @JsonProperty("products") CartProduct[] products, @JsonProperty("dateTime") String dateTime, @JsonProperty("paymentMethod") String paymentMethod) {
         this.id = id;
         this.user = user;
         this.products = products;
         this.dateTime = dateTime;
+        this.paymentMethod = paymentMethod;
+    }
+
+    public Transaction(int user, CartProduct[] products, String paymentMethod) {
+        id = -1;
+        this.user = user;
+        this.products = products;
+        dateTime = "N/A";
         this.paymentMethod = paymentMethod;
     }
 
