@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+<<<<<<< HEAD
 import { map, Observable } from 'rxjs';
 import { Product, ProductNoId, ProductNoImage } from 'src/app/types/Product';
+=======
+import { Observable } from 'rxjs';
+import { Product } from 'src/app/types/Product';
+>>>>>>> main
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +29,6 @@ export class InventoryService {
     deleteProduct(id: number): Observable<Product> {
         return this.httpClient.delete<Product>(`/api/inventory/${id}`);
     }
-
     searchItems(query: string): Observable<Product[]> {
         return this.httpClient.get<Product[]>(`/api/inventory?q=${query}`);
     }

@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { InventoryService } from 'src/app/services/inventory/inventory.service';
+<<<<<<< HEAD
 import { Product, ProductNoId } from 'src/app/types/Product';
+=======
+import { Product } from 'src/app/types/Product';
+>>>>>>> main
 
 @Component({
     selector: 'app-create-product',
