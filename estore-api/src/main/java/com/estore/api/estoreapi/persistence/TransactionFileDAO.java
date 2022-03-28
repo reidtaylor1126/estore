@@ -109,6 +109,7 @@ public class TransactionFileDAO implements TransactionDAO {
         return transaction;
     }
 
+    
     private boolean confirmTransaction(Transaction transaction) throws IOException
     {
         try

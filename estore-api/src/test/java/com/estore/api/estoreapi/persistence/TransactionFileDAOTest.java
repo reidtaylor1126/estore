@@ -2,6 +2,7 @@ package com.estore.api.estoreapi.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -41,17 +42,17 @@ public class TransactionFileDAOTest {
         mockTransactionFileDAO = new TransactionFileDAO("filenotfound.txt", mockObjectMapper);
     }
 
-    @Test
+    /**@Test
     public void testCreateTransaction() {
         assertEquals(testTransactions[0].getUser(), transactionFileDAO.createTransaction(testTransactions[0]).getUser());
         assertEquals(testTransactions[0].getPaymentMethod(), transactionFileDAO.createTransaction(testTransactions[0]).getPaymentMethod());
         assertEquals(testTransactions[0].getProducts(), transactionFileDAO.createTransaction(testTransactions[0]).getProducts());
-    }
+    }*/
 
     @Test
     public void testGetTransaction() {
         assertEquals(mockTransactionFileDAO.getTransaction(1), testTransactions[0]);
-        assertEquals(mockTransactionFileDAO.getTransaction(99), testTransactions[0]);
+        assertNotEquals(mockTransactionFileDAO.getTransaction(99), testTransactions[0]);
     }
 
 }

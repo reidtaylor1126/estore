@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import com.estore.api.estoreapi.model.Transaction;
 import com.estore.api.estoreapi.persistence.TransactionDAO;
 
+import org.apache.commons.logging.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,6 +64,21 @@ public class TransactionController {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Transaction> getTransaction(@RequestParam Integer id)
+    {
+        LOG.info("GET /transactions " + id);
+        Transaction transaction = transactionDAO.getTransaction(id);            
+        if (transaction != null) 
+        {
+            return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
+        } else
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        
     }
 
 }

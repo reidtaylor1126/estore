@@ -44,7 +44,7 @@ public class TransactionControllerTest {
 
         when(mockTransactionDAO.getTransaction(transaction.getId())).thenReturn(transaction);
 
-        ResponseEntity<String> response = transactionController.getTransaction(testID);
+        ResponseEntity<Transaction> response = transactionController.getTransaction(testID);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -61,9 +61,9 @@ public class TransactionControllerTest {
 
         when(mockTransactionDAO.getTransaction(transaction.getId())).thenReturn(transaction);
 
-        ResponseEntity<String> response = transactionController.getTransaction(testID);
+        ResponseEntity<Transaction> response = transactionController.getTransaction(testID);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
     
 }
