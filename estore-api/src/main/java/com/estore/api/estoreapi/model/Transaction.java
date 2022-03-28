@@ -1,50 +1,78 @@
-/**
- * @author Nathan (Nate) Appleby npa1508
- */
-
 package com.estore.api.estoreapi.model;
 
-import java.io.ObjectInputStream.GetField;
-import java.util.Arrays;
-
-import javax.validation.constraints.NotNull;
-
+import com.estore.api.estoreapi.model.Product;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Transaction {
-    @NotNull
-    @JsonProperty
-    private Cart transactionCart;
-
-    @NotNull
-    @JsonProperty
-    private UserAccount transactionAccount;
-
-    @NotNull
-    @JsonProperty
+    /**
+     * The id of the transaction.
+     */
+    @JsonProperty("id")
     private Integer id;
 
-    public Transaction(@NotNull @JsonProperty("id") int id, 
-                        @NotNull @JsonProperty("cart") Cart transactionCart,
-                        @NotNull @JsonProperty("account") UserAccount transactionAccount){
-        this.id = id;
-        this.transactionCart = transactionCart;
-        this.transactionAccount = transactionAccount;
-    }
+    /**
+     * User attached to transaction
+     */
+    @JsonProperty("user")
+    private Integer user;
 
-    public int getID()
-    {
+    /**
+     * Products for transaction
+     */
+    @JsonProperty("products")
+    private CartProduct[] products;
+
+    /**
+     * Date and Time of transaction
+     */
+    @JsonProperty("dateTime")
+    private String dateTime;
+
+    /**
+     * Payment method to pay for transaction
+     */
+    @JsonProperty("paymentMethod")
+    private String paymentMethod;
+
+    public Integer getId() {
         return id;
     }
 
-    public Cart getCart()
-    {
-        return transactionCart;
+    public Integer getUser() {
+        return user;
     }
 
-    public UserAccount getAccount()
-    {
-        return transactionAccount;
+    public CartProduct[] getProducts() {
+        return products;
+    }
+
+    public String getDateTime() {
+        return dateTime;
     }
     
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    private static final String STRING_FORMAT = "Transaction [id=%d, user=%d Date/Time=%s Payment Method=%s Products Purchased=%s]";
+
+    public Transaction(@JsonProperty("id") int id, @JsonProperty("user") int user, @JsonProperty("products") CartProduct[] products, @JsonProperty("dateTime") String dateTime, @JsonProperty("paymentMethod") String paymentMethod) {
+        this.id = id;
+        this.user = user;
+        this.products = products;
+        this.dateTime = dateTime;
+        this.paymentMethod = paymentMethod;
+    }
+
+    @Override
+    public String toString() {
+        String productList = "";
+
+        for (CartProduct product : products) {
+            productList = productList + product.toString() + ", ";
+        }
+
+        return String.format(STRING_FORMAT, id, user, dateTime, paymentMethod, productList);
+    }
 }

@@ -1,14 +1,13 @@
-/**
- * @author Nathan (Nate) Appleby npa1508
- */
-
 package com.estore.api.estoreapi.persistence;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import com.estore.api.estoreapi.model.*;
-import java.io.*;
 
 public interface TransactionDAO {
-    
-    public Transaction getTransaction(int id) throws IOException;
-    
+
+    public Transaction createTransaction(Transaction transaction) throws IOException;
+
+    public Transaction getTransaction(Integer id);
+
 }
