@@ -126,15 +126,8 @@ export class ProductDetailComponent implements OnInit {
             }
 
             Promise.all(actions).then(() => {
-                console.log('Successfully saved edits');
                 this.initImages();
                 this.stagedImageActions = [];
-                console.log(this.imgLocations);
-                console.log(
-                    this.currentImage < this.product.numImages
-                        ? this.currentImage
-                        : this.product.numImages - 1
-                );
                 this.goToImg(
                     this.currentImage < this.product.numImages
                         ? this.currentImage
@@ -283,11 +276,6 @@ export class ProductDetailComponent implements OnInit {
             }
             this.product.numImages--;
             this.imgLocations = newImgLocations;
-            console.log(
-                this.getCurrentImg() >= this.product.numImages
-                    ? 0
-                    : this.getCurrentImg()
-            );
             this.goToImg(
                 this.getCurrentImg() >= this.product.numImages
                     ? 0

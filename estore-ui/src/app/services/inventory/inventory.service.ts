@@ -30,12 +30,7 @@ export class InventoryService {
     }
 
     createProduct(product: ProductNoId): Observable<Product> {
-        return this.httpClient.post<Product>('/api/inventory', product).pipe(
-            map((p) => {
-                console.log(p);
-                return p;
-            })
-        );
+        return this.httpClient.post<Product>('/api/inventory', product);
     }
 
     addImage(file: File, productId: number): Observable<void> {

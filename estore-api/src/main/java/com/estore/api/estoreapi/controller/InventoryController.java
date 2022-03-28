@@ -195,7 +195,7 @@ public class InventoryController {
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<byte[]> getProductImage(@RequestParam Integer productId,
             @RequestParam(required = false) Integer imageId) {
-        LOG.info("GET /inventory/image?id=" + productId);
+        LOG.info("GET /inventory/productId?id=" + productId + "&imageId=" + imageId);
 
         try {
             LOG.log(Level.INFO, "Getting image for product " + productId);
@@ -219,7 +219,7 @@ public class InventoryController {
     @DeleteMapping("/image")
     public ResponseEntity<Void> deleteProductImage(@RequestParam Integer productId,
             @RequestParam Integer imageId) {
-        LOG.info("DELETE /inventory/image?id=" + productId);
+        LOG.info("DELETE /inventory/image?productId=" + productId + "&imageId=" + imageId);
 
         try {
             inventoryDAO.deleteProductImage(productId, imageId);

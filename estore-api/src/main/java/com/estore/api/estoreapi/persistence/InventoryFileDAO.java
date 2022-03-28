@@ -265,7 +265,6 @@ public class InventoryFileDAO implements InventoryDAO {
                 } else {
                     Files.write(file.toPath(), image.getBytes());
                 }
-                System.out.println(file.getPath());
                 productToUpdate.addImage();
                 saveInventory();
             } catch (NumberFormatException e) {
@@ -315,7 +314,6 @@ public class InventoryFileDAO implements InventoryDAO {
             file.delete();
             product.removeImage();
             for (int i = imageId; i < product.getNumImages(); ++i) {
-                System.out.println("here");
                 File tempFile = new File("src/main/resources/static/images/products/product_"
                         + product.getId() + "_" + (i + 1) + ".jpg");
                 File newFile = new File("src/main/resources/static/images/products/product_"
