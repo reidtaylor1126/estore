@@ -246,9 +246,7 @@ public class InventoryFileDAO implements InventoryDAO {
                     Product tempProduct = inventory.get(tempProductID);
                     int oldStock = tempProduct.getQuantity();
                     int newStock = oldStock - tempProductQty;
-                    System.out.println(tempProduct);
                     Product newProduct = new Product(tempProduct.getId(), tempProduct.getName(), tempProduct.getDescription(), tempProduct.getPrice(), newStock);
-                    System.out.println(newProduct);
                     updateProduct(newProduct);
                 }
                 return true;

@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+import com.estore.api.estoreapi.model.AccountNotFoundException;
+import com.estore.api.estoreapi.model.InvalidTokenException;
 import com.estore.api.estoreapi.model.Transaction;
 import com.estore.api.estoreapi.persistence.InventoryDAO;
 import com.estore.api.estoreapi.persistence.InventoryFileDAO;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,17 +60,26 @@ public class TransactionController {
      * @return the created product
      */
     @PostMapping("")
-    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
+    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction, @RequestHeader("token") String token) {
         LOG.info("POST /transactions " + transaction);
         if (transaction.getUser() == null || transaction.getProducts() == null || transaction.getPaymentMethod() == null || transaction.getPaymentMethod().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            Transaction newTransaction = transactionDAO.createTransaction(transaction);
+            Transaction newTransaction = transactionDAO.createTransaction(transaction, token);
             return new ResponseEntity<Transaction>(newTransaction, HttpStatus.CREATED);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalArgumentException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (AccountNotFoundException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InvalidTokenException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 

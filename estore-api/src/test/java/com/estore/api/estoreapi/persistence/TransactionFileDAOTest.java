@@ -25,12 +25,14 @@ public class TransactionFileDAOTest {
     ObjectMapper mockObjectMapper;
     TransactionFileDAO mockTransactionFileDAO;
     InventoryFileDAO mockInventoryFileDAO;
+    CartFileDAO mockCartFileDAO;
 
     @BeforeEach
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
         mockTransactionFileDAO = mock(TransactionFileDAO.class);
         mockInventoryFileDAO = mock(InventoryFileDAO.class);
+        mockCartFileDAO = mock(CartFileDAO.class);
         testTransactions = new Transaction[3];
         CartProduct[] testCartProducts = {new CartProduct(1, 1), new CartProduct(4, 4)};
         CartProduct[] testCartProducts2 = {new CartProduct(2, 2), new CartProduct(5, 5)};
@@ -41,7 +43,7 @@ public class TransactionFileDAOTest {
 
         when(mockObjectMapper.readValue(new File("filenotfound.txt"), Transaction[].class))
                 .thenReturn(testTransactions);
-        mockTransactionFileDAO = new TransactionFileDAO("filenotfound.txt", mockObjectMapper, mockInventoryFileDAO);
+        mockTransactionFileDAO = new TransactionFileDAO("filenotfound.txt", mockObjectMapper, mockInventoryFileDAO, mockCartFileDAO);
     }
 
     /**@Test

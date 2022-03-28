@@ -19,6 +19,7 @@ public class TransactionFileDAO implements TransactionDAO {
     private static final Logger LOG = Logger.getLogger(TransactionFileDAO.class.getName());
     private static TransactionFileDAO instance = null;
     private InventoryDAO inventoryDAO = null;
+    private CartDAO cartDAO = null;
 
     /**
      * The set of transactions
@@ -38,11 +39,12 @@ public class TransactionFileDAO implements TransactionDAO {
     private static int nextId;
 
     @Autowired
-    public TransactionFileDAO(@Value("${transactions.filename}") String filename, ObjectMapper objectMapper, InventoryDAO inventoryDAO)
+    public TransactionFileDAO(@Value("${transactions.filename}") String filename, ObjectMapper objectMapper, InventoryDAO inventoryDAO, CartDAO cartDAO)
             throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
         this.inventoryDAO = inventoryDAO;
+        this.cartDAO = cartDAO;
         loadTransactions();
         if(instance == null) instance = this;
     }
@@ -87,7 +89,7 @@ public class TransactionFileDAO implements TransactionDAO {
         }
     }
 
-    public Transaction createTransaction(Transaction transaction) throws IOException, IllegalArgumentException {
+    public Transaction createTransaction(Transaction transaction, String token) throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         String dateTime = dateFormat.format(date);
@@ -98,6 +100,7 @@ public class TransactionFileDAO implements TransactionDAO {
             saveTransactions();
         }
         inventoryDAO.confirmTransaction(transaction);
+        cartDAO.clearCart(token);
         return newTransaction;
     }
 
