@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 public class TransactionFileDAO implements TransactionDAO {
     private static final Logger LOG = Logger.getLogger(TransactionFileDAO.class.getName());
     private static TransactionFileDAO instance = null;
+    private InventoryDAO inventoryDAO = null;
 
     /**
      * The set of transactions
@@ -37,10 +38,11 @@ public class TransactionFileDAO implements TransactionDAO {
     private static int nextId;
 
     @Autowired
-    public TransactionFileDAO(@Value("${transactions.filename}") String filename, ObjectMapper objectMapper)
+    public TransactionFileDAO(@Value("${transactions.filename}") String filename, ObjectMapper objectMapper, InventoryDAO inventoryDAO)
             throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
+        this.inventoryDAO = inventoryDAO;
         loadTransactions();
         if(instance == null) instance = this;
     }
@@ -95,7 +97,7 @@ public class TransactionFileDAO implements TransactionDAO {
             transactions.put(id, newTransaction);
             saveTransactions();
         }
-        //confirmTransaction(transaction);
+        inventoryDAO.confirmTransaction(transaction);
         return newTransaction;
     }
 
