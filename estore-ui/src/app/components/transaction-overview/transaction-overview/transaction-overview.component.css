@@ -1,0 +1,113 @@
+.transaction-overview {
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.cart-list {
+    margin: 10px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    margin-left: 7px;
+}
+
+.payment-options {
+    margin: 10px;
+    width: 30%;
+    border-radius: 10px;
+    border: 2 solid #1e293b;
+}
+
+.overview-entry {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.form-entry {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+label {
+    margin: 3px;
+}
+
+fieldset {
+    border: 1px solid #334155;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.payment-method input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  
+    border-radius: 25%;
+    width: 16px;
+    height: 16px;
+  
+    border: 2px solid #999;
+    transition: 0.1s all ease;
+    margin-right: 5px;
+  }
+
+  .payment-method input:checked {
+    border: 8px solid #1e293b;
+  }
+
+.peronal-info input {
+    border-width: 0;
+    border-bottom: 2px solid #2f3a4c;
+}
+
+.error-msg {
+    margin-top: 6px;
+    color: #e44540;
+    font-size: 16px;
+}
+
+legend {
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 5px;
+    background-color: #1e293b;
+    color: #fafafa;
+    border-radius: 5px;
+    padding: 3px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background-color: #1e293b;
+    color: #fafafa;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: #2f3a4c;
+}
+
+button:disabled {
+    background-color: #1e293b;
+    opacity: 0.5;
+    cursor: default;
+}

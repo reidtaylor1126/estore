@@ -28,8 +28,15 @@ export class CartService {
         return this.numItems;
     }
 
-    private getCart(): Observable<Cart> {
-        return this.httpClient.get<Cart>('/api/cart');
+    getCart(): Observable<Cart> {
+        const token = this.authService.getToken();
+        if(token != undefined) {
+            return this.httpClient.get<Cart>('/api/cart', {
+                headers: {'token': token}
+            });
+        } else {
+            return new Observable<Cart>();
+        }
     }
 
     async getCartProducts(): Promise<ProductCart> {
