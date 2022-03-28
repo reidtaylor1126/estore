@@ -98,6 +98,17 @@ public class TransactionFileDAO implements TransactionDAO {
         return newTransaction;
     }
 
+    public Transaction getTransaction(Integer id)
+    {
+        Transaction transaction = null;
+        if (transactions.containsKey(id))
+        {
+            transaction = transactions.get(id);
+        }
+
+        return transaction;
+    }
+
     private boolean confirmTransaction(Transaction transaction) throws IOException
     {
         try
