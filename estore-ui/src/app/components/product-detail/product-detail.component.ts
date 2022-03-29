@@ -79,7 +79,7 @@ export class ProductDetailComponent implements OnInit {
 
     saveEdit(): void {
         if (this.isAdmin()) {
-            const actions = [];
+            const actions: (() => Promise<void>)[] = [];
             for (const stagedAction of this.stagedImageActions) {
                 if (
                     stagedAction.type === 'add' &&
@@ -87,21 +87,22 @@ export class ProductDetailComponent implements OnInit {
                     stagedAction.imageFile !== undefined
                 ) {
                     actions.push(
-                        new Promise((resolve, reject) => {
-                            if (
-                                stagedAction.imageFile !== undefined &&
-                                this.product.id !== undefined
-                            ) {
-                                this.inventoryService
-                                    .addImage(
-                                        stagedAction.imageFile,
-                                        this.product.id
-                                    )
-                                    .subscribe((value) => {
-                                        resolve(value);
-                                    });
-                            }
-                        })
+                        () =>
+                            new Promise<void>((resolve, reject) => {
+                                if (
+                                    stagedAction.imageFile !== undefined &&
+                                    this.product.id !== undefined
+                                ) {
+                                    this.inventoryService
+                                        .addImage(
+                                            stagedAction.imageFile,
+                                            this.product.id
+                                        )
+                                        .subscribe((value) => {
+                                            resolve(value);
+                                        });
+                                }
+                            })
                     );
                 } else if (
                     stagedAction.type === 'delete' &&
@@ -109,23 +110,27 @@ export class ProductDetailComponent implements OnInit {
                     stagedAction.imageId !== undefined
                 ) {
                     actions.push(
-                        new Promise((resolve, reject) => {
-                            if (this.product.id !== undefined) {
-                                this.inventoryService
-                                    .deleteImage(
-                                        this.product.id,
-                                        stagedAction.imageId
-                                    )
-                                    .subscribe((value) => {
-                                        resolve(value);
-                                    });
-                            }
-                        })
+                        () =>
+                            new Promise<void>((resolve, reject) => {
+                                if (this.product.id !== undefined) {
+                                    this.inventoryService
+                                        .deleteImage(
+                                            this.product.id,
+                                            stagedAction.imageId
+                                        )
+                                        .subscribe((value) => {
+                                            resolve(value);
+                                        });
+                                }
+                            })
                     );
                 }
             }
 
-            Promise.all(actions).then(() => {
+            (async () => {
+                for (const action of actions) {
+                    await action();
+                }
                 this.initImages();
                 this.stagedImageActions = [];
                 this.goToImg(
@@ -145,7 +150,7 @@ export class ProductDetailComponent implements OnInit {
                     .subscribe((value) => {
                         this.product = value;
                     });
-            });
+            })();
         }
         this.leaveEditing();
     }
