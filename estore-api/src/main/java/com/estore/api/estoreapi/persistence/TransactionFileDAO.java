@@ -123,6 +123,10 @@ public class TransactionFileDAO implements TransactionDAO {
         return transaction;
     }
 
+    public Transaction[] getAllTransactions()
+    {
+        return getTransactionArray();
+    }
     
     
 }

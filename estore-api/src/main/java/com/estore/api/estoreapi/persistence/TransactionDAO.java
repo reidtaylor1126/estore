@@ -10,4 +10,6 @@ public interface TransactionDAO {
 
     public Transaction getTransaction(Integer id);
 
+    public Transaction[] getAllTransactions();
+
 }

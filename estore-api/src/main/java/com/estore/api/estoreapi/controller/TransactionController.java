@@ -95,4 +95,12 @@ public class TransactionController {
         
     }
 
+    @GetMapping("")
+    public ResponseEntity<Transaction[]> getAllTransactions()
+    {
+        LOG.info("GET /transactions");
+        Transaction[] transactions = transactionDAO.getAllTransactions();
+        return new ResponseEntity<Transaction[]>(transactions, HttpStatus.OK);
+    }
+
 }
