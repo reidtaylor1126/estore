@@ -8,11 +8,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.estore.api.estoreapi.model.AccountNotFoundException;
+import com.estore.api.estoreapi.model.Cart;
 import com.estore.api.estoreapi.model.InvalidTokenException;
 import com.estore.api.estoreapi.model.Transaction;
+import com.estore.api.estoreapi.model.UserAccount;
+import com.estore.api.estoreapi.persistence.CartDAO;
 import com.estore.api.estoreapi.persistence.TransactionDAO;
+import com.estore.api.estoreapi.persistence.UserDAO;
 
 import org.apache.commons.logging.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,14 +42,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TransactionController {
     private static final Logger LOG = Logger.getLogger(TransactionController.class.getName());
     private TransactionDAO transactionDAO;
+    private UserDAO userDAO;
+    private CartDAO cartDAO;
 
     /**
      * Constructor.
      *
      * @param TransactionDAO the transaction DAO
      */
-    public TransactionController(TransactionDAO transactionDAO) {
+    @Autowired
+    public TransactionController(TransactionDAO transactionDAO, UserDAO userDAO, CartDAO cartDAO) {
         this.transactionDAO = transactionDAO;
+        this.userDAO = userDAO;
+        this.cartDAO = cartDAO;
     }
 
     /**
@@ -54,17 +64,17 @@ public class TransactionController {
      * @return the created product
      */
     @PostMapping("")
-    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction, @RequestHeader("token") String token) {
-        LOG.info("POST /transactions " + transaction);
-        if (transaction.getUser() == null || transaction.getProducts() == null || transaction.getPaymentMethod() == null || transaction.getPaymentMethod().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Transaction> createTransaction(@RequestHeader("token") String token, @RequestParam("paymentMethod") String paymentMethod) {
+        LOG.info("POST /transactions " + token);
         try {
-            Transaction newTransaction = transactionDAO.createTransaction(transaction, token);
-            if (newTransaction != null)
-                return new ResponseEntity<Transaction>(newTransaction, HttpStatus.CREATED);
-            else
+            Transaction newTransaction = transactionDAO.createTransaction(token, paymentMethod);
+            if (newTransaction == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } if (newTransaction.getUser() == null || newTransaction.getProducts() == null || newTransaction.getPaymentMethod() == null || newTransaction.getPaymentMethod().isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<Transaction>(newTransaction, HttpStatus.CREATED);
+            }
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,7 +90,7 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping("/{id}")
     public ResponseEntity<Transaction> getTransaction(@RequestParam Integer id)
     {
         LOG.info("GET /transactions " + id);

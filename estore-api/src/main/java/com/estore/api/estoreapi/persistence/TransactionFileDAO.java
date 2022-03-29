@@ -20,6 +20,7 @@ public class TransactionFileDAO implements TransactionDAO {
     private static TransactionFileDAO instance = null;
     private InventoryDAO inventoryDAO = null;
     private CartDAO cartDAO = null;
+    private UserDAO userDAO = null;
 
 
     /**
@@ -40,12 +41,13 @@ public class TransactionFileDAO implements TransactionDAO {
     private static int nextId;
 
     @Autowired
-    public TransactionFileDAO(@Value("${transactions.filename}") String filename, ObjectMapper objectMapper, InventoryDAO inventoryDAO, CartDAO cartDAO)
+    public TransactionFileDAO(@Value("${transactions.filename}") String filename, ObjectMapper objectMapper, InventoryDAO inventoryDAO, CartDAO cartDAO, UserDAO userDAO)
             throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
         this.inventoryDAO = inventoryDAO;
         this.cartDAO = cartDAO;
+        this.userDAO = userDAO;
         loadTransactions();
         if(instance == null) instance = this;
     }
@@ -91,15 +93,17 @@ public class TransactionFileDAO implements TransactionDAO {
     }
 
 
-    public Transaction createTransaction(Transaction transaction, String token) throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
+    public Transaction createTransaction(String token, String paymentMethod) throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         String dateTime = dateFormat.format(date);
         Integer id = nextId();
+        UserAccount user = userDAO.verifyToken(token);
+        Cart cart = cartDAO.getCart(token);
 
-        Transaction newTransaction = new Transaction(id, transaction.getUser(), transaction.getProducts(), dateTime, transaction.getPaymentMethod());
+        Transaction newTransaction = new Transaction(id, user.getId(), cart.getProducts(), dateTime, paymentMethod);
 
-        if(inventoryDAO.confirmTransaction(transaction))
+        if(inventoryDAO.confirmTransaction(newTransaction))
         {
             synchronized (transactions) {
                 transactions.put(id, newTransaction);
