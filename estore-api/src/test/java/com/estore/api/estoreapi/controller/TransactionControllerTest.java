@@ -8,6 +8,7 @@ import java.beans.Transient;
 import java.io.IOException;
 
 import com.estore.api.estoreapi.model.Transaction;
+import com.estore.api.estoreapi.model.TransactionInfo;
 import com.estore.api.estoreapi.model.AccountNotFoundException;
 import com.estore.api.estoreapi.model.CartProduct;
 import com.estore.api.estoreapi.model.InvalidTokenException;
@@ -38,15 +39,18 @@ public class TransactionControllerTest {
     public void testCreateTransaction() throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
         Integer expected_id = 1;
         Integer expected_user = 2;
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
         String expected_dateTime = "3/27";
         String expected_paymentMethod = "visa";
+        String expected_shippingAddress = "address";
+        TransactionInfo transactionInfo = new TransactionInfo(expected_paymentMethod, expected_shippingAddress);
+        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
 
-        Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod);
 
-        when(mockTransactionDAO.createTransaction(transaction, authValid)).thenReturn(transaction);
+        Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
 
-        ResponseEntity<Transaction> response = transactionController.createTransaction(transaction, authValid);
+        when(mockTransactionDAO.createTransaction(authValid, expected_paymentMethod, expected_shippingAddress)).thenReturn(transaction);
+        
+        ResponseEntity<Transaction> response = transactionController.createTransaction(authValid, transactionInfo);
 
         assertEquals(response.getStatusCode(), HttpStatus.CREATED);
         assertEquals(response.getBody(), transaction);
@@ -54,34 +58,25 @@ public class TransactionControllerTest {
 
     @Test
     public void testCreateTransactionEmptyName() throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException{
-        Integer expected_id = 1;
-        Integer expected_user = 2;
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
-        String expected_dateTime = "3/27";
         String expected_paymentMethod = "";
+        String expected_shippingAddress = "address";
 
-        Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod);
+        when(mockTransactionDAO.createTransaction(authValid, expected_paymentMethod, expected_shippingAddress)).thenReturn(null);
 
-        when(mockTransactionDAO.createTransaction(transaction, authValid)).thenReturn(null);
-
-        ResponseEntity<Transaction> response = transactionController.createTransaction(transaction, authValid);
+        ResponseEntity<Transaction> response = transactionController.createTransaction(authValid, new TransactionInfo(expected_paymentMethod, expected_shippingAddress));
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
     public void testError() throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException{
-        Integer expected_id = 1;
-        Integer expected_user = 2;
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
-        String expected_dateTime = "3/27";
         String expected_paymentMethod = "visa";
+        String expected_shippingAddress = "address";
+        TransactionInfo transactionInfo = new TransactionInfo(expected_paymentMethod, expected_shippingAddress);
 
-        Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod);
+        when(mockTransactionDAO.createTransaction(authValid, expected_paymentMethod, expected_shippingAddress)).thenThrow(new IOException());
 
-        when(mockTransactionDAO.createTransaction(transaction, authValid)).thenThrow(new IOException());
-
-        ResponseEntity<Transaction> response = transactionController.createTransaction(transaction, authValid);
+        ResponseEntity<Transaction> response = transactionController.createTransaction(authValid, transactionInfo);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
@@ -89,16 +84,18 @@ public class TransactionControllerTest {
     @Test
     public void testGetTransaction()
     {
-        int testID = 99;
-        CartProduct[] products = new CartProduct[3];
-        products[0] = new CartProduct(99, 1);
-        products[1] = new CartProduct(98, 2);
-        products[2] = new CartProduct(97, 3);
-        Transaction transaction = new Transaction(99, 99, products, "testDate/Time", "test");
+        Integer expected_id = 1;
+        Integer expected_user = 2;
+        String expected_dateTime = "3/27";
+        String expected_paymentMethod = "visa";
+        String expected_shippingAddress = "address";
+        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        
+        Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
 
         when(mockTransactionDAO.getTransaction(transaction.getId())).thenReturn(transaction);
 
-        ResponseEntity<Transaction> response = transactionController.getTransaction(testID);
+        ResponseEntity<Transaction> response = transactionController.getTransaction(expected_id);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -106,17 +103,42 @@ public class TransactionControllerTest {
     @Test
     public void testGetTransactionNotFound()
     {
-        int testID = 98;
-        CartProduct[] products = new CartProduct[3];
-        products[0] = new CartProduct(99, 1);
-        products[1] = new CartProduct(98, 2);
-        products[2] = new CartProduct(97, 3);
-        Transaction transaction = new Transaction(99, 99, products, "testDate/Time", "test");
-
+        Integer expected_id = 1;
+        Integer unexpected_id = 2;
+        Integer expected_user = 2;
+        String expected_dateTime = "3/27";
+        String expected_paymentMethod = "visa";
+        String expected_shippingAddress = "address";
+        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        
+        Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
         when(mockTransactionDAO.getTransaction(transaction.getId())).thenReturn(transaction);
 
-        ResponseEntity<Transaction> response = transactionController.getTransaction(testID);
+        ResponseEntity<Transaction> response = transactionController.getTransaction(unexpected_id);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetAllTransactions()
+    {
+        Integer expected_id = 1;
+        Integer expected_user = 2;
+        String expected_dateTime = "3/27";
+        String expected_paymentMethod = "visa";
+        String expected_shippingAddress = "address";
+        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+
+        Transaction[] transactions = new Transaction[3];
+        transactions[0] = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
+        transactions[1] = new Transaction(expected_id + 1, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
+        transactions[2] = new Transaction(expected_id + 1, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
+        
+        when(mockTransactionDAO.getAllTransactions()).thenReturn(transactions);
+
+        ResponseEntity<Transaction[]> response = transactionController.getAllTransactions();
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody(), transactions);
     }
 }

@@ -93,7 +93,7 @@ public class TransactionFileDAO implements TransactionDAO {
     }
 
 
-    public Transaction createTransaction(String token, String paymentMethod) throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
+    public Transaction createTransaction(String token, String paymentMethod, String shippingAddress) throws IOException, IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         String dateTime = dateFormat.format(date);
@@ -101,7 +101,7 @@ public class TransactionFileDAO implements TransactionDAO {
         UserAccount user = userDAO.verifyToken(token);
         Cart cart = cartDAO.getCart(token);
 
-        Transaction newTransaction = new Transaction(id, user.getId(), cart.getProducts(), dateTime, paymentMethod);
+        Transaction newTransaction = new Transaction(id, user.getId(), cart.getProducts(), dateTime, paymentMethod, shippingAddress);
 
         if(inventoryDAO.confirmTransaction(newTransaction))
         {

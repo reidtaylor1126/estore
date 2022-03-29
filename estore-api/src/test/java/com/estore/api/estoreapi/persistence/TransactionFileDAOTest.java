@@ -12,7 +12,9 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 import com.estore.api.estoreapi.model.Transaction;
+import com.estore.api.estoreapi.model.UserAccount;
 import com.estore.api.estoreapi.model.AccountNotFoundException;
+import com.estore.api.estoreapi.model.Cart;
 import com.estore.api.estoreapi.model.CartProduct;
 import com.estore.api.estoreapi.model.InvalidTokenException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +30,9 @@ public class TransactionFileDAOTest {
     TransactionFileDAO mockTransactionFileDAO;
     InventoryFileDAO mockInventoryFileDAO;
     CartFileDAO mockCartFileDAO;
+    UserFileDAO mockUserFileDAO;
+    UserAccount mockUser;
+    Cart mockCart;
 
     String validAuth = "test1*1";
 
@@ -37,31 +42,45 @@ public class TransactionFileDAOTest {
         mockTransactionFileDAO = mock(TransactionFileDAO.class);
         mockInventoryFileDAO = mock(InventoryFileDAO.class);
         mockCartFileDAO = mock(CartFileDAO.class);
+        mockUserFileDAO = mock(UserFileDAO.class);
+        mockUser = mock(UserAccount.class);
+        mockCart = mock(Cart.class);
         testTransactions = new Transaction[3];
         CartProduct[] testCartProducts = {new CartProduct(1, 1), new CartProduct(4, 4)};
         CartProduct[] testCartProducts2 = {new CartProduct(2, 2), new CartProduct(5, 5)};
         CartProduct[] testCartProducts3 = {new CartProduct(3, 3), new CartProduct(6, 6)};
-        testTransactions[0] = new Transaction(1, 1, testCartProducts, "10", "visa");
-        testTransactions[1] = new Transaction(2, 2, testCartProducts2, "20", "debit");
-        testTransactions[2] = new Transaction(3, 3, testCartProducts3, "30", "mastercard");
+        testTransactions[0] = new Transaction(1, 1, testCartProducts, "10", "visa", "address");
+        testTransactions[1] = new Transaction(2, 2, testCartProducts2, "20", "debit", "address2");
+        testTransactions[2] = new Transaction(3, 3, testCartProducts3, "30", "mastercard", "address3");
 
         when(mockObjectMapper.readValue(new File("filenotfound.txt"), Transaction[].class))
                 .thenReturn(testTransactions);
-        mockTransactionFileDAO = new TransactionFileDAO("filenotfound.txt", mockObjectMapper, mockInventoryFileDAO, mockCartFileDAO);
+        mockTransactionFileDAO = new TransactionFileDAO("filenotfound.txt", mockObjectMapper, mockInventoryFileDAO, mockCartFileDAO, mockUserFileDAO);
     }
   
     @Test
     public void testCreateTransaction() throws IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
 
         try {
-            Transaction result = assertDoesNotThrow((() -> mockTransactionFileDAO.createTransaction(testTransactions[0], validAuth)),
-                                    "Unexpected exception thrown");
+            Cart cart = new Cart(testTransactions[0].getProducts());
+            UserAccount user = new UserAccount(1, "test");
 
             when(mockInventoryFileDAO.confirmTransaction(testTransactions[0])).thenReturn(true);
+            when(mockCartFileDAO.getCart(validAuth)).thenReturn(cart);
+            when(mockUserFileDAO.verifyToken(validAuth)).thenReturn(user);
+            when(mockUser.getId()).thenReturn(1);
+            when(mockCart.getProducts()).thenReturn(testTransactions[0].getProducts());
+            
+            Transaction result = assertDoesNotThrow((() -> mockTransactionFileDAO.createTransaction(validAuth, "visa", "address")),
+            "Unexpected exception thrown");
+
+            assertNotNull(result);
+            
+            System.out.println(result);
                                     
-            assertEquals(testTransactions[0].getUser(), mockTransactionFileDAO.createTransaction(testTransactions[0], validAuth).getUser());
-            assertEquals(testTransactions[0].getPaymentMethod(), mockTransactionFileDAO.createTransaction(testTransactions[0], validAuth).getPaymentMethod());
-            assertEquals(testTransactions[0].getProducts(), mockTransactionFileDAO.createTransaction(testTransactions[0], validAuth).getProducts());
+            assertEquals(testTransactions[0].getUser(), result.getUser());
+            assertEquals(testTransactions[0].getPaymentMethod(), result.getPaymentMethod());
+            assertEquals(testTransactions[0].getProducts(), result.getProducts());
     
         } catch (IOException ioe) {
             

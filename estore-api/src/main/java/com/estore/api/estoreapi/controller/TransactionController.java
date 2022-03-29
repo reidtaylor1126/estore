@@ -8,13 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.estore.api.estoreapi.model.AccountNotFoundException;
-import com.estore.api.estoreapi.model.Cart;
 import com.estore.api.estoreapi.model.InvalidTokenException;
 import com.estore.api.estoreapi.model.Transaction;
-import com.estore.api.estoreapi.model.UserAccount;
-import com.estore.api.estoreapi.persistence.CartDAO;
+import com.estore.api.estoreapi.model.TransactionInfo;
 import com.estore.api.estoreapi.persistence.TransactionDAO;
-import com.estore.api.estoreapi.persistence.UserDAO;
 
 import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +39,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TransactionController {
     private static final Logger LOG = Logger.getLogger(TransactionController.class.getName());
     private TransactionDAO transactionDAO;
-    private UserDAO userDAO;
-    private CartDAO cartDAO;
 
     /**
      * Constructor.
@@ -51,10 +46,8 @@ public class TransactionController {
      * @param TransactionDAO the transaction DAO
      */
     @Autowired
-    public TransactionController(TransactionDAO transactionDAO, UserDAO userDAO, CartDAO cartDAO) {
+    public TransactionController(TransactionDAO transactionDAO) {
         this.transactionDAO = transactionDAO;
-        this.userDAO = userDAO;
-        this.cartDAO = cartDAO;
     }
 
     /**
@@ -64,13 +57,17 @@ public class TransactionController {
      * @return the created product
      */
     @PostMapping("")
-    public ResponseEntity<Transaction> createTransaction(@RequestHeader("token") String token, @RequestParam("paymentMethod") String paymentMethod) {
-        LOG.info("POST /transactions " + token);
+    public ResponseEntity<Transaction> createTransaction(@RequestHeader("token") String token, @RequestBody TransactionInfo transactionInfo) {
+    LOG.info("POST /transactions " + token);
         try {
-            Transaction newTransaction = transactionDAO.createTransaction(token, paymentMethod);
+            Transaction newTransaction = transactionDAO.createTransaction(token, transactionInfo.getPaymentMethod(), transactionInfo.getShippingAddress());
             if (newTransaction == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            } if (newTransaction.getUser() == null || newTransaction.getProducts() == null || newTransaction.getPaymentMethod() == null || newTransaction.getPaymentMethod().isEmpty()) {
+            } if (newTransaction.getUser() == null || newTransaction.getProducts() == null || 
+                    newTransaction.getPaymentMethod() == null || 
+                    newTransaction.getPaymentMethod().isEmpty() ||
+                    newTransaction.getShippingAddress() == null ||
+                    newTransaction.getShippingAddress().isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             } else {
                 return new ResponseEntity<Transaction>(newTransaction, HttpStatus.CREATED);

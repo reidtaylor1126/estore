@@ -133,7 +133,7 @@ public class InventoryFileDAOTest {
                 cartProducts[0] = new CartProduct(1, 1);
                 cartProducts[1] = new CartProduct(2, 1);
                 cartProducts[2] = new CartProduct(3, 1);
-                Transaction test = new Transaction(99, 99, cartProducts, "testDate", "testPayment");
+                Transaction test = new Transaction(99, 99, cartProducts, "testDate", "testPayment", "testAddress");
 
                 assertTrue(inventoryFileDAO.confirmTransaction(test));
         }

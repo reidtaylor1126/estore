@@ -35,6 +35,9 @@ public class Transaction {
     @JsonProperty("paymentMethod")
     private String paymentMethod;
 
+    @JsonProperty("shippingAddress")
+    private String shippingAddress;
+
     public Integer getId() {
         return id;
     }
@@ -55,14 +58,20 @@ public class Transaction {
         return paymentMethod;
     }
 
-    public static final String STRING_FORMAT = "Transaction [id=%d, user=%d Date/Time=%s Payment Method=%s Products Purchased=%s]";
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
 
-    public Transaction(@JsonProperty("id") int id, @JsonProperty("user") int user, @JsonProperty("products") CartProduct[] products, @JsonProperty("dateTime") String dateTime, @JsonProperty("paymentMethod") String paymentMethod) {
+    public static final String STRING_FORMAT = "Transaction [id=%d, user=%d Date/Time=%s Payment Method=%s Shipping Address=%s Products Purchased=%s]";
+
+    public Transaction(@JsonProperty("id") int id, @JsonProperty("user") int user, @JsonProperty("products") CartProduct[] products, @JsonProperty("dateTime") String dateTime, @JsonProperty("paymentMethod") String paymentMethod, 
+                            @JsonProperty("shippingAddress") String shippingAddress) {
         this.id = id;
         this.user = user;
         this.products = products;
         this.dateTime = dateTime;
         this.paymentMethod = paymentMethod;
+        this.shippingAddress = shippingAddress;
     }
 
     public Transaction(int user, CartProduct[] products, String paymentMethod) {
@@ -81,6 +90,6 @@ public class Transaction {
             productList = productList + product.toString() + ", ";
         }
 
-        return String.format(STRING_FORMAT, id, user, dateTime, paymentMethod, productList);
+        return String.format(STRING_FORMAT, id, user, dateTime, paymentMethod, shippingAddress, productList);
     }
 }
