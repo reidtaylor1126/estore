@@ -239,6 +239,7 @@ public class InventoryFileDAO implements InventoryDAO {
         try
         {
                 CartProduct[] cartItems = transaction.getProducts();
+                Product[] newItems = new Product[cartItems.length];
                 for (int i = 0; i < cartItems.length; i++)
                 {
                     int tempProductID = cartItems[i].getId();
@@ -246,8 +247,15 @@ public class InventoryFileDAO implements InventoryDAO {
                     Product tempProduct = inventory.get(tempProductID);
                     int oldStock = tempProduct.getQuantity();
                     int newStock = oldStock - tempProductQty;
+                    if(newStock < 0)
+                        return false;
                     Product newProduct = new Product(tempProduct.getId(), tempProduct.getName(), tempProduct.getDescription(), tempProduct.getPrice(), newStock);
-                    updateProduct(newProduct);
+                    newItems[i] = newProduct;
+                }
+
+                for (int i = 0; i < newItems.length; i++)
+                {
+                    updateProduct(newItems[i]);
                 }
                 return true;
         } catch(IOException e) 

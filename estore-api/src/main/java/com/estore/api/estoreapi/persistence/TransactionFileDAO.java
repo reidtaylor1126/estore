@@ -96,14 +96,20 @@ public class TransactionFileDAO implements TransactionDAO {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         String dateTime = dateFormat.format(date);
         Integer id = nextId();
-        Transaction newTransaction = new Transaction(id, transaction.getUser(), transaction.getProducts(), dateTime, transaction.getPaymentMethod());
-        synchronized (transactions) {
-            transactions.put(id, newTransaction);
-            saveTransactions();
-        }
 
-        inventoryDAO.confirmTransaction(transaction);
-        cartDAO.clearCart(token);
+        Transaction newTransaction = new Transaction(id, transaction.getUser(), transaction.getProducts(), dateTime, transaction.getPaymentMethod());
+
+        if(inventoryDAO.confirmTransaction(transaction))
+        {
+            synchronized (transactions) {
+                transactions.put(id, newTransaction);
+                saveTransactions();
+            }
+            cartDAO.clearCart(token);
+        } else
+        {
+            newTransaction = null;
+        }
         return newTransaction;
     }
 

@@ -61,7 +61,10 @@ public class TransactionController {
         }
         try {
             Transaction newTransaction = transactionDAO.createTransaction(transaction, token);
-            return new ResponseEntity<Transaction>(newTransaction, HttpStatus.CREATED);
+            if (newTransaction != null)
+                return new ResponseEntity<Transaction>(newTransaction, HttpStatus.CREATED);
+            else
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
