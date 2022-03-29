@@ -57,6 +57,8 @@ public class TransactionFileDAOTest {
             Transaction result = assertDoesNotThrow((() -> mockTransactionFileDAO.createTransaction(testTransactions[0], validAuth)),
                                     "Unexpected exception thrown");
 
+            when(mockInventoryFileDAO.confirmTransaction(testTransactions[0])).thenReturn(true);
+                                    
             assertEquals(testTransactions[0].getUser(), mockTransactionFileDAO.createTransaction(testTransactions[0], validAuth).getUser());
             assertEquals(testTransactions[0].getPaymentMethod(), mockTransactionFileDAO.createTransaction(testTransactions[0], validAuth).getPaymentMethod());
             assertEquals(testTransactions[0].getProducts(), mockTransactionFileDAO.createTransaction(testTransactions[0], validAuth).getProducts());
