@@ -1,4 +1,1 @@
-[
-    { "id": 0, "name": "dsjafkl", "description": "ajdfslj", "price": 5435.0, "quantity": 3523, "numImages": 0 },
-    { "id": 1, "name": "jasdfkl", "description": "sdlfjal", "price": 53.0, "quantity": 453, "numImages": 1 }
-]
+[{"id":0,"name":"dsjafkl","description":"ajdfslj","price":5435.0,"quantity":3523,"numImages":0},{"id":4,"name":"caden","description":"caden's product","price":4.2,"quantity":69,"numImages":0}]
