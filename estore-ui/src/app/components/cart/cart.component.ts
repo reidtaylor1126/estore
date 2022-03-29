@@ -45,14 +45,15 @@ export class CartComponent implements OnInit {
                 return product.id !== productId;
             }
         );
+        this.productCart.totalPrice = this.productCart.products.reduce(
+            (acc, product) => acc + product.price,
+            0
+        );
     }
 
     getTotalPrice(): number {
         if (this.productCart) {
-            return this.productCart.products.reduce(
-                (acc, product) => acc + product.price,
-                0
-            );
+            return this.productCart.totalPrice;
         }
         return 0;
     }
@@ -77,6 +78,10 @@ export class CartComponent implements OnInit {
 
     updateCart(): void {
         if (this.productCart) {
+            this.productCart.totalPrice = this.productCart.products.reduce(
+                (acc, product) => acc + product.price,
+                0
+            );
             this.cartService
                 .updateCart(this.cartService.convertToCart(this.productCart))
                 .subscribe(async (cart) => {
