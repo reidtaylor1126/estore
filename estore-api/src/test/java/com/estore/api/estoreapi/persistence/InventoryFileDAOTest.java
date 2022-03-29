@@ -4,13 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
 
+import com.estore.api.estoreapi.model.CartProduct;
 import com.estore.api.estoreapi.model.Product;
+import com.estore.api.estoreapi.model.Transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -121,5 +124,17 @@ public class InventoryFileDAOTest {
                 Product[] products = inventoryFileDAO.searchProducts(searchTerms);
 
                 assertEquals(testProducts[1], products[0]);
+        }
+
+        @Test
+        public void testConfirmTransaction()
+        {
+                CartProduct[] cartProducts = new CartProduct[3];
+                cartProducts[0] = new CartProduct(1, 1);
+                cartProducts[1] = new CartProduct(2, 1);
+                cartProducts[2] = new CartProduct(3, 1);
+                Transaction test = new Transaction(99, 99, cartProducts, "testDate", "testPayment");
+
+                assertTrue(inventoryFileDAO.confirmTransaction(test));
         }
 }
