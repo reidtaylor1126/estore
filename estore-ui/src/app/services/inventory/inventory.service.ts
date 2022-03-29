@@ -1,12 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD
 import { map, Observable } from 'rxjs';
 import { Product, ProductNoId, ProductNoImage } from 'src/app/types/Product';
-=======
-import { Observable } from 'rxjs';
-import { Product } from 'src/app/types/Product';
->>>>>>> main
 
 @Injectable({
     providedIn: 'root',
