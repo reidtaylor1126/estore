@@ -110,4 +110,19 @@ public class TransactionController {
         return new ResponseEntity<Transaction[]>(transactions, HttpStatus.OK);
     }
 
+    @PutMapping("")
+    public ResponseEntity<Transaction> changeFulfilledStatus(@RequestParam("id") Integer id, @RequestParam("status") Boolean bool, @RequestHeader("token") String token)
+    {
+        LOG.info("PUT /transactions " + id);
+        try {
+            Transaction transaction = transactionDAO.changeFulfilledStatus(id, bool, token);
+            return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (AccountNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InvalidTokenException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
 }

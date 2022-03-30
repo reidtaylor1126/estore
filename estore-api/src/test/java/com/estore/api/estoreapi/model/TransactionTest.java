@@ -45,7 +45,7 @@ public class TransactionTest {
             productList = productList + product.toString() + ", ";
         }
 
-        String expected_string = String.format(Transaction.STRING_FORMAT, id, user, dateTime, paymentMethod, shippingAddress, productList);
+        String expected_string = String.format(Transaction.STRING_FORMAT, id, user, dateTime, paymentMethod, shippingAddress, productList, transaction.getFulfilledStatus());
         assert transaction.toString().equals(expected_string);
     }
 

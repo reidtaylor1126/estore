@@ -132,5 +132,39 @@ public class TransactionFileDAO implements TransactionDAO {
         return getTransactionArray();
     }
     
+    public boolean getFulfilledStatus(Integer id)
+    {
+        synchronized(transactions)
+        {
+            if (!transactions.containsKey(id))
+                {
+                    throw new IllegalArgumentException(
+                        "Transaction #" + id + " does not exist"
+                    );
+                }
+            return transactions.get(id).getFulfilledStatus();
+        }
+    }
+
+    public Transaction changeFulfilledStatus(Integer id, boolean bool, String token) throws IOException, AccountNotFoundException, InvalidTokenException
+    {
+        UserAccount user = userDAO.verifyToken(token);
+        synchronized(transactions)
+        {
+            if (!transactions.containsKey(id))
+            {
+                throw new IllegalArgumentException(
+                    "Transaction #" + id + " does not exist"
+                    );
+                }
+                
+                if(user.getIsAdmin())
+                {
+                transactions.get(id).changeFulfilledStatus(bool);
+                saveTransactions();
+                }
+                return transactions.get(id);
+        }
+    }
     
 }

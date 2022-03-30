@@ -12,4 +12,7 @@ public interface TransactionDAO {
 
     public Transaction[] getAllTransactions();
 
+    public boolean getFulfilledStatus(Integer id);
+
+    public Transaction changeFulfilledStatus(Integer id, boolean bool, String token) throws IOException, AccountNotFoundException, InvalidTokenException;
 }

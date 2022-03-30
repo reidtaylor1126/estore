@@ -38,6 +38,9 @@ public class Transaction {
     @JsonProperty("shippingAddress")
     private String shippingAddress;
 
+    @JsonProperty("fulfilled")
+    private Boolean fulfilled;
+
     public Integer getId() {
         return id;
     }
@@ -62,7 +65,15 @@ public class Transaction {
         return shippingAddress;
     }
 
-    public static final String STRING_FORMAT = "Transaction [id=%d, user=%d Date/Time=%s Payment Method=%s Shipping Address=%s Products Purchased=%s]";
+    public boolean getFulfilledStatus() {
+        return fulfilled;
+    }
+
+    public void changeFulfilledStatus(Boolean bool) {
+        fulfilled = bool;
+    }
+
+    public static final String STRING_FORMAT = "Transaction [id=%d, user=%d Date/Time=%s Payment Method=%s Shipping Address=%s Products Purchased=%s Fulfilled=%b]";
 
     public Transaction(@JsonProperty("id") int id, @JsonProperty("user") int user, @JsonProperty("products") CartProduct[] products, @JsonProperty("dateTime") String dateTime, @JsonProperty("paymentMethod") String paymentMethod, 
                             @JsonProperty("shippingAddress") String shippingAddress) {
@@ -72,6 +83,7 @@ public class Transaction {
         this.dateTime = dateTime;
         this.paymentMethod = paymentMethod;
         this.shippingAddress = shippingAddress;
+        this.fulfilled = false;
     }
 
     public Transaction(int user, CartProduct[] products, String paymentMethod) {
@@ -90,6 +102,6 @@ public class Transaction {
             productList = productList + product.toString() + ", ";
         }
 
-        return String.format(STRING_FORMAT, id, user, dateTime, paymentMethod, shippingAddress, productList);
+        return String.format(STRING_FORMAT, id, user, dateTime, paymentMethod, shippingAddress, productList, fulfilled);
     }
 }
