@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag("Controller")
 public class InventoryControllerTest {
@@ -180,6 +181,138 @@ public class InventoryControllerTest {
         doThrow(new IOException()).when(mockInventoryDAO).searchProducts(searchTerm);
 
         ResponseEntity<Product[]> response = inventoryController.searchProduct(searchTerm);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetProductImage() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        byte[] image = {1, 2, 3, 4, 5};
+
+        when(mockInventoryDAO.getImage(product.getId(), 0)).thenReturn(image);
+
+        ResponseEntity<byte[]> response = inventoryController.getProductImage(product.getId(), 0);
+        ResponseEntity<byte[]> response2 =
+                inventoryController.getProductImage(product.getId(), null);
+        ResponseEntity<byte[]> response3 = inventoryController.getProductImage(5, null);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(image, response.getBody());
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        assertEquals(image, response2.getBody());
+        assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
+    }
+
+    @Test
+    public void testGetProductImageHandleException() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+
+        when(mockInventoryDAO.getImage(product.getId(), 0)).thenThrow(new IOException());
+
+        ResponseEntity<byte[]> response = inventoryController.getProductImage(product.getId(), 0);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetProductImageHandleNotFound() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+
+        when(mockInventoryDAO.getImage(product.getId(), 0))
+                .thenThrow(new IllegalArgumentException());
+
+        ResponseEntity<byte[]> response = inventoryController.getProductImage(product.getId(), 0);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteProductImage() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+
+        mockInventoryDAO.deleteProductImage(product.getId(), 0);
+
+        ResponseEntity<Void> response = inventoryController.deleteProductImage(product.getId(), 0);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteProductImageHandleException() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+
+        doThrow(new IOException()).when(mockInventoryDAO).deleteProductImage(product.getId(), 0);
+
+        ResponseEntity<Void> response = inventoryController.deleteProductImage(product.getId(), 0);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteProductImageNotFound() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+
+        doThrow(new IllegalArgumentException()).when(mockInventoryDAO)
+                .deleteProductImage(product.getId(), 0);
+
+        ResponseEntity<Void> response = inventoryController.deleteProductImage(product.getId(), 0);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testAddProductImage() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        MultipartFile image = mock(MultipartFile.class);
+
+        when(image.getBytes()).thenReturn(new byte[] {1, 2, 3, 4, 5});
+
+        mockInventoryDAO.addProductImage(product.getId().toString(), image);
+
+        ResponseEntity<Void> response =
+                inventoryController.addProductImage(product.getId().toString(), image);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testAddProductImageNull() throws IOException {
+        MultipartFile image = mock(MultipartFile.class);
+
+        when(image.getBytes()).thenReturn(new byte[] {1, 2, 3, 4, 5});
+
+
+        ResponseEntity<Void> response = inventoryController.addProductImage(null, image);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testAddProductImageEmpty() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        MultipartFile image = mock(MultipartFile.class);
+
+        when(image.isEmpty()).thenReturn(true);
+
+        ResponseEntity<Void> response =
+                inventoryController.addProductImage(product.getId().toString(), image);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testAddProductImageHandleException() throws IOException {
+        Product product = new Product(1, "test", "testdes", 1.0, 1);
+        MultipartFile image = mock(MultipartFile.class);
+
+        when(image.getBytes()).thenReturn(new byte[] {1, 2, 3, 4, 5});
+
+        doThrow(new IOException()).when(mockInventoryDAO)
+                .addProductImage(product.getId().toString(), image);
+
+        ResponseEntity<Void> response =
+                inventoryController.addProductImage(product.getId().toString(), image);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }

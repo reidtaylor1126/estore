@@ -10,5 +10,11 @@
 html,
 body {
     font-family: "Roboto", sans-serif;
+}
+
+#root-container {
+    position: relative;
     overflow-x: hidden;
+    width: 100vw;
+    height: 100vh;
 }

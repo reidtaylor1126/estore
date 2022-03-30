@@ -38,7 +38,6 @@ export class AuthService {
     }
 
     register(username: string): Observable<User> {
-        console.log('login');
         return this.httpClient.post<User>('/api/users', { username });
     }
 
