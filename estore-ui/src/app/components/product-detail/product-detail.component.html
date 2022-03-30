@@ -1,47 +1,106 @@
 <div class="product-detail">
     <div class="image-pane">
-        <img [src]="getImage()">
+        <img [src]="getImage()" />
     </div>
 
     <div class="detail">
         <div class="title-bar">
-            <h1 *ngIf="!isEditing()" class="product-name">{{product.name}}</h1>
-            <input *ngIf="isEditing()" class="name-edit" [(ngModel)]="product.name">
+            <h1 *ngIf="!isEditing()" class="product-name">
+                {{ product.name }}
+            </h1>
+            <input
+                *ngIf="isEditing()"
+                class="name-edit"
+                [(ngModel)]="product.name"
+            />
 
-            <button *ngIf="isAdmin() && !isEditing()" class="edit-button" (click)="startEditing()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-pencil" viewBox="0 0 1rem 1rem">
-                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                  </svg>
+            <button
+                *ngIf="isAdmin() && !isEditing()"
+                class="edit-button"
+                (click)="startEditing()"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1rem"
+                    height="1rem"
+                    fill="currentColor"
+                    class="bi bi-pencil"
+                    viewBox="0 0 1rem 1rem"
+                >
+                    <path
+                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"
+                    />
+                </svg>
             </button>
         </div>
-        <h2 *ngIf="!isEditing()" class="product-price">${{product.price | number: "1.2-2"}}</h2>
+        <h2 *ngIf="!isEditing()" class="product-price">
+            ${{ product.price | number: "1.2-2" }}
+        </h2>
         <div *ngIf="isEditing()" class="price-edit-container">
             <p class="price-edit-sign">$</p>
-            <input class="price-edit" [(ngModel)]="product.price" type="number">
+            <input
+                class="price-edit"
+                [(ngModel)]="product.price"
+                type="number"
+            />
         </div>
         <!-- Angular protects against XSS so the innerHtml here is safe. -->
-        <div *ngIf="!isEditing()" class="description" [innerHtml]="product.description"></div>
+        <div
+            *ngIf="!isEditing()"
+            class="description"
+            [innerHtml]="product.description"
+        ></div>
         <h3 *ngIf="isEditing()">Edit Description</h3>
-        <textarea *ngIf="isEditing()" id="description-edit" class="description-edit" [(ngModel)]="product.description"></textarea>
+        <textarea
+            *ngIf="isEditing()"
+            id="description-edit"
+            class="description-edit"
+            [(ngModel)]="product.description"
+        ></textarea>
         <div class="options">
             <div>
                 <label for="quantity">Quantity: </label>
-                <input *ngIf="!isEditing()" id="quantity" type="number" min="1" step="1" [(ngModel)]="localQuantity" placeholder=1>
-                <input *ngIf="isEditing()" id="quantity" type="number" min="0" step="1" [(ngModel)]="product.quantity" placeholder=0>
+                <input
+                    *ngIf="!isEditing() && isAdmin() === false"
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    step="1"
+                    [(ngModel)]="localQuantity"
+                    placeholder="1"
+                />
+                <label
+                    *ngIf="!isEditing() && isAdmin() === true"
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="1"
+                    >{{ product.quantity }}</label
+                >
+                <input
+                    *ngIf="isEditing()"
+                    id="quantity"
+                    type="number"
+                    min="0"
+                    step="1"
+                    [(ngModel)]="product.quantity"
+                    placeholder="0"
+                />
             </div>
             <div>
-                <button *ngIf="!isEditing()" (click)="addToCart($event)" [disabled]="!inStock()">
+                <button
+                    *ngIf="!isEditing() && !isAdmin"
+                    (click)="addToCart($event)"
+                    [disabled]="!inStock()"
+                >
                     {{ inStock() ? "Add to Cart" : "Sold Out" }}
                 </button>
             </div>
         </div>
         <div *ngIf="isEditing()" class="edit-controls">
-            <button class="save-edit" (click)="saveEdit()">
-                Save Edits
-            </button>
-            <button class="cancel-edit" (click)="cancelEdit()">
-                Cancel
-            </button>
+            <button class="save-edit" (click)="saveEdit()">Save Edits</button>
+            <button class="cancel-edit" (click)="cancelEdit()">Cancel</button>
         </div>
         <div *ngIf="isEditing()" class="edit-controls">
             <button class="delete-product" (click)="deleteProduct()">

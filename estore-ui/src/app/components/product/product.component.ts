@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { Product } from 'src/app/types/Product';
 
@@ -9,7 +10,11 @@ import { Product } from 'src/app/types/Product';
     styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
-    constructor(private router: Router, private cartService: CartService) {}
+    constructor(
+        private router: Router,
+        private cartService: CartService,
+        private authService: AuthService
+    ) {}
 
     @Input() product?: Product;
 
@@ -24,6 +29,10 @@ export class ProductComponent implements OnInit {
 
     navigate() {
         this.router.navigate([`/products/${this.product?.id}`]);
+    }
+
+    isAdmin() {
+        return this.authService.getCurrentUser()?.admin === true;
     }
 
     addToCart(event: MouseEvent): void {

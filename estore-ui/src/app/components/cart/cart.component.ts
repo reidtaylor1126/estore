@@ -27,6 +27,10 @@ export class CartComponent implements OnInit {
                 queryParams: { redirect: '/cart' },
             });
         }
+
+        if (this.authService.getCurrentUser()?.admin === true) {
+            this.router.navigate(['/']);
+        }
         this.cartService
             .getCartObservable()
             .pipe(first())
@@ -46,7 +50,7 @@ export class CartComponent implements OnInit {
             }
         );
         this.productCart.totalPrice = this.productCart.products.reduce(
-            (acc, product) => acc + product.price,
+            (acc, product) => acc + product.price * product.quantity,
             0
         );
     }
@@ -76,10 +80,11 @@ export class CartComponent implements OnInit {
         return this.productCart;
     }
 
-    updateCart(): void {
+    updateCart(event: any): void {
+        event.preventDefault();
         if (this.productCart) {
             this.productCart.totalPrice = this.productCart.products.reduce(
-                (acc, product) => acc + product.price,
+                (acc, product) => acc + product.price * product.quantity,
                 0
             );
             this.cartService

@@ -6,7 +6,7 @@
             <p>{{ product.price }}</p>
         </div>
         <div class="modify">
-            <div class="quantity">
+            <form (ngSubmit)="updateCart($event)" class="quantity">
                 <p>Quantity</p>
                 <input
                     type="number"
@@ -15,10 +15,8 @@
                     name="quantity"
                     [(ngModel)]="product.quantity"
                 />
-                <button class="update-button" (click)="updateCart()">
-                    Update
-                </button>
-            </div>
+                <button class="update-button" type="submit">Update</button>
+            </form>
             <i
                 (click)="deleteItem(product.id)"
                 class="bi bi-trash-fill delete"
@@ -28,7 +26,7 @@
     <h4 class="total">
         {{ "Total: " }}{{ getTotalPrice() | number: "1.2-2" }}
     </h4>
-    <button class="update-button">Checkout</button>
+    <button class="update-button" routerLink="/checkout">Checkout</button>
 </div>
 
 <h2 class="empty" *ngIf="!hasProducts()">Your Cart is currently empty</h2>
