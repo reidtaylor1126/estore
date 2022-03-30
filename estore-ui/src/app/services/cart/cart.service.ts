@@ -14,7 +14,6 @@ import { InventoryService } from '../inventory/inventory.service';
 export class CartService {
     private numItems = new BehaviorSubject<number>(0);
     private cart = new BehaviorSubject<Cart | null>(null);
-    private numItems: number = 0;
     constructor(
         private authService: AuthService,
         private httpClient: HttpClient,
@@ -59,18 +58,6 @@ export class CartService {
 
     getCartObservable(): Observable<Cart | null> {
         return this.cart.asObservable();
-    }
-
-    private getCart(token: string): Observable<Cart> {
-        return this.httpClient
-            .get<Cart>('/api/cart', {
-                headers: { token: token },
-            })
-            .pipe(
-                map((cart) => {
-                    return cart;
-                })
-            );
     }
 
     // private function that puts a CartProduct into the Cart and if the product is already in the cart, it increments the quantity
@@ -137,28 +124,11 @@ export class CartService {
             );
     }
 
-    async getCartProducts(): Promise<ProductCart | null> {
-        const token = this.authService.getToken();
-        if (!token) return null;
-        const cart = await firstValueFrom(this.getCart(token));
-        this.cart.next(cart);
-        this.numItems.next(cart.numItems);
-      
-    addToCart(product: Product): Observable<Product[]> {
-        this.numItems += product.quantity;
-        // Placeholder until cart is done on backend
-        return of([]);
-    }
-
-    getNumItems(): number {
-        return this.numItems;
-    }
-
     getCart(): Observable<Cart> {
         const token = this.authService.getToken();
-        if(token != undefined) {
+        if (token != undefined) {
             return this.httpClient.get<Cart>('/api/cart', {
-                headers: {'token': token}
+                headers: { token: token },
             });
         } else {
             return new Observable<Cart>();
