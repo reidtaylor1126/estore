@@ -9,10 +9,10 @@
             <h3>Hello, {{ username }}</h3>
         </li>
         <li *ngIf="!username">
-            <a (click)="toggleNav(false)" routerLink="/login">Login</a>
+            <a (click)="goToLogin()">Login</a>
         </li>
         <li *ngIf="!username">
-            <a (click)="toggleNav(false)" routerLink="/register">Register</a>
+            <a (click)="goToRegister()">Register</a>
         </li>
         <li *ngIf="username">
             <a (click)="logout()" routerLink="/">Logout</a>

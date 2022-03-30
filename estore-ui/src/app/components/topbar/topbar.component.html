@@ -12,8 +12,12 @@
         <h2>StraightFlush</h2>
     </div>
     <div class="shop">
-        <i *ngIf="!isAdmin" class="bi bi-bag">
-            <p>99</p>
+        <i
+            *ngIf="!isAdmin && isLoggedIn"
+            class="bi bi-bag cart"
+            routerLink="/cart"
+        >
+            <p>{{ numItems }}</p>
         </i>
         <i (click)="toggleAcct()" class="bi bi-person-circle"></i>
     </div>

@@ -7,8 +7,13 @@
                 ${{ product?.price | number: "1.2-2" }}
             </p>
         </div>
-        <button (click)="addToCart($event)" [disabled]="!inStock()">
+        <button
+            *ngIf="!isAdmin()"
+            (click)="addToCart($event)"
+            [disabled]="!inStock()"
+        >
             {{ inStock() ? "Add to Cart" : "Sold Out" }}
         </button>
+        <button *ngIf="isAdmin()" (click)="navigate()">View Item</button>
     </div>
 </div>

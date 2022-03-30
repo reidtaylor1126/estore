@@ -1,1 +1,32 @@
-<p>cart works!</p>
+<div *ngIf="hasProducts()" class="container">
+    <div *ngFor="let product of getProductCart()?.products" class="cart-item">
+        <img src="https://source.unsplash.com/500x500?cards" alt="" />
+        <div class="product-details">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.price }}</p>
+        </div>
+        <div class="modify">
+            <form (ngSubmit)="updateCart($event)" class="quantity">
+                <p>Quantity</p>
+                <input
+                    type="number"
+                    max="99"
+                    min="1"
+                    name="quantity"
+                    [(ngModel)]="product.quantity"
+                />
+                <button class="update-button" type="submit">Update</button>
+            </form>
+            <i
+                (click)="deleteItem(product.id)"
+                class="bi bi-trash-fill delete"
+            ></i>
+        </div>
+    </div>
+    <h4 class="total">
+        {{ "Total: " }}{{ getTotalPrice() | number: "1.2-2" }}
+    </h4>
+    <button class="update-button" routerLink="/checkout">Checkout</button>
+</div>
+
+<h2 class="empty" *ngIf="!hasProducts()">Your Cart is currently empty</h2>

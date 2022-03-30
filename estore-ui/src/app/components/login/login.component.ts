@@ -13,16 +13,30 @@ export class LoginComponent implements OnInit {
         username: '',
         admin: false,
     };
+    redirect: string = '/';
 
     constructor(private authService: AuthService, private router: Router) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        const url = this.router
+            .parseUrl(this.router.url)
+            .queryParamMap.get('redirect');
+        if (url) {
+            this.redirect = url;
+        }
+
+        this.authService.currentUser.subscribe((user) => {
+            if (user) {
+                this.router.navigate([this.redirect]);
+            }
+        });
+    }
 
     login() {
         if (this.formData.username) {
             this.authService.login(this.formData.username).subscribe((user) => {
                 if (user) {
-                    this.router.navigate(['/']);
+                    this.router.navigate([this.redirect]);
                 }
             });
         }

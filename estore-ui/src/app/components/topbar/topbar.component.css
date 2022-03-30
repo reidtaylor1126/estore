@@ -89,6 +89,10 @@
     align-items: center;
 }
 
+.cart {
+    cursor: pointer;
+}
+
 .shop i p {
     font-family: "Roboto", sans-serif;
     font-style: normal;

@@ -84,6 +84,8 @@ estore-ui/.scannerwork/.sonar_lock
 estore-ui/.scannerwork/report-task.txt
 estore-ui/.scannerwork/css-bundle/stylelintconfig.json
 
+.scannerwork/
+
 estore-api/src/main/resources/static/images/products/*
 !estore-api/src/main/resources/static/images/products/default.jpg
 !estore-api/src/main/resources/static/images/products/.gitkeep
