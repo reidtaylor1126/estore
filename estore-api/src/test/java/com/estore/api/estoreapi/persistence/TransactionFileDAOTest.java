@@ -17,6 +17,7 @@ import com.estore.api.estoreapi.model.AccountNotFoundException;
 import com.estore.api.estoreapi.model.Cart;
 import com.estore.api.estoreapi.model.CartProduct;
 import com.estore.api.estoreapi.model.InvalidTokenException;
+import com.estore.api.estoreapi.model.Product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -47,9 +48,9 @@ public class TransactionFileDAOTest {
         mockUser = mock(UserAccount.class);
         mockCart = mock(Cart.class);
         testTransactions = new Transaction[3];
-        CartProduct[] testCartProducts = {new CartProduct(1, 1), new CartProduct(4, 4)};
-        CartProduct[] testCartProducts2 = {new CartProduct(2, 2), new CartProduct(5, 5)};
-        CartProduct[] testCartProducts3 = {new CartProduct(3, 3), new CartProduct(6, 6)};
+        Product[] testCartProducts = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
+        Product[] testCartProducts2 = {new Product(3, "Prod3", "Prod3", 3.99, 3), new Product(4, "Prod4", "Prod4", 4.99, 4)};
+        Product[] testCartProducts3 = {new Product(5, "Prod5", "Prod5", 5.99, 5), new Product(6, "Prod6", "Prod6", 6.99, 6)};
         testTransactions[0] = new Transaction(1, 1, testCartProducts, "10", "visa", "address");
         testTransactions[1] = new Transaction(2, 2, testCartProducts2, "20", "debit", "address2");
         testTransactions[2] = new Transaction(3, 3, testCartProducts3, "30", "mastercard", "address3");
@@ -63,14 +64,10 @@ public class TransactionFileDAOTest {
     public void testCreateTransaction() throws IllegalArgumentException, AccountNotFoundException, InvalidTokenException {
 
         try {
-            Cart cart = new Cart(testTransactions[0].getProducts());
-            UserAccount user = new UserAccount(1, "test");
 
             when(mockInventoryFileDAO.confirmTransaction(testTransactions[0])).thenReturn(true);
             when(mockCartFileDAO.getCart(validAuth)).thenReturn(mockCart);
             when(mockUserFileDAO.verifyToken(validAuth)).thenReturn(mockUser);
-            when(mockUser.getId()).thenReturn(1);
-            when(mockCart.getProducts()).thenReturn(testTransactions[0].getProducts());
             
             Transaction result = assertDoesNotThrow((() -> transactionFileDAO.createTransaction(validAuth, "visa", "address")),
             "Unexpected exception thrown");

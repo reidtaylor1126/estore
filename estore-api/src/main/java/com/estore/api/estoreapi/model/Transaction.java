@@ -21,7 +21,7 @@ public class Transaction {
      * Products for transaction
      */
     @JsonProperty("products")
-    private CartProduct[] products;
+    private Product[] products;
 
     /**
      * Date and Time of transaction
@@ -49,7 +49,7 @@ public class Transaction {
         return user;
     }
 
-    public CartProduct[] getProducts() {
+    public Product[] getProducts() {
         return products;
     }
 
@@ -75,7 +75,7 @@ public class Transaction {
 
     public static final String STRING_FORMAT = "Transaction [id=%d, user=%d Date/Time=%s Payment Method=%s Shipping Address=%s Products Purchased=%s Fulfilled=%b]";
 
-    public Transaction(@JsonProperty("id") int id, @JsonProperty("user") int user, @JsonProperty("products") CartProduct[] products, @JsonProperty("dateTime") String dateTime, @JsonProperty("paymentMethod") String paymentMethod, 
+    public Transaction(@JsonProperty("id") int id, @JsonProperty("user") int user, @JsonProperty("products") Product[] products, @JsonProperty("dateTime") String dateTime, @JsonProperty("paymentMethod") String paymentMethod, 
                             @JsonProperty("shippingAddress") String shippingAddress) {
         this.id = id;
         this.user = user;
@@ -86,7 +86,7 @@ public class Transaction {
         this.fulfilled = false;
     }
 
-    public Transaction(int user, CartProduct[] products, String paymentMethod) {
+    public Transaction(int user, Product[] products, String paymentMethod) {
         id = -1;
         this.user = user;
         this.products = products;
@@ -98,7 +98,7 @@ public class Transaction {
     public String toString() {
         String productList = "";
 
-        for (CartProduct product : products) {
+        for (Product product : products) {
             productList = productList + product.toString() + ", ";
         }
 

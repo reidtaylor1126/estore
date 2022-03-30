@@ -129,11 +129,11 @@ public class InventoryFileDAOTest {
         @Test
         public void testConfirmTransaction()
         {
-                CartProduct[] cartProducts = new CartProduct[3];
-                cartProducts[0] = new CartProduct(1, 1);
-                cartProducts[1] = new CartProduct(2, 1);
-                cartProducts[2] = new CartProduct(3, 1);
-                Transaction test = new Transaction(99, 99, cartProducts, "testDate", "testPayment", "testAddress");
+                Product[] products = new Product[3];
+                products[0] = new Product(1, "Product1", "Product1", 10.99, 1);
+                products[1] = new Product(2, "Product2", "Product2", 11.99, 2);
+                products[2] = new Product(3, "Product3", "Product3", 12.99, 3);
+                Transaction test = new Transaction(99, 99, products, "testDate", "testPayment", "testAddress");
 
                 assertTrue(inventoryFileDAO.confirmTransaction(test));
         }

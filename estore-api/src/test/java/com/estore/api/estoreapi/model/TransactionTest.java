@@ -10,7 +10,7 @@ public class TransactionTest {
     public void testCreate() {
         Integer expected_id = 1;
         Integer expected_user = 2;
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        Product[] expected_products = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
         String expected_dateTime = "3/27";
         String expected_paymentMethod = "visa";
         String expected_shippingAddress = "address";
@@ -33,7 +33,7 @@ public class TransactionTest {
     public void testToString() {
         Integer id = 1;
         Integer user = 2;
-        CartProduct[] products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        Product[] products = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
         String dateTime = "3/27";
         String paymentMethod = "visa";
         String shippingAddress = "address";
@@ -41,7 +41,7 @@ public class TransactionTest {
         Transaction transaction = new Transaction(id, user, products, dateTime, paymentMethod, shippingAddress);
         String productList = "";
 
-        for (CartProduct product : products) {
+        for (Product product : products) {
             productList = productList + product.toString() + ", ";
         }
 

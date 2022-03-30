@@ -49,7 +49,7 @@ public class TransactionControllerTest {
         String expected_paymentMethod = "visa";
         String expected_shippingAddress = "address";
         TransactionInfo transactionInfo = new TransactionInfo(expected_paymentMethod, expected_shippingAddress);
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        Product[] expected_products = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
 
 
         Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
@@ -95,7 +95,7 @@ public class TransactionControllerTest {
         String expected_dateTime = "3/27";
         String expected_paymentMethod = "visa";
         String expected_shippingAddress = "address";
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        Product[] expected_products = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
         
         Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
 
@@ -115,7 +115,7 @@ public class TransactionControllerTest {
         String expected_dateTime = "3/27";
         String expected_paymentMethod = "visa";
         String expected_shippingAddress = "address";
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        Product[] expected_products = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
         
         Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
         when(mockTransactionDAO.getTransaction(transaction.getId())).thenReturn(transaction);
@@ -133,7 +133,7 @@ public class TransactionControllerTest {
         String expected_dateTime = "3/27";
         String expected_paymentMethod = "visa";
         String expected_shippingAddress = "address";
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        Product[] expected_products = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
 
         Transaction[] transactions = new Transaction[3];
         transactions[0] = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
@@ -156,7 +156,7 @@ public class TransactionControllerTest {
         String expected_dateTime = "3/27";
         String expected_paymentMethod = "visa";
         String expected_shippingAddress = "address";
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        Product[] expected_products = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
         
         Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
 
@@ -176,7 +176,7 @@ public class TransactionControllerTest {
         String expected_dateTime = "3/27";
         String expected_paymentMethod = "visa";
         String expected_shippingAddress = "address";
-        CartProduct[] expected_products = {new CartProduct(1, 1), new CartProduct(4, 4)};
+        Product[] expected_products = {new Product(1, "Prod1", "Prod1", 1.99, 1), new Product(2, "Prod2", "Prod2", 2.99, 2)};
         
         Transaction transaction = new Transaction(expected_id, expected_user, expected_products, expected_dateTime, expected_paymentMethod, expected_shippingAddress);
 
