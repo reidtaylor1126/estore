@@ -14,9 +14,6 @@
     border-radius: 10px;
 }
 
-.input-group {
-}
-
 .form-label {
     color: #1e293b;
     display: block;
@@ -42,4 +39,26 @@
 .form-submit:hover {
     background: #1e293b;
     color: #fff;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.upload-btn {
+    display: block;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1.2rem;
+    background-color: #1e293b;
+    color: #fff;
+    cursor: pointer;
 }

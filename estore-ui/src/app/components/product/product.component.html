@@ -1,10 +1,5 @@
 <div (click)="navigate()" class="product">
-    <img
-        src="https://source.unsplash.com/500x500?cards"
-        alt=""
-        height="200"
-        width="200"
-    />
+    <img [src]="getProductImage()" alt="" height="200" width="200" />
     <div class="product-bottom">
         <div class="product-info">
             <h3 class="name">{{ product?.name }}</h3>
