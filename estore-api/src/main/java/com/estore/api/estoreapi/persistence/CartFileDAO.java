@@ -110,6 +110,10 @@ public class CartFileDAO implements CartDAO {
     }
 
     private Cart verifyCart(Cart cart) throws IOException {
+        if(cart == null)
+        {
+            return null;
+        }
         getSingletonDependencies();
         ArrayList<CartProduct> products = new ArrayList<>();
         Double totalPrice = 0.0;
