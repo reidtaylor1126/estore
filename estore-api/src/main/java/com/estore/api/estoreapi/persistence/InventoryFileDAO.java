@@ -8,8 +8,9 @@ import java.util.TreeMap;
 import java.util.stream.Stream;
 import java.util.List;
 
-
+import com.estore.api.estoreapi.model.CartProduct;
 import com.estore.api.estoreapi.model.Product;
+import com.estore.api.estoreapi.model.Transaction;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -231,5 +232,38 @@ public class InventoryFileDAO implements InventoryDAO {
         List<Product> inventory = getInventoryArray();
         Stream<Product> inventoryStream = inventory.stream();
         return !inventoryStream.anyMatch(p -> p.getName().equals(name));
+    }
+
+    public boolean confirmTransaction(Transaction transaction)
+    {
+        try
+        {
+                Product[] cartItems = transaction.getProducts();
+                Product[] newItems = new Product[cartItems.length];
+                if(cartItems.length == 0)
+                    return false;
+                for (int i = 0; i < cartItems.length; i++)
+                {
+                    int tempProductID = cartItems[i].getId();
+                    int tempProductQty = cartItems[i].getQuantity();
+                    Product tempProduct = inventory.get(tempProductID);
+                    int oldStock = tempProduct.getQuantity();
+                    int newStock = oldStock - tempProductQty;
+                    if(newStock < 0)
+                        return false;
+                    Product newProduct = new Product(tempProduct.getId(), tempProduct.getName(), tempProduct.getDescription(), tempProduct.getPrice(), newStock);
+                    newItems[i] = newProduct;
+                }
+
+                for (int i = 0; i < newItems.length; i++)
+                {
+                    updateProduct(newItems[i]);
+                }
+                return true;
+        } catch(IOException e) 
+        {
+            return false;
+        }
+
     }
 }
