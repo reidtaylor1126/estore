@@ -11,8 +11,14 @@ export class ProductComponent implements OnInit {
     constructor(private router: Router) {}
 
     @Input() product?: Product;
+    imgSource: string = '';
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.imgSource =
+            this.product?.id !== undefined
+                ? `/api/inventory/image?productId=${this.product.id}`
+                : '/api/inventory/image?productId=-1&imageId=-1';
+    }
 
     inStock(): boolean {
         return (
@@ -29,5 +35,9 @@ export class ProductComponent implements OnInit {
         event.preventDefault();
         event.stopPropagation();
         //TODO add to cart
+    }
+
+    getProductImage(): string {
+        return this.imgSource;
     }
 }

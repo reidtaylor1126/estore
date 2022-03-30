@@ -80,3 +80,7 @@ typings/
 .DS_Store
 Thumbs.db
 .angular/
+
+estore-api/src/main/resources/static/images/products/*
+!estore-api/src/main/resources/static/images/products/default.jpg
+!estore-api/src/main/resources/static/images/products/.gitkeep

@@ -2,10 +2,12 @@ package com.estore.api.estoreapi.persistence;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -15,6 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Ryan Yocum
@@ -61,7 +66,8 @@ public class InventoryFileDAO implements InventoryDAO {
         this.filename = filename;
         this.objectMapper = objectMapper;
         loadInventory();
-        if(instance == null) instance = this;
+        if (instance == null)
+            instance = this;
     }
 
     public static InventoryFileDAO getInstance() {
@@ -170,8 +176,11 @@ public class InventoryFileDAO implements InventoryDAO {
                     product.getDescription() != null ? product.getDescription()
                             : tempProduct.getDescription(),
                     product.getPrice() != null ? product.getPrice() : tempProduct.getPrice(),
-                    product.getQuantity() != null ? product.getQuantity()
-                            : tempProduct.getQuantity());
+                    product.getQuantity() != null ? tempProduct.getQuantity()
+                            : tempProduct.getQuantity(),
+                    product.getNumImages() != null ? product.getNumImages()
+                            : tempProduct.getNumImages());
+
 
             // Update the inventory
             inventory.put(updatedProduct.getId(), updatedProduct);
@@ -212,6 +221,10 @@ public class InventoryFileDAO implements InventoryDAO {
 
         synchronized (inventory) {
             if (inventory.containsKey(id)) {
+                int numImages = inventory.get(id).getNumImages();
+                for (int i = 0; i < numImages; i++) {
+                    deleteProductImage(id, 0);
+                }
                 inventory.remove(id);
                 saveInventory();
             } else {
@@ -231,5 +244,83 @@ public class InventoryFileDAO implements InventoryDAO {
         List<Product> inventory = getInventoryArray();
         Stream<Product> inventoryStream = inventory.stream();
         return !inventoryStream.anyMatch(p -> p.getName().equals(name));
+    }
+
+    @Override
+    public void addProductImage(String product, MultipartFile image)
+            throws IOException, IllegalArgumentException {
+        synchronized (inventory) {
+            try {
+                Product productToUpdate = inventory.get(Integer.parseInt(product));
+                if (productToUpdate == null) {
+                    throw new IllegalArgumentException(
+                            "Product with id " + product + " does not exist");
+                }
+                Integer imageId = productToUpdate.getNumImages();
+                String imageName = "product_" + product + "_" + imageId + ".jpg";
+                File file = new File("src/main/resources/static/images/products/" + imageName);
+                if (file.createNewFile()) {
+                    System.out.println("File is created!");
+                    Files.write(file.toPath(), image.getBytes());
+                } else {
+                    Files.write(file.toPath(), image.getBytes());
+                }
+                productToUpdate.addImage();
+                saveInventory();
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Product id must be an integer");
+            }
+        }
+
+    }
+
+    @Override
+    public byte[] getImage(int id, int imageId) throws IOException {
+        synchronized (inventory) {
+            if (id == -1 && imageId == -1) {
+                File file = new File("src/main/resources/static/images/products/default.jpg");
+                return Files.readAllBytes(file.toPath());
+            }
+
+            Product product = inventory.get(id);
+            if (product == null) {
+                throw new IllegalArgumentException("Product with id " + id + " does not exist");
+            }
+            if (product.getNumImages() <= imageId && imageId == 0) {
+                File file = new File("src/main/resources/static/images/products/default.jpg");
+                return Files.readAllBytes(file.toPath());
+            }
+            if (product.getNumImages() <= imageId || imageId < 0) {
+                return null;
+            }
+            File file = new File("src/main/resources/static/images/products/product_"
+                    + product.getId() + "_" + imageId + ".jpg");
+            return Files.readAllBytes(file.toPath());
+        }
+    }
+
+    @Override
+    public void deleteProductImage(int id, int imageId) throws IOException {
+        synchronized (inventory) {
+            Product product = inventory.get(id);
+            if (product == null) {
+                throw new IllegalArgumentException("Product with id " + id + " does not exist");
+            }
+            if (product.getNumImages() <= imageId) {
+                throw new IllegalArgumentException("Image with id " + imageId + " does not exist");
+            }
+            File file = new File("src/main/resources/static/images/products/product_"
+                    + product.getId() + "_" + imageId + ".jpg");
+            file.delete();
+            product.removeImage();
+            for (int i = imageId; i < product.getNumImages(); ++i) {
+                File tempFile = new File("src/main/resources/static/images/products/product_"
+                        + product.getId() + "_" + (i + 1) + ".jpg");
+                File newFile = new File("src/main/resources/static/images/products/product_"
+                        + product.getId() + "_" + i + ".jpg");
+                tempFile.renameTo(newFile);
+            }
+            saveInventory();
+        }
     }
 }
