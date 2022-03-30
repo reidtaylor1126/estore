@@ -1,0 +1,84 @@
+<div class="transaction-overview">
+    <div class="cart-list">
+        <div *ngIf="hasProducts()" class="products-container">
+            <div *ngFor="let product of cartProducts">
+                <app-transaction-product [cartProduct]="product"></app-transaction-product>
+            </div>
+        </div>
+        
+        <h3 class="not-found" *ngIf="!hasProducts()">Cart is Empty</h3>
+    </div>
+    <div class="payment-options">
+        <form>
+            <fieldset class="totals">
+                <legend>Overview</legend>
+                <div class="overview-entry">
+                    <p>Subtotal:</p>
+                    <h3>${{cart?.totalPrice | number: "1.2-2"}}</h3>
+                </div>
+                <div class="overview-entry">
+                    <p>Shipping & Handling:</p>
+                    <h3>${{shipping | number: "1.2-2"}}</h3>
+                </div>
+            </fieldset>
+            <fieldset class="payment-method">
+                <legend>Payment Method</legend>
+                <div class="form-entry">
+                    <input type="radio" id="card" name="pay-type" value="card" [(ngModel)]="paymentMethod"/>
+                    <label for="card">Credit/Debit Card</label>
+                </div>
+    
+                <div class="form-entry">
+                    <input type="radio" id="paypal" name="pay-type" value="paypal" [(ngModel)]="paymentMethod"/>
+                    <label for="paypal">PayPal</label>
+                </div>
+            </fieldset>
+            <fieldset class="personal-info" *ngIf="paymentMethod == 'card'">
+                <legend>Personal Information</legend>
+                <div class="overview-entry">
+                    <label for="first-name">First Name</label>
+                    <input id="first-name" type="text" name="personal-info" [(ngModel)]="personalInfo.firstName">
+                </div>
+                <div class="overview-entry">
+                    <label for="last-name">Last Name</label>
+                    <input id="last-name" type="text" name="personal-info" [(ngModel)]="personalInfo.lastName">
+                </div>
+                <div class="overview-entry">
+                    <label for="billing-address">Billing Address</label>
+                    <input id="billing-address" type="text" name="personal-info" [(ngModel)]="personalInfo.billingAddress">
+                </div>
+                <div class="overview-entry">
+                    <label for="state">State</label>
+                    <input id="state" type="text" name="personal-info" [(ngModel)]="personalInfo.state">
+                </div>
+                <div class="overview-entry">
+                    <label for="zip">Zip Code</label>
+                    <input id="zip" type="number" name="personal-info" [(ngModel)]="personalInfo.zipCode">
+                </div>
+            </fieldset>
+            <fieldset *ngIf="paymentMethod == 'card'">
+                <legend>Card</legend>
+                <div class="overview-entry">
+                    <label for="card-number">Card Number</label>
+                    <input id="card-number" type="number" name="card-info" [(ngModel)]="card.account">
+                </div>
+                <div class="overview-entry">
+                    <label for="expiration">Expiration</label>
+                    <input id="expiration" type="month" name="card-info" [(ngModel)]="card.expiration">
+                </div>
+                <div class="overview-entry">
+                    <label for="ccv">CCV</label>
+                    <input id="ccv" type="password" maxlength="3" name="card-info" [(ngModel)]="card.ccv">
+                </div>
+            </fieldset>
+            <fieldset *ngIf="paymentMethod == 'paypal'">
+                <legend>PayPal</legend>
+                <button disabled="true">Pay with PayPal</button>
+            </fieldset>
+        </form>
+        <div>
+            <button (click)="submitTransaction()">Submit</button>
+            <p class="error-msg">{{formErrorMsg}}</p> 
+        </div>
+    </div>
+</div>

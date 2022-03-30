@@ -1,0 +1,72 @@
+.admin-order {
+    padding: 5px;
+    border: 2px solid #334155;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.order-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.divider {
+    height: 1px;
+    width: 98%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 1%;
+    background-color: #495e7b;
+}
+
+button {
+    cursor: pointer;
+    border: 2px solid black;
+    padding: 5px;
+    margin-top: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: #2f3a4c;
+}
+
+.fulfilled {
+    border-color: #479261;
+    color: #479261;
+}
+
+.fulfilled:hover {
+    background-color: #479261;
+    border-color: #479261;
+    color: #fafafa;
+}
+
+.unfulfilled {
+    border-color: #c0b233;
+    color: #c0b233;
+}
+
+.unfulfilled:hover {
+    background-color: #c0b233;
+    border-color: #c0b233;
+    color: #fafafa;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+p {
+    font-size: 12px;
+}
