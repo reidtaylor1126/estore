@@ -1,0 +1,18 @@
+<div class="admin-order">
+    <div class="order-info">
+        <div>
+            <h2>Order #{{transaction?.id}}</h2>
+            <h3>Ships to {{transaction?.address}} </h3>
+        </div>
+        <div>
+            <button *ngIf="!transaction?.fulfilled" class="unfulfilled" (click)="setFulfilled(true)">Unfulfilled</button>
+            <button *ngIf="transaction?.fulfilled" class="fulfilled" (click)="setFulfilled(false)">Fulfilled</button>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="product-list" *ngIf="hasProducts()">
+        <div *ngFor="let product of transaction?.products">
+            <app-order-product [product]="product"></app-order-product>
+        </div>
+    </div>
+</div>

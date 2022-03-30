@@ -1,0 +1,7 @@
+<div class="admin-orders">
+    <div class="order-list" *ngFor="let transaction of transactions">
+        <app-admin-order [transaction]="transaction"></app-admin-order>
+    </div>
+</div>
+
+<h3 class="not-found" *ngIf="!hasTransactions()">No transactions</h3>

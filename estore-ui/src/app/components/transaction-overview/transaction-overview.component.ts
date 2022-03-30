@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { Cart } from 'src/app/types/Cart';
@@ -30,7 +31,7 @@ export class TransactionOverviewComponent implements OnInit {
   }
   formErrorMsg = '';
 
-  constructor(private cartService: CartService, private authService: AuthService) {}
+  constructor(private cartService: CartService, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     if(this.authService.getCurrentUser() == null) console.log('no current user');
@@ -44,7 +45,7 @@ export class TransactionOverviewComponent implements OnInit {
   }
 
   paymentIsCard(): boolean {
-    return this.paymentMethod == 'card';
+    return this.paymentMethod === 'card';
   }
 
   hasProducts(): boolean {
@@ -85,17 +86,15 @@ export class TransactionOverviewComponent implements OnInit {
     return(this.paymentIsCard() ? this.personalComplete() && this.cardComplete() : this.paypalComplete());
   }
 
-  submitTransaction(): boolean {
+  submitTransaction() {
     if(this.paymentMethod == '') {
       this.formErrorMsg = 'Select a Payment Method';
-      return false;
     }
     if(this.formComplete()) {
       console.log('Submitting Transaction');
-      return true;
+      this.router.navigateByUrl('transaction-complete');
     } else {
       console.log('failed to submit')
-      return false;
     }
   }
 }
