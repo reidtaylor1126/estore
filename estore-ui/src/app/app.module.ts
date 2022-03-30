@@ -16,6 +16,13 @@ import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register/register.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
+import { CartComponent } from './components/cart/cart.component';
+import { TransactionOverviewComponent } from './components/transaction-overview/transaction-overview.component';
+import { TransactionProductComponent } from './components/transaction-product/transaction-product.component';
+import { AdminOrdersComponent } from './components/admin-orders/admin-orders.component';
+import { AdminOrderComponent } from './components/admin-order/admin-order.component';
+import { OrderProductComponent } from './components/order-product/order-product.component';
+import { TransactionCompleteComponent } from './components/transaction-complete/transaction-complete.component';
 
 @NgModule({
     declarations: [
@@ -31,6 +38,13 @@ import { HomepageComponent } from './components/homepage/homepage.component';
         RegisterComponent,
         CreateProductComponent,
         HomepageComponent,
+        CartComponent,
+        TransactionOverviewComponent,
+        TransactionProductComponent,
+        AdminOrdersComponent,
+        AdminOrderComponent,
+        OrderProductComponent,
+        TransactionCompleteComponent,
     ],
     imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
     providers: [],
