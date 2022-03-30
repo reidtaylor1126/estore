@@ -1,6 +1,0 @@
-projectKey=estore-ui
-serverUrl=http://localhost:9000
-serverVersion=9.3.0.51899
-dashboardUrl=http://localhost:9000/dashboard?id=estore-ui
-ceTaskId=AX-8AB3ukQgE0Mn-c4sZ
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AX-8AB3ukQgE0Mn-c4sZ
