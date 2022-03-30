@@ -48,7 +48,7 @@ export class TransactionService {
         if(!this.authService.getCurrentUser()?.admin) return of(null);
         const token = this.authService.getToken();
         if(!token) return of(null);
-        return this.httpClient.put<Transaction>(`/api/transactions/id=${transaction.id}&status=${transaction.fulfilled}`, '');
+        return this.httpClient.put<Transaction>(`/api/transactions?id=${transaction.id}&status=${transaction.fulfilled}`, '', {headers: {token: token}});
     }
 
     getAllTransactions(): Observable<Transaction[] | null> {
