@@ -1,0 +1,200 @@
+#main-header {
+    height: calc(100vh - 100px);
+    width: 100%;
+    overflow: hidden;
+    background-color: #000000bb;
+}
+
+#main-header:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: url('/assets/img/hero.jpg') no-repeat center center/cover;
+    background-attachment: fixed;
+    z-index: -1;
+}
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 250px;
+}
+
+.hero h1 {
+    text-shadow: #597db7 0 0 5px;
+}
+
+.hero h1 span {
+    text-shadow: none;
+    background: #ccc;
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.hero h2 {
+    margin-top: 50px;
+}
+
+.hero div {
+    margin-top: 40px;
+    display: flex;
+}
+
+.hero div a {
+    margin: 0 20px;
+}
+
+.hero div {
+    margin-top: 30px;
+    display: flex;
+}
+
+.hero div div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero div div a {
+    margin: 0 20px;
+    display: block;
+}
+
+.hero div div i {
+    width: 0;
+    margin-top: 30px;
+}
+
+#overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 250px;
+}
+
+#overview h2 {
+    font-size: 2rem;
+}
+
+.btn {
+  padding: 15px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 5px;
+}
+
+.btn-primary {
+  background: #597db7;
+}
+
+.btn-outline {
+  border: 2px solid #597db7;
+  background: #00000088;
+}
+
+.btn-dark {
+  border: 2px solid #ccc;
+  background: #333;
+}
+
+.btn-light {
+  border: 2px solid #000;
+  background: #ccc;
+}
+
+.btn-primary:hover {
+  background: #c72326;
+}
+
+.btn-outline:hover {
+  background: #33333388;
+}
+
+.btn-dark:hover {
+  background: #252525;
+}
+
+.btn-light:hover {
+  background: #949494;
+}
+
+.bg-primary {
+  background: #DF292D;
+}
+
+.bg-dark {
+  background: #333;
+}
+
+.bg-light {
+  background: #ccc;
+}
+
+.text-primary {
+  color: #1e293b;
+}
+
+.text-dark {
+  color: #333;
+}
+
+.text-light {
+  color: #ccc;
+}
+
+.text-black {
+  color: #000;
+}
+
+.text-white {
+  color: #000;
+}
+
+.fw-400 {
+  font-weight: 400;
+}
+
+.fw-700 {
+  font-weight: 700;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.arrow-light {
+  border: solid #ccc;
+  border-width: 0 10px 10px 0;
+  display: inline-block;
+  padding: 10px;
+}
+
+.arrow-primary {
+  border: solid #597db7;
+  border-width: 0 10px 10px 0;
+  display: inline-block;
+  padding: 10px;
+}
+
+.arrow.up {
+  transform: rotate(-135deg);
+}
+
+.arrow.down {
+  transform: rotate(45deg);
+}
+
+.arrow.left {
+  transform: rotate(135deg);
+}
+
+.arrow.right {
+  transform: rotate(-45deg);
+}

@@ -15,6 +15,7 @@ import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register/register.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
+import { HomepageComponent } from './components/homepage/homepage.component';
 import { CartComponent } from './components/cart/cart.component';
 import { TransactionOverviewComponent } from './components/transaction-overview/transaction-overview.component';
 import { TransactionProductComponent } from './components/transaction-product/transaction-product.component';
@@ -36,6 +37,7 @@ import { TransactionCompleteComponent } from './components/transaction-complete/
         LoginComponent,
         RegisterComponent,
         CreateProductComponent,
+        HomepageComponent,
         CartComponent,
         TransactionOverviewComponent,
         TransactionProductComponent,
