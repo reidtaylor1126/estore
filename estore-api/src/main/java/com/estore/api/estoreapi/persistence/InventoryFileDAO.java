@@ -240,6 +240,8 @@ public class InventoryFileDAO implements InventoryDAO {
         {
                 CartProduct[] cartItems = transaction.getProducts();
                 Product[] newItems = new Product[cartItems.length];
+                if(cartItems.length == 0)
+                    return false;
                 for (int i = 0; i < cartItems.length; i++)
                 {
                     int tempProductID = cartItems[i].getId();

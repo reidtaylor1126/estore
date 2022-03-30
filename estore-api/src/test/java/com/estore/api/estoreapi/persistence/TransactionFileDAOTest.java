@@ -27,8 +27,9 @@ import org.junit.jupiter.api.Test;
 public class TransactionFileDAOTest {
     Transaction[] testTransactions;
     ObjectMapper mockObjectMapper;
-    TransactionFileDAO mockTransactionFileDAO;
+    TransactionFileDAO transactionFileDAO;
     InventoryFileDAO mockInventoryFileDAO;
+    Transaction mockTransaction;
     CartFileDAO mockCartFileDAO;
     UserFileDAO mockUserFileDAO;
     UserAccount mockUser;
@@ -39,7 +40,7 @@ public class TransactionFileDAOTest {
     @BeforeEach
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
-        mockTransactionFileDAO = mock(TransactionFileDAO.class);
+        mockTransaction = mock(Transaction.class);
         mockInventoryFileDAO = mock(InventoryFileDAO.class);
         mockCartFileDAO = mock(CartFileDAO.class);
         mockUserFileDAO = mock(UserFileDAO.class);
@@ -55,7 +56,7 @@ public class TransactionFileDAOTest {
 
         when(mockObjectMapper.readValue(new File("filenotfound.txt"), Transaction[].class))
                 .thenReturn(testTransactions);
-        mockTransactionFileDAO = new TransactionFileDAO("filenotfound.txt", mockObjectMapper, mockInventoryFileDAO, mockCartFileDAO, mockUserFileDAO);
+        transactionFileDAO = new TransactionFileDAO("filenotfound.txt", mockObjectMapper, mockInventoryFileDAO, mockCartFileDAO, mockUserFileDAO);
     }
   
     @Test
@@ -66,12 +67,12 @@ public class TransactionFileDAOTest {
             UserAccount user = new UserAccount(1, "test");
 
             when(mockInventoryFileDAO.confirmTransaction(testTransactions[0])).thenReturn(true);
-            when(mockCartFileDAO.getCart(validAuth)).thenReturn(cart);
-            when(mockUserFileDAO.verifyToken(validAuth)).thenReturn(user);
+            when(mockCartFileDAO.getCart(validAuth)).thenReturn(mockCart);
+            when(mockUserFileDAO.verifyToken(validAuth)).thenReturn(mockUser);
             when(mockUser.getId()).thenReturn(1);
             when(mockCart.getProducts()).thenReturn(testTransactions[0].getProducts());
             
-            Transaction result = assertDoesNotThrow((() -> mockTransactionFileDAO.createTransaction(validAuth, "visa", "address")),
+            Transaction result = assertDoesNotThrow((() -> transactionFileDAO.createTransaction(validAuth, "visa", "address")),
             "Unexpected exception thrown");
 
             assertNotNull(result);
@@ -89,8 +90,8 @@ public class TransactionFileDAOTest {
   
     @Test
     public void testGetTransaction() {
-        assertEquals(mockTransactionFileDAO.getTransaction(1), testTransactions[0]);
-        assertNotEquals(mockTransactionFileDAO.getTransaction(99), testTransactions[0]);
+        assertEquals(transactionFileDAO.getTransaction(1), testTransactions[0]);
+        assertNotEquals(transactionFileDAO.getTransaction(99), testTransactions[0]);
     }
 
 }
