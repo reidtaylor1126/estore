@@ -30,20 +30,31 @@ export class TransactionService {
         return of(confirmedTransaction);
     }
 
-    createTransaction(transaction: Transaction): Observable<Transaction | null> {
+    createTransaction(paymentMethod: string, address: string): Observable<Transaction | null> {
         const token = this.authService.getToken();
         if(!token) return of(null);
-        return this.httpClient.post<Transaction>('/api/transactions', transaction, {headers: {token: token}});
+        const transactionInfo = {
+            paymentMethod: paymentMethod,
+            shippingAddress: address
+        }
+        return this.httpClient.post<Transaction>('/api/transactions', transactionInfo, {headers: {token: token}});
     }
 
     placeholderSetFulfilled(transaction: Transaction): Observable<Transaction | null> {
         return of(transaction);
     }
 
+    setFulfilled(transaction: Transaction): Observable<Transaction | null> {
+        if(!this.authService.getCurrentUser()?.admin) return of(null);
+        const token = this.authService.getToken();
+        if(!token) return of(null);
+        return this.httpClient.put<Transaction>(`/api/transactions/id=${transaction.id}&status=${transaction.fulfilled}`, '');
+    }
+
     getAllTransactions(): Observable<Transaction[] | null> {
         if(!this.authService.getCurrentUser()?.admin) return of(null);
         const token = this.authService.getToken();
         if(!token) return of(null);
-        return this.httpClient.get<Transaction[]>('/api/transactions/all', {headers: {token: token}});
+        return this.httpClient.get<Transaction[]>('/api/transactions');
     }
 }

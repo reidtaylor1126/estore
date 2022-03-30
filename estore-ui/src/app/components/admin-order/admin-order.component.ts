@@ -19,7 +19,7 @@ export class AdminOrderComponent implements OnInit {
     setFulfilled(fulfilled: boolean) {
         if(this.transaction) {
             this.transaction.fulfilled = fulfilled;
-            this.transactionService.placeholderSetFulfilled(this.transaction).subscribe((result) => {
+            this.transactionService.setFulfilled(this.transaction).subscribe((result) => {
                 if(result != null) {
                     this.transaction = result;
                 }

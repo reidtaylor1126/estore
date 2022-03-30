@@ -100,7 +100,7 @@ public class TransactionFileDAO implements TransactionDAO {
         Integer id = nextId();
         UserAccount user = userDAO.verifyToken(token);
         Cart cart = cartDAO.getCart(token);
-        Product[] products = new Product[cart.getNumItems()];
+        Product[] products = new Product[cart.getProducts().length];
         CartProduct[] cartProducts = cart.getProducts();
         for(int i = 0; i < cartProducts.length; i++){
             int product_id = cartProducts[i].getId();
@@ -112,6 +112,7 @@ public class TransactionFileDAO implements TransactionDAO {
             products[i] = new Product(product_id, product_name, product_desc, product_price, product_quant);
         }
 
+        System.out.println(Arrays.deepToString(products));
         Transaction newTransaction = new Transaction(id, user.getId(), products, dateTime, paymentMethod, shippingAddress);
 
         if(inventoryDAO.confirmTransaction(newTransaction))

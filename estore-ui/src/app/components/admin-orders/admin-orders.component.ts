@@ -17,50 +17,9 @@ export class AdminOrdersComponent implements OnInit {
               });
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {}
 
-    transactions?: Transaction[] = [
-        {
-            id: 1,
-            user: 1,
-            products: [
-                {
-                    id: 1,
-                    name: 'testname1',
-                    description: 'testdesc1',
-                    price: 5.99,
-                    quantity: 3
-                }
-            ],
-            address: 'address',
-            dateTime: '2022-03-25',
-            paymentMethod: 'card',
-            fulfilled: true
-        }, {
-          id: 2,
-          user: 1,
-          products: [
-              {
-                  id: 2,
-                  name: 'testname2',
-                  description: 'testdesc2',
-                  price: 7.99,
-                  quantity: 1
-              }, 
-              {
-                  id: 3,
-                  name: 'testname3',
-                  description: 'testdesc3',
-                  price: 3.99,
-                  quantity: 2
-              }
-          ],
-          address: 'address',
-          dateTime: '2022-03-25',
-          paymentMethod: 'card',
-          fulfilled: false
-      }
-    ]
+    transactions?: Transaction[];
 
     hasTransactions(): boolean {
         if(this.transactions) return this.transactions.length > 0;

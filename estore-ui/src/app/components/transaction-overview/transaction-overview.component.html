@@ -63,12 +63,12 @@
                     <input id="card-number" type="number" name="card-info" [(ngModel)]="card.account">
                 </div>
                 <div class="overview-entry">
-                    <label for="card-number">Expiration</label>
-                    <input id="card-number" type="month" name="card-info" [(ngModel)]="card.expiration">
+                    <label for="expiration">Expiration</label>
+                    <input id="expiration" type="month" name="card-info" [(ngModel)]="card.expiration">
                 </div>
                 <div class="overview-entry">
-                    <label for="card-number">CCV</label>
-                    <input id="card-number" type="password" maxlength="3" name="card-info" [(ngModel)]="card.ccv">
+                    <label for="ccv">CCV</label>
+                    <input id="ccv" type="password" maxlength="3" name="card-info" [(ngModel)]="card.ccv">
                 </div>
             </fieldset>
             <fieldset *ngIf="paymentMethod == 'paypal'">
