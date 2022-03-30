@@ -22,7 +22,7 @@ export class TransactionService {
             id: 1,
             user: 1,
             products: [],
-            address: 'address',
+            shippingAddress: 'address',
             dateTime: 'date',
             paymentMethod: 'card',
             fulfilled: false

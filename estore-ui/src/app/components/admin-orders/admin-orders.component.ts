@@ -1,3 +1,4 @@
+import { transformAll } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -14,12 +15,21 @@ export class AdminOrdersComponent implements OnInit {
         if(!authService.getCurrentUser()?.admin) router.navigateByUrl('');
         transactionService.getAllTransactions().subscribe((transactions) => {
                   if(transactions != null) this.transactions = transactions;
+                  console.log(transactions);
               });
     }
 
     ngOnInit(): void {}
 
     transactions?: Transaction[];
+    search: string = '';
+    showUnfulfilled = true;
+    showFulfilled = false;
+
+    searchFilter(transaction: Transaction): boolean {
+        if(this.search === '') return true;
+        else return(this.search.includes(transaction.id ? transaction.id?.toString() : '-1'))
+    }
 
     hasTransactions(): boolean {
         if(this.transactions) return this.transactions.length > 0;

@@ -2,7 +2,7 @@
     <div class="order-info">
         <div>
             <h2>Order #{{transaction?.id}}</h2>
-            <h3>Ships to {{transaction?.address}} </h3>
+            <h3>Ships to {{transaction?.shippingAddress}} </h3>
         </div>
         <div>
             <button *ngIf="!transaction?.fulfilled" class="unfulfilled" (click)="setFulfilled(true)">Unfulfilled</button>

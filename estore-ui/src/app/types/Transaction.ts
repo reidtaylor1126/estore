@@ -4,7 +4,7 @@ export type Transaction = {
     id?: number;
     user: number;
     products: Product[];
-    address: string;
+    shippingAddress: string;
     dateTime: string;
     paymentMethod: string;
     fulfilled: boolean;
