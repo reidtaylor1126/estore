@@ -14,12 +14,12 @@ import { InventoryService } from '../inventory/inventory.service';
 export class CartService {
     private numItems = new BehaviorSubject<number>(0);
     private cart = new BehaviorSubject<Cart | null>(null);
+    private numItems: number = 0;
     constructor(
         private authService: AuthService,
         private httpClient: HttpClient,
         private inventoryService: InventoryService
     ) {}
-
     addToCart(product: Product, quantity?: number): Observable<Cart | null> {
         const token = this.authService.getToken();
         if (!token) return of(null);
@@ -143,6 +143,30 @@ export class CartService {
         const cart = await firstValueFrom(this.getCart(token));
         this.cart.next(cart);
         this.numItems.next(cart.numItems);
+      
+    addToCart(product: Product): Observable<Product[]> {
+        this.numItems += product.quantity;
+        // Placeholder until cart is done on backend
+        return of([]);
+    }
+
+    getNumItems(): number {
+        return this.numItems;
+    }
+
+    getCart(): Observable<Cart> {
+        const token = this.authService.getToken();
+        if(token != undefined) {
+            return this.httpClient.get<Cart>('/api/cart', {
+                headers: {'token': token}
+            });
+        } else {
+            return new Observable<Cart>();
+        }
+    }
+
+    async getCartProducts(): Promise<ProductCart> {
+        const cart = await firstValueFrom(this.getCart());
         const products = cart.products.map(async (product) => {
             const productData = await firstValueFrom(
                 this.inventoryService.getProduct(product.id)
@@ -151,6 +175,7 @@ export class CartService {
                 ...productData,
                 quantity: product.quantity,
             };
+            return productData;
         });
         return {
             products: await Promise.all(products),

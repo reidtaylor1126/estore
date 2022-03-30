@@ -96,4 +96,15 @@ export class CartComponent implements OnInit {
                 });
         }
     }
+    private productCart: ProductCart | undefined;
+
+    constructor(private cartService: CartService) {}
+
+    async ngOnInit(): Promise<void> {
+        this.productCart = await this.cartService.getCartProducts();
+    }
+
+    getProductCart(): ProductCart | undefined {
+        return this.productCart;
+    }
 }

@@ -1,0 +1,13 @@
+<div class="product-listing">
+    <img
+    src="https://source.unsplash.com/500x500?cards"
+    alt="product-thumbnail"
+    height="200"
+    width="200"
+    />
+    <div class="product-info">
+        <p class="name">{{product?.name}}</p>
+        <p class="quantity">${{product?.price | number: "1.2-2"}} x {{product?.quantity}}</p>
+        <p class="price">${{totalPrice | number: "1.2-2"}}</p>
+    </div>
+</div>

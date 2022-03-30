@@ -1,0 +1,30 @@
+<div class="admin-orders">
+    <div class="controls">
+        <div>
+            <label for="search">Search</label>
+            <input id="search" class="search" type="text" [(ngModel)]="search"/>
+        </div>
+        <div class="filters">
+            <div class="filter">
+                <label for="showFulfilled">Show Fulfilled?</label>
+                <input id="showFulfilled" type="checkbox" class="showFulfilled" [(ngModel)]="showFulfilled"/>
+            </div>
+            <div class="filter"> 
+                <label for="showUnfulfilled">Show Unfulfilled?</label>
+                <input id="showUnfulfilled" type="checkbox" class="showFulfilled" [(ngModel)]="showUnfulfilled"/>
+            </div>
+        </div>
+    </div>
+    <div class="order-list" *ngFor="let transaction of transactions">
+        <div *ngIf="showUnfulfilled && !transaction.fulfilled && searchFilter(transaction)">
+            <app-admin-order [transaction]="transaction"></app-admin-order>
+        </div>
+    </div>
+    <div class="order-list" *ngFor="let transaction of transactions">
+        <div *ngIf="showFulfilled && transaction.fulfilled && searchFilter(transaction)">
+            <app-admin-order [transaction]="transaction"></app-admin-order>
+        </div>
+    </div>
+</div>
+
+<h3 class="not-found" *ngIf="!hasTransactions()">No transactions</h3>

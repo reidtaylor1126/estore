@@ -45,7 +45,7 @@ public class UserFileDAO implements UserDAO {
     //     if(instance == null) instance = this;
     // }
 
-    @Autowired
+    //@Autowired
     public UserFileDAO(@Value("${users.filename}") String filename, ObjectMapper objectMapper, CartFileDAO cartFileDAO)
             throws IOException {
         this.filename = filename;

@@ -80,6 +80,9 @@ typings/
 .DS_Store
 Thumbs.db
 .angular/
+estore-ui/.scannerwork/.sonar_lock
+estore-ui/.scannerwork/report-task.txt
+estore-ui/.scannerwork/css-bundle/stylelintconfig.json
 
 .scannerwork/
 

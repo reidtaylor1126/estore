@@ -50,6 +50,12 @@ export class AuthService {
         return this.currentUserSubject.value;
     }
 
+    getID(): number {
+        const currentUser = this.getCurrentUser();
+        if(currentUser?.id != undefined) return currentUser.id;
+        else return -1;
+    }
+
     getToken(): string | undefined {
         const currentUser = this.getCurrentUser();
         return currentUser
