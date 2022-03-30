@@ -227,12 +227,6 @@ export class ProductDetailComponent implements OnInit {
     }
 
     addToCart(event: MouseEvent): void {
-<<<<<<< HEAD
-        this.cartService
-            .addToCart(this.product, this.localQuantity)
-            .subscribe();
-        this.product.quantity = 1;
-=======
         if (this.localQuantity <= this.product.quantity) {
             this.cartService.addToCart({
                 id: this.product.id,
@@ -244,7 +238,6 @@ export class ProductDetailComponent implements OnInit {
             });
             this.product.quantity = 1;
         }
->>>>>>> origin/main
     }
 
     inStock(): boolean {
