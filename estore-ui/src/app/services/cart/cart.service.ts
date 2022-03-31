@@ -19,10 +19,17 @@ export class CartService {
         private httpClient: HttpClient,
         private inventoryService: InventoryService
     ) {}
-    addToCart(product: Product, quantity?: number): Observable<Cart | null> {
+    async addToCart(
+        product: Product,
+        quantity?: number
+    ): Promise<Observable<Cart | null>> {
         const token = this.authService.getToken();
         if (!token) return of(null);
         if (product.id === undefined) return of(null);
+        if (this.cart.value === null) {
+            const cart = await firstValueFrom(this.getCart());
+            this.cart.next(cart);
+        }
         const cartData = {
             id: product.id,
             quantity: quantity || 1,

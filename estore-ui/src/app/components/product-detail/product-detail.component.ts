@@ -226,11 +226,13 @@ export class ProductDetailComponent implements OnInit {
         return this.imgLocations.get(id)?.imgSource;
     }
 
-    addToCart(event: MouseEvent): void {
+    async addToCart(event: MouseEvent): Promise<void> {
         if (this.localQuantity <= this.product.quantity) {
-            this.cartService
-                .addToCart(this.product, this.localQuantity)
-                .subscribe();
+            const promise = await this.cartService.addToCart(
+                this.product,
+                this.localQuantity
+            );
+            promise.subscribe();
         }
     }
 

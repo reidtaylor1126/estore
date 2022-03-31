@@ -41,11 +41,12 @@ export class ProductComponent implements OnInit {
         return this.authService.getCurrentUser()?.admin === true;
     }
 
-    addToCart(event: MouseEvent): void {
+    async addToCart(event: MouseEvent): Promise<void> {
         event.preventDefault();
         event.stopPropagation();
         if (!this.product) return;
-        this.cartService.addToCart(this.product).subscribe();
+        const promise = await this.cartService.addToCart(this.product);
+        promise.subscribe();
     }
 
     getProductImage(): string {
