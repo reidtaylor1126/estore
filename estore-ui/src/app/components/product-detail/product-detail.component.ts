@@ -297,7 +297,8 @@ export class ProductDetailComponent implements OnInit {
     prevImg(): void {
         if (this.product.numImages > 0) {
             this.currentImage =
-                (this.currentImage - 1) % this.product.numImages;
+                (this.currentImage - 1 + this.product.numImages) %
+                this.product.numImages;
             const img = this.getImgLocation(this.currentImage);
             if (img !== undefined) {
                 this.imgSource = img;
