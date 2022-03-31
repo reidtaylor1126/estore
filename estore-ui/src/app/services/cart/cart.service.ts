@@ -127,9 +127,17 @@ export class CartService {
     getCart(): Observable<Cart> {
         const token = this.authService.getToken();
         if (token != undefined) {
-            return this.httpClient.get<Cart>('/api/cart', {
-                headers: { token: token },
-            });
+            return this.httpClient
+                .get<Cart>('/api/cart', {
+                    headers: { token: token },
+                })
+                .pipe(
+                    map((cart) => {
+                        this.numItems.next(cart.numItems);
+                        this.cart.next(cart);
+                        return cart;
+                    })
+                );
         } else {
             return new Observable<Cart>();
         }

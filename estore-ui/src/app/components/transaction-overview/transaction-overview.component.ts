@@ -12,7 +12,7 @@ import { Transaction } from 'src/app/types/Transaction';
 @Component({
     selector: 'app-transaction-overview',
     templateUrl: './transaction-overview.component.html',
-    styleUrls: ['./transaction-overview.component.css']
+    styleUrls: ['./transaction-overview.component.css'],
 })
 export class TransactionOverviewComponent implements OnInit {
     cart?: Cart;
@@ -25,17 +25,23 @@ export class TransactionOverviewComponent implements OnInit {
         lastName: '',
         billingAddress: '',
         state: '',
-        zipCode: ''
-    }
+        zipCode: '',
+    };
 
     card = {
         account: '',
         expiration: '',
-        ccv: ''
-    }
+        ccv: '',
+    };
     formErrorMsg = '';
 
-    constructor(private cartService: CartService, private inventoryService: InventoryService, private authService: AuthService, private transactionService: TransactionService, private router: Router) {
+    constructor(
+        private cartService: CartService,
+        private inventoryService: InventoryService,
+        private authService: AuthService,
+        private transactionService: TransactionService,
+        private router: Router
+    ) {
         // this.cartProducts?.map((cartProduct) => {
         //     this.inventoryService.getProduct(cartProduct.id).subscribe((product) => {
         //         product.quantity = cartProduct.quantity;
@@ -45,13 +51,14 @@ export class TransactionOverviewComponent implements OnInit {
     }
 
     ngOnInit() {
-        if(this.authService.getCurrentUser() == null) console.log('no current user');
+        if (this.authService.getCurrentUser() == null)
+            console.log('no current user');
         else {
             this.cartService.getCart().subscribe((cart) => {
                 console.log('got cart with ' + cart.numItems + ' items');
                 this.cart = cart;
                 this.cartProducts = cart.products;
-            })
+            });
         }
     }
 
@@ -64,25 +71,35 @@ export class TransactionOverviewComponent implements OnInit {
     }
 
     private personalComplete(): boolean {
-        if(this.personalInfo.firstName.length < 2) this.formErrorMsg = 'First name must be at least 2 characters, is only ' + this.personalInfo.firstName.length;
-        else if(this.personalInfo.lastName.length < 2) this.formErrorMsg = 'Last name must be at least 2 characters';
-        else if(this.personalInfo.billingAddress.length < 2) this.formErrorMsg = 'Billing address must be at least 2 characters';
-        else if(this.personalInfo.state.length < 5) this.formErrorMsg = 'State must be at least 5 characters';
-        else if(this.personalInfo.zipCode.toString().length != 5) this.formErrorMsg = 'Zip code must be 5 numbers';
+        if (this.personalInfo.firstName.length < 2)
+            this.formErrorMsg =
+                'First name must be at least 2 characters, is only ' +
+                this.personalInfo.firstName.length;
+        else if (this.personalInfo.lastName.length < 2)
+            this.formErrorMsg = 'Last name must be at least 2 characters';
+        else if (this.personalInfo.billingAddress.length < 2)
+            this.formErrorMsg = 'Billing address must be at least 2 characters';
+        else if (this.personalInfo.state.length < 5)
+            this.formErrorMsg = 'State must be at least 5 characters';
+        else if (this.personalInfo.zipCode.toString().length != 5)
+            this.formErrorMsg = 'Zip code must be 5 numbers';
         else {
-          this.formErrorMsg = '';
-          return true;
+            this.formErrorMsg = '';
+            return true;
         }
         return false;
     }
 
     private cardComplete(): boolean {
-        if(this.card.account.toString().length != 12) this.formErrorMsg = 'Invalid card number';
-        else if(Date.parse(this.card.expiration) < Date.now()) this.formErrorMsg = 'Select a date in the future';
-        else if(this.card.ccv.toString().length != 3) this.formErrorMsg = 'Invalid CCV';
+        if (this.card.account.toString().length != 16)
+            this.formErrorMsg = 'Invalid card number';
+        else if (Date.parse(this.card.expiration) < Date.now())
+            this.formErrorMsg = 'Select a date in the future';
+        else if (this.card.ccv.toString().length != 3)
+            this.formErrorMsg = 'Invalid CCV';
         else {
-          this.formErrorMsg = '';
-          return true;
+            this.formErrorMsg = '';
+            return true;
         }
         return false;
     }
@@ -94,27 +111,37 @@ export class TransactionOverviewComponent implements OnInit {
 
     formComplete(): boolean {
         this.formErrorMsg = '';
-        return(this.paymentIsCard() ? this.personalComplete() && this.cardComplete() : this.paypalComplete());
+        return this.paymentIsCard()
+            ? this.personalComplete() && this.cardComplete()
+            : this.paypalComplete();
     }
 
     submitTransaction() {
-        if(this.paymentMethod == '') {
+        if (this.paymentMethod == '') {
             this.formErrorMsg = 'Select a Payment Method';
         }
-        if(this.formComplete() && this.authService.getCurrentUser() != undefined) {
+        if (
+            this.formComplete() &&
+            this.authService.getCurrentUser() != undefined
+        ) {
             console.log('Submitting Transaction');
             const userID = this.authService.getID();
-            if(userID == -1) {
+            if (userID == -1) {
                 console.log('account error');
                 return;
             } else {
-                this.transactionService.createTransaction(this.paymentMethod, `${this.personalInfo.billingAddress} ${this.personalInfo.state} ${this.personalInfo.zipCode}`).subscribe((result) => {
-                    console.log(result);
-                    this.router.navigateByUrl('transaction-complete');
-                })
+                this.transactionService
+                    .createTransaction(
+                        this.paymentMethod,
+                        `${this.personalInfo.billingAddress} ${this.personalInfo.state} ${this.personalInfo.zipCode}`
+                    )
+                    .subscribe((result) => {
+                        console.log(result);
+                        this.router.navigateByUrl('transaction-complete');
+                    });
             }
         } else {
-            console.log('failed to submit')
+            console.log('failed to submit');
         }
     }
 }
