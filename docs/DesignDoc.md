@@ -1,66 +1,54 @@
 ---
 geometry: margin=1in
 ---
+
 # PROJECT Design Documentation
 
-> _The following template provides the headings for your Design
-> Documentation.  As you edit each section make sure you remove these
-> commentary 'blockquotes'; the lines that start with a > character
-> and appear in the generated PDF in italics._
-
 ## Team Information
-* Team name: straightflush
-* Team members
-  * Ryan Yocum
-  * James McGuire
-  * Clay Rankin
-  * Reid Taylor
-  * Nate Appleby
+
+-   Team name: StraightFlush
+-   Team members
+    -   Ryan Yocum
+    -   Clay Rankin
+    -   Reid Taylor
+    -   Nate Appleby
 
 ## Executive Summary
 
-This is a summary of the project.
+This project involves a working E-Store that allows users to buy, search and view cards and related products, standard users are capable of creating accounts to login and purchase products, while also maintaining cart information for their next visit. Admin users are capable of creating/editting/deleting products, along with base user capabilities. Finally with a user interface to facilitate all of these actions.
 
 ### Purpose
-> _Provide a very brief statement about the project and the most
-> important user group and user goals._
+
+The purpose of this project is to provide an online store with a user interface, important goals were to have a working login system, displaying products, and allowing users to checkout and complete transactions with a cart containing products.
 
 ### Glossary and Acronyms
-> _Provide a table of terms and acronyms._
 
-| Term | Definition |
-|------|------------|
-| SPA | Single Page |
-
+| Term | Definition                        |
+| ---- | --------------------------------- |
+| SPA  | Single Page Application           |
+| API  | Application Programming Interface |
 
 ## Requirements
 
-This section describes the features of the application.
-
-> _In this section you do not need to be exhaustive and list every
-> story.  Focus on top-level features from the Vision document and
-> maybe Epics and critical Stories._
+The main features of this application included the user authentication system, including user accounts. Allowing users to store data and access admin powers. There is also everything involving products, which includes all of the searching/viewing/creating/editting of products on the frontend/backend. Another major feature are the carts systems, which allows all normal users to save a cart of products that they want to purchase. The 10% feature will include user reviews and displaying those reviews on products with averaged rating.
 
 ### Definition of MVP
-> _Provide a simple description of the Minimum Viable Product._
+
+The Minimum Viable Product displays products and allows users to login to accounts. Normal users must have access to a cart with products for transactions. Admin users must be allowed to edit and create products.
 
 ### MVP Features
-> _Provide a list of top-level Epics and/or Stories of the MVP._
+
+User Authentication Epic, including login, account creation. Product Methods Epic, including creation, deletion, search, editting. Cart Methods Epic, including adding to the cart, clearing the cart and getting the cart. Finally the Transaction Epic, which will include transaction functionality and be linked to user proceeding to transaction with a cart of products.
 
 ### Roadmap of Enhancements
-> _Provide a list of top-level features in the order you plan to consider them._
 
+Our initial plan for enhancements included both custom product images and a product rating and review system. However, we significanly underestimated the difficulty of implementing both features, and decided that between having only product images and only ratings and reviews, product images provided a superior user experience. As of our latest release, the Store Owner can upload images both when creating a new product, and when editing an existing one. Users can view and scroll through the images uploaded for each product, allowing them to see products before they make a purchase.
 
 ## Application Domain
 
-This section describes the application domain.
+[Domain Model](Domain-Model.pdf)
 
-![Domain Model](domain-model-placeholder.png)
-
-> _Provide a high-level overview of the domain for this application. You
-> can discuss the more important domain entities and their relationship
-> to each other._
-
+First we have the Customer, whom has access to a cart in which they can add, edit and view products in the cart, and this cart defines items to be purchased. The cart contains products, which are viewed/searched for by the customer, these products are able to added, viewed, editted or deleted by the product owner, who is an admin user. After a transaction the product owner receives payment from the customer, who receives confirmation of the transaction. Both users must login using Auth, which grants access to user specific data, or admin priviledges if applicable. The user specific data is saved and accessed from a File Database.
 
 ## Architecture and Design
 
@@ -70,82 +58,50 @@ This section describes the application architecture.
 
 The following Tiers/Layers model shows a high-level view of the webapp's architecture.
 
-![The Tiers & Layers of the Architecture](architecture-tiers-and-layers.png)
+[The Tiers & Layers of the Architecture](architecture-tiers-and-layers.png)
 
-The e-store web application, is built using the Model–View–ViewModel (MVVM) architecture pattern. 
+The e-store web application, is built using the Model–View–ViewModel (MVVM) architecture pattern.
 
-The Model stores the application data objects including any functionality to provide persistance. 
+The Model stores the application data objects including any functionality to provide persistance.
 
 The View is the client-side SPA built with Angular utilizing HTML, CSS and TypeScript. The ViewModel provides RESTful APIs to the client (View) as well as any logic required to manipulate the data objects from the Model.
 
 Both the ViewModel and Model are built using Java and Spring Framework. Details of the components within these tiers are supplied below.
 
-
 ### Overview of User Interface
 
-This section describes the web interface flow; this is how the user views and interacts
-with the e-store application.
+[Web Application Interface Statechart](State-Chart.pdf)
 
-> _Provide a summary of the application's user interface.  Describe, from
-> the user's perspective, the flow of the pages in the web application._
-
+The user interface is comprised of 6 pages
+On the home page, the user has access to both the Home and View Items buttons on the navbar, and the account icon will open a menu that allows any user to log in, register, or logout dependent on whether the user is logged in at first.
 
 ### View Tier
-> _Provide a summary of the View Tier UI of your architecture.
-> Describe the types of components in the tier and describe their
-> responsibilities.  This should be a narrative description, i.e. it has
-> a flow or "story line" that the reader can follow._
 
-> _You must also provide sequence diagrams as is relevant to a particular aspects 
-> of the design that you are describing.  For example, in e-store you might create a 
-> sequence diagram of a customer searching for an item and adding to their cart. 
-> Be sure to include an relevant HTTP reuqests from the client-side to the server-side 
-> to help illustrate the end-to-end flow._
-
+[Diagram](State-Chart.pdf)
+The App renders the Topbar component for user navigation, which allows the user to navigate to different pages such as the View Products page, and individual's product page, as well as the login and register pages using links on the page. As an admin, there are edit links on the products that make a request to the backend ViewModel, as well as login and register send a request to log a user in.
 
 ### ViewModel Tier
-> _Provide a summary of this tier of your architecture. This
-> section will follow the same instructions that are given for the View
-> Tier above._
 
-> _At appropriate places as part of this narrative provide one or more
-> static models (UML class diagrams) with some details such as critical attributes and methods._
-
+[Diagram](Class-Diagram.pdf)
+Each distinct section of the Model tier has its own Controller, which provides API endpoints for all of the relevant persistence functions. These Controllers match up with a corresponding Angular Service running on the client, which makes requests to the provided endpoints.
 
 ### Model Tier
-> _Provide a summary of this tier of your architecture. This
-> section will follow the same instructions that are given for the View
-> Tier above._
 
-> _At appropriate places as part of this narrative provide one or more
-> static models (UML class diagrams) with some details such as critical attributes and methods._
+[Diagram](Class-Diagram.pdf)
+The Product model includes an id, name, description, price, and quantity. The UserAccount includes an id, username, and a boolean isAdmin
 
 ### Static Code Analysis/Design Improvements
-> _Discuss design improvements that you would make if the project were
-> to continue. These improvement should be based on your direct
-> analysis of where there are problems in the code base which could be
-> addressed with design changes, and describe those suggested design
-> improvements._
 
-> _With the results from the Static Code Analysis exercise, 
-> discuss the resulting issues/metrics measurements along with your analysis
-> and recommendations for further improvements. Where relevant, include 
-> screenshots from the tool and/or corresponding source code that was flagged._
+The main area in which our code could be improved is in unity and parity between code written by different developers. Not only do we have different code styles, but we also have different ideas and levels of experience that result in vast differences in implementation. Assigning responsibilities of team members provides some help in mitigating this, but as the required functionality becomes more complex, more connection between classes implemented by different team members is required.
 
 ## Testing
-> _This section will provide information about the testing performed
-> and the results of the testing._
+
+Testing for the program was performed using both unit testing and human functional testing. The potential conditions were layed out and actions were performed with these conditions to confirm the program was working as intended. So far all components passed their tests except a few bugs found related to the carts.
 
 ### Acceptance Testing
-> _Report on the number of user stories that have passed all their
-> acceptance criteria tests, the number that have some acceptance
-> criteria tests failing, and the number of user stories that
-> have not had any testing yet. Highlight the issues found during
-> acceptance testing and if there are any concerns._
+
+There were 6 implemented user stories and they all passed their acceptance criteria tests. The 7th component is related to carts, which the front end for that has yet to be implemented, so no tests were able to be run.
 
 ### Unit Testing and Code Coverage
-> _Discuss your unit testing strategy. Report on the code coverage
-> achieved from unit testing of the code base. Discuss the team's
-> coverage targets, why you selected those values, and how well your
-> code coverage met your targets. If there are any anomalies, discuss
-> those._
+
+Each method in the backend is set to unit tests to confirm they correctly return values depending on parameters. All backend methods directly related to stories such as loginUser/getProduct, have passed all their unit tests. Correctly returning values given each condition.
