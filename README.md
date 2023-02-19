@@ -1,6 +1,6 @@
 # E-Store: Playing Cards
 
-An online E-store system built in Java 8=>11 and Angular.js
+An online E-store system built in Java 8=>11 and Angular.js. This was a team project for an introductory software design course in my first year of college, but my parts of it should be a decent representation of my coding style in a somewhat large, formal Java project.
   
 ## Team
 
